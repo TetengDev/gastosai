@@ -7,12 +7,12 @@ import com.teng.app.gastosai.dto.MonthlyReportItem;
 import com.teng.app.gastosai.entity.Expense;
 import com.teng.app.gastosai.exception.ResourceNotFoundException;
 import com.teng.app.gastosai.entity.Category;
-import com.teng.app.gastosai.service.CategoryService;
 import com.teng.app.gastosai.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -95,7 +95,7 @@ public class ExpenseService {
 
 	private ExpenseResponse toResponse(final Expense e) {
 		String categoryName = e.getCategory() != null ? e.getCategory().getName() : "Uncategorized";
-		return new ExpenseResponse(e.getId(), e.getAmount(), categoryName, e.getDate(), e.getNote());
+		return new ExpenseResponse(e.getId(), e.getAmount().setScale(2, RoundingMode.HALF_UP), categoryName, e.getDate(), e.getNote());
 	}
 
 	private static BigDecimal toBigDecimal(Object value) {
@@ -103,11 +103,11 @@ public class ExpenseService {
 			return BigDecimal.ZERO;
 		}
 		if (value instanceof BigDecimal bd) {
-			return bd;
+			return bd.setScale(2, RoundingMode.HALF_UP);
 		}
 		if (value instanceof Number n) {
-			return BigDecimal.valueOf(n.doubleValue());
+			return BigDecimal.valueOf(n.doubleValue()).setScale(2, RoundingMode.HALF_UP);
 		}
-		return new BigDecimal(value.toString());
+		return new BigDecimal(value.toString()).setScale(2, RoundingMode.HALF_UP);
 	}
 }

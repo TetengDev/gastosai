@@ -1,5 +1,10 @@
 package com.teng.app.gastosai.dto;
 
-public record CategoryResponse(Long id, String name) {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public record CategoryResponse(
+		@JsonIgnore
+		Long id,
+		String name) {
 }
 
