@@ -11,7 +11,7 @@ public final class SqlGuard {
 			"(?is)\\b(insert|update|delete|drop|truncate|alter|create|grant|revoke|merge|call|execute|union|intersect|except|into\\s+outfile|load\\s+file|copy\\s+\\(|pg_sleep|information_schema|pg_catalog)\\b");
 
 	private static final Pattern FROM_EXPENSES = Pattern.compile(
-			"(?is)from\\s+[\"`]?expenses[\"`]?(\\s|,|$|\\))");
+			"(?is)from\\s+(?:[\\w]+\\.)?[\"`]?expenses[\"`]?(\\s|,|$|\\))");
 
 	private SqlGuard() {
 	}

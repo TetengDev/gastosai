@@ -6,6 +6,8 @@ import com.teng.app.gastosai.dto.ExpenseResponse;
 import com.teng.app.gastosai.dto.MonthlyReportItem;
 import com.teng.app.gastosai.entity.Expense;
 import com.teng.app.gastosai.exception.ResourceNotFoundException;
+import com.teng.app.gastosai.entity.Category;
+import com.teng.app.gastosai.service.CategoryService;
 import com.teng.app.gastosai.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +20,19 @@ import java.util.List;
 public class ExpenseService {
 
 	private final ExpenseRepository expenseRepository;
+	private final CategoryService categoryService;
 
-	public ExpenseService(ExpenseRepository expenseRepository) {
+	public ExpenseService(ExpenseRepository expenseRepository, CategoryService categoryService) {
 		this.expenseRepository = expenseRepository;
+		this.categoryService = categoryService;
 	}
 
 	@Transactional
 	public ExpenseResponse create(ExpenseRequest request) {
+		Category category = categoryService.getOrCreateByName(request.category());
 		Expense expense = Expense.builder()
 				.amount(request.amount())
-				.category(request.category())
+				.category(category)
 				.date(request.date() != null ? request.date() : LocalDate.now())
 				.note(request.note())
 				.build();
@@ -49,8 +54,10 @@ public class ExpenseService {
 	public ExpenseResponse update(Long id, ExpenseRequest request) {
 		Expense expense = expenseRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Expense not found: " + id));
+
+		Category category = categoryService.getOrCreateByName(request.category());
 		expense.setAmount(request.amount());
-		expense.setCategory(request.category());
+		expense.setCategory(category);
 		expense.setDate(request.date() != null ? request.date() : expense.getDate());
 		expense.setNote(request.note());
 		return toResponse(expenseRepository.save(expense));
@@ -87,7 +94,8 @@ public class ExpenseService {
 	}
 
 	private ExpenseResponse toResponse(final Expense e) {
-		return new ExpenseResponse(e.getId(), e.getAmount(), e.getCategory(), e.getDate(), e.getNote());
+		String categoryName = e.getCategory() != null ? e.getCategory().getName() : "Uncategorized";
+		return new ExpenseResponse(e.getId(), e.getAmount(), categoryName, e.getDate(), e.getNote());
 	}
 
 	private static BigDecimal toBigDecimal(Object value) {

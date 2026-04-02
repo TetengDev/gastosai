@@ -16,12 +16,18 @@ import java.util.regex.Pattern;
 public class OpenAiSqlGenerator {
 
 	private static final String SYSTEM_PROMPT = """
-			You generate exactly one PostgreSQL SELECT query for the table "expenses" with columns:
-			id (bigint), amount (numeric), category (varchar), date (date), note (text).
+			You generate exactly one PostgreSQL SELECT query for the table "expenses".
+			The schema is:
+			- expenses(id bigint, amount numeric, category_id bigint, date date, note text)
+			- categories(id bigint, name varchar)
+
+			When you need the category name, join:
+			LEFT JOIN categories c ON c.id = e.category_id
+			and select from `c.name`.
 			Rules:
 			- Output only the SQL, no markdown unless you wrap it in a single ```sql code block.
 			- SELECT only; no semicolons at the end.
-			- Query only the expenses table (aliases like e are fine).
+			- The FROM clause must include the `expenses` table (aliases like e are fine). Joins to `categories` are allowed.
 			- Use standard PostgreSQL date functions when the user asks about months or ranges.
 			""";
 
