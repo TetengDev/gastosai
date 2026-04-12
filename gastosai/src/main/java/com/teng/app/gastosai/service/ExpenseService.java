@@ -8,6 +8,7 @@ import com.teng.app.gastosai.entity.Expense;
 import com.teng.app.gastosai.exception.ResourceNotFoundException;
 import com.teng.app.gastosai.entity.Category;
 import com.teng.app.gastosai.repository.ExpenseRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +18,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ExpenseService {
 
 	private final ExpenseRepository expenseRepository;
 	private final CategoryService categoryService;
-
-	public ExpenseService(ExpenseRepository expenseRepository, CategoryService categoryService) {
-		this.expenseRepository = expenseRepository;
-		this.categoryService = categoryService;
-	}
 
 	@Transactional
 	public ExpenseResponse create(ExpenseRequest request) {

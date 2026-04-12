@@ -6,21 +6,18 @@ import com.teng.app.gastosai.entity.Category;
 import com.teng.app.gastosai.exception.ResourceNotFoundException;
 import com.teng.app.gastosai.repository.CategoryRepository;
 import com.teng.app.gastosai.repository.ExpenseRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
 	private final CategoryRepository categoryRepository;
 	private final ExpenseRepository expenseRepository;
-
-	public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository) {
-		this.categoryRepository = categoryRepository;
-		this.expenseRepository = expenseRepository;
-	}
 
 	@Transactional
 	public CategoryResponse create(CategoryRequest request) {
