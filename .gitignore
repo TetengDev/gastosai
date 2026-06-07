@@ -1,0 +1,79 @@
+# --- Secrets & local config (never commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+secrets/
+credentials/
+*.credentials
+
+# --- Spring Boot (repo root; module also has its own .gitignore) ---
+**/application-local.properties
+**/application-local.yml
+**/application-secret.properties
+**/application-secret.yml
+**/application-secrets.properties
+**/application-secrets.yml
+
+# --- Build outputs ---
+**/target/
+**/build/
+**/out/
+*.class
+
+# --- Maven (optional local repo path overrides) ---
+.mvn/timing.properties
+
+# --- Logs & runtime ---
+*.log
+logs/
+*.pid
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- IDEs & editors ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- Cursor / local AI ---
+.cursor/
+
+# --- Docker (local overrides with real env) ---
+docker-compose.override.yml
+.env.docker
+
+# --- Test & coverage ---
+**/coverage/
+**/.nyc_output/
+*.lcov
+.jacoco/
+
+# --- Node (if you add a frontend later) ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-store/
+
+# --- Python (if you add scripts later) ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# --- Misc ---
+*.tmp
+*.temp
+.cache/
