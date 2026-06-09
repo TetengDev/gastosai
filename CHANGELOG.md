@@ -11,6 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.2] - 2026-06-10
+
+### Added
+- Full Docker stack via `docker compose --profile app up -d --build` — backend and frontend now containerised alongside the existing DB service
+- `scripts/start.ps1` option 6: start the full stack through Docker Compose
+- Named volume `postgres_data` so DB data survives `docker compose down` (only wiped with `down -v`)
+- DB health check in `docker-compose.yaml`; backend waits for Postgres to be healthy before starting
+- Memory limits on all Docker services: DB 256 MB, backend 512 MB, frontend 64 MB
+- BuildKit cache mounts in Dockerfiles for faster Maven and npm rebuilds
+- `frontend/Dockerfile` multi-stage build: Node 22 Alpine → nginx Alpine (~20 MB runtime image)
+- `frontend/nginx.conf` with SPA fallback routing and gzip compression
+- Demo user credentials (name, email, password) now configurable via `GASTOS_DEMO_NAME`, `GASTOS_DEMO_EMAIL`, `GASTOS_DEMO_PASSWORD` env vars
+
+### Fixed
+- Category seed data: "Transporation" corrected to "Transportation"
+- `scripts/start.ps1`: em-dash inside string literal replaced with `--` to fix PowerShell 5.1 Windows-1252 parse error
+
+### Changed
+- Backend Docker runtime switched from `eclipse-temurin:25-jdk` to `eclipse-temurin:25-jdk-alpine` (~40% smaller image); runs as non-root `spring` user
+- `scripts/teardown.ps1` option 3 now explicitly documents that `docker compose down` stops all Docker services including app-profile containers
+- Pre-PR checklist: added mandatory runtime execution-testing rule (≥90% of touched paths), infrastructure breaking-change rule, and PS encoding rule
+
+---
+
 ## [0.5.1] - 2026-06-09
 
 ### Fixed
