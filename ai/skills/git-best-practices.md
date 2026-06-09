@@ -183,6 +183,28 @@ If one seems necessary:
 
 ---
 
+## Pull request policy
+
+After a feature or fix is committed and pushed on a branch:
+
+**Simple / single-concern changes** (one file, one bug fix, a small chore):
+→ Automatically create the PR and merge it without asking.
+
+**Non-trivial / multi-file / feature changes** that are tested and working:
+→ Ask the user: *"Feature is ready — should I create a PR?"* before proceeding.
+
+Never create a PR for a branch that:
+* Has failing CI checks.
+* Is not yet confirmed working end-to-end.
+* Is still in progress.
+
+When creating a PR via the GitHub API:
+* Use `merge_method: "merge"` (preserve merge commit for history).
+* Delete the branch after a successful merge.
+* Pull the updated master locally after merge.
+
+---
+
 ## Final summary format
 
 After making changes, summarize using:
