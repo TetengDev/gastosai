@@ -2,7 +2,11 @@
 
 Use this skill when reviewing a commit, staged changes, unstaged changes, branch diff, or pull request.
 
-This skill focuses on code health, correctness, maintainability, security, test coverage, and merge readiness.
+This skill focuses on **code health, correctness, maintainability, security, test coverage, and merge readiness**.
+
+> PR creation policy (when to auto-create vs ask first) is defined in `ai/skills/shared/git-best-practices.md`.
+> Pre-PR quality gate (lint, build, tests, secrets, version bump) is defined in `ai/skills/shared/pre-pr-checklist.md`.
+> This skill covers the *review* of the change, not the process of creating the PR.
 
 ---
 
