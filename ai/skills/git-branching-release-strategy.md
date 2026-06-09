@@ -39,39 +39,17 @@ Why:
 
 ## Branch types
 
-Use these branch names:
+See `ai/skills/git-best-practices.md` for general branching rules. Branch name conventions specific to releases:
 
 ```text
-feature/<short-description>
-fix/<short-description>
-docs/<short-description>
-refactor/<short-description>
-test/<short-description>
-chore/<short-description>
-ci/<short-description>
-release/<major>.<minor>.x
-hotfix/<short-description>
+release/<major>.<minor>.x   — stabilisation branch for a release line
+hotfix/<short-description>  — urgent production fix off main
 ```
 
-Examples:
-
-```text
-feature/expense-filtering
-fix/sql-guard-validation
-docs/agent-skills
-refactor/category-service
-test/expense-api-it
-ci/backend-tests
-release/1.2.x
-hotfix/ai-query-error-leak
-```
+All other types (`feature/`, `fix/`, `docs/`, `refactor/`, `test/`, `chore/`, `ci/`) follow the same pattern — lowercase kebab-case, short, descriptive.
 
 Rules:
 
-* Use lowercase kebab-case.
-* Keep branch names short and descriptive.
-* Do not include ticket numbers unless the repo already uses them.
-* Do not mix unrelated work in one branch.
 * Delete merged short-lived branches after merge.
 * Do not delete release branches without explicit approval.
 
@@ -306,6 +284,70 @@ BREAKING CHANGE: removes the old category response shape.
 ```
 
 Breaking changes require a MAJOR bump once the project is stable at `1.0.0+`.
+
+---
+
+## CHANGELOG
+
+Every release must have a corresponding entry in `CHANGELOG.md` following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+Structure:
+
+```markdown
+## [Unreleased]
+
+## [1.2.0] - YYYY-MM-DD
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+```
+
+Rules:
+
+* Keep an `[Unreleased]` section at the top. Move its contents to a versioned section when releasing.
+* Write entries for the reader, not the developer — describe what changed from a user or operator perspective.
+* `Security` entries are highest priority — list them first in the section.
+* Every version bump commit must also update `CHANGELOG.md`. The `commit-msg` hook reminds you of this.
+* Do not document internal refactors or test-only changes unless they affect observable behavior.
+
+---
+
+## Dependency management
+
+Outdated or vulnerable dependencies must be reviewed before each release.
+
+### Frontend (npm)
+
+```bash
+npm audit                          # show vulnerabilities
+npm audit --audit-level=high       # fail on high/critical (used in CI)
+npm outdated                       # show available updates
+```
+
+Rules:
+
+* High or critical vulnerabilities are **release blockers**. Patch them before tagging.
+* Moderate vulnerabilities should be tracked and resolved within the next minor release.
+* Minor version upgrades are generally safe — test after updating.
+* Major version upgrades require a dedicated branch and regression testing.
+* `npm audit fix` applies safe automatic fixes; `npm audit fix --force` may introduce breaking changes — use cautiously.
+
+### Backend (Maven)
+
+```bash
+./mvnw versions:display-dependency-updates   # show available updates
+./mvnw dependency:tree                       # inspect transitive dependencies
+```
+
+Rules:
+
+* Direct dependency updates should be reviewed individually.
+* BOM-managed versions (Spring Boot parent POM) update together when upgrading Spring Boot — do not override them individually.
+* Dependabot (`.github/dependabot.yml`) raises weekly PRs for both Maven and npm — review and merge regularly.
+* For explicit vulnerability scanning, consider adding the OWASP Dependency-Check Maven plugin if the project grows.
 
 ---
 

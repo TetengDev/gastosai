@@ -32,27 +32,7 @@ Rules:
 
 For non-trivial changes, prefer a dedicated branch.
 
-Branch name examples:
-
-```text
-feature/<short-description>
-fix/<short-description>
-docs/<short-description>
-refactor/<short-description>
-test/<short-description>
-chore/<short-description>
-```
-
-Examples:
-
-```text
-feature/expense-filtering
-fix/sql-guard-validation
-docs/agent-skills
-refactor/category-service
-test/expense-api-it
-chore/update-dependencies
-```
+See `ai/skills/git-branching-release-strategy.md` for branch naming conventions, release branches, hotfix flow, and SemVer rules.
 
 Rules:
 
@@ -156,28 +136,25 @@ Rules:
 
 ## Commit message style
 
-Suggest conventional commit messages.
-
-Examples:
-
-```text
-feat: add expense filtering
-fix: prevent unsafe SQL execution
-docs: add AI agent git skill
-refactor: simplify category service
-test: add expense API integration tests
-chore: update project config
-```
+Use conventional commits. See `ai/skills/git-branching-release-strategy.md` for the full type → version bump mapping.
 
 Common prefixes:
 
-* `feat:` for user-facing features
-* `fix:` for bug fixes
-* `docs:` for documentation
-* `refactor:` for behavior-preserving code changes
-* `test:` for test-only changes
-* `chore:` for tooling/config/maintenance
-* `ci:` for CI/CD changes
+* `feat:` — user-facing feature (triggers MINOR bump when app code changes)
+* `fix:` — bug fix (triggers PATCH bump when app code changes)
+* `perf:` — performance improvement (triggers PATCH bump when app code changes)
+* `docs:` — documentation only (no version bump)
+* `refactor:` — behavior-preserving code change (no version bump)
+* `test:` — test-only change (no version bump)
+* `chore:` — tooling/config/maintenance (no version bump)
+* `ci:` — CI/CD pipeline change (no version bump)
+
+Breaking changes append `!` or include a `BREAKING CHANGE:` footer:
+
+```text
+feat!: rename expense API response shape
+fix!: remove deprecated category field
+```
 
 ---
 
