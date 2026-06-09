@@ -6,11 +6,22 @@ Claude Code guidance for the gastosai repository. Read `AGENTS.md` first — thi
 
 ## Commands
 
-### Database
+### Database (DB-only — default dev workflow)
 ```bash
-docker compose up -d      # start Postgres 17 on host port 5433
-docker compose down       # stop (data preserved)
-docker compose down -v    # stop + wipe volume
+docker compose up -d         # start Postgres 17 on :5433 (data in named volume)
+docker compose down          # stop (data preserved)
+docker compose down -v       # stop + wipe volume (full DB reset)
+```
+
+### Full stack in Docker
+```bash
+docker compose --profile app up -d        # build + start DB, backend, frontend
+docker compose --profile app up -d --build  # force rebuild images
+docker compose --profile app down         # stop all (data preserved)
+docker compose --profile app down -v      # stop all + wipe DB volume
+
+# Pass a custom backend URL when building (defaults to http://localhost:8080)
+VITE_API_URL=http://api.example.com docker compose --profile app up -d --build
 ```
 
 ### Backend (run from `backend/`)
