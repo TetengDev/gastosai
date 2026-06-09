@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.1] - 2026-06-09
+
+### Fixed
+- Settings page: removed `useEffect` that called `setState` synchronously, resolving the `react-hooks/set-state-in-effect` lint error in CI
+
+### Docs
+- Split `ai/skills` into `shared/` (reusable, project-agnostic) and project-specific files
+- Added `ai/skills/shared/pre-pr-checklist.md` — mandatory lint/build/test gate before every PR
+
+---
+
 ## [0.5.0] - 2026-06-09
 
 ### Added

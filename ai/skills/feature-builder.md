@@ -127,8 +127,12 @@ export default function MyPage() {
 
 ## Checklist before opening a PR
 
+Run the full pre-PR checklist from `ai/skills/shared/pre-pr-checklist.md`. Additionally for this project:
+
 - [ ] New endpoint appears in Swagger: http://localhost:8080/swagger-ui.html
-- [ ] `mvnw.cmd test` passes
-- [ ] Frontend TypeScript compiles (`npm run build` from `frontend/`)
+- [ ] `.\mvnw.cmd test` passes (from `backend/`)
+- [ ] `npm run lint` passes with 0 errors (from `frontend/`)
+- [ ] `npm run build` compiles clean (from `frontend/`)
 - [ ] No `any` types introduced in TypeScript
-- [ ] No entity returned directly from controller
+- [ ] No entity returned directly from a controller
+- [ ] Version bumped in `backend/pom.xml` and `frontend/package.json` if required
