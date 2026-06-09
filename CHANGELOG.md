@@ -11,6 +11,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.1] - 2026-06-09
+
+### Fixed
+- Settings page: removed `useEffect` that called `setState` synchronously, resolving the `react-hooks/set-state-in-effect` lint error in CI
+
+### Docs
+- Split `ai/skills` into `shared/` (reusable, project-agnostic) and project-specific files
+- Added `ai/skills/shared/pre-pr-checklist.md` — mandatory lint/build/test gate before every PR
+
+---
+
+## [0.5.0] - 2026-06-09
+
+### Added
+- User profile with name and optional nickname, configurable from the new Settings page
+- Nickname (when set) is shown in the navbar and used by the chatbot to personalize greetings; falls back to name when unset
+- `GET /user/profile` and `PUT /user/profile` endpoints for fetching and updating profile data
+
+---
+
 ## [0.4.2] - 2026-06-09
 
 ### Fixed
