@@ -88,6 +88,42 @@ Rules:
 
 ---
 
+## Breaking changes workflow
+
+A **breaking change** is any change that modifies a public contract, renames/removes an API endpoint, restructures shared data, alters a database schema, or changes behavior that other code depends on.
+
+### Required workflow
+
+1. **Branch out** — always start a dedicated branch before beginning a breaking change, even if the scope looks small.
+2. **Commit incrementally** — commit each logical sub-step as soon as it works independently. Do not batch unrelated parts into one large commit.
+3. **Verify before proceeding** — after each commit, confirm the affected layer still works (compile, tests, or manual smoke test as appropriate) before moving to the next step.
+4. **Merge only when fully working** — only merge back to `master` after the complete change is confirmed end-to-end. Never merge a half-finished breaking change.
+5. **Announce before starting** — if a change will break the API, DB schema, or shared types, state that clearly before making the first edit.
+
+### What counts as a breaking change
+
+| Area | Examples |
+|---|---|
+| REST API | rename/remove an endpoint, change request/response shape |
+| Database | add NOT NULL column, rename column/table, drop table |
+| Shared types | rename/remove a DTO field, change a type |
+| Auth / security | change token format, modify permission rules |
+| Config / env | rename required env vars, change default behavior |
+
+### Incremental commit cadence example
+
+```text
+feat: add deleteAll endpoint to ExpenseController
+feat: wire deleteAll service method with transaction
+feat: add frontend API helper deleteAllExpenses
+feat: add Delete All button and confirmation modal to Expenses page
+merge: feature/bulk-delete into master
+```
+
+Each commit above can be verified independently before the next step starts.
+
+---
+
 ## During changes
 
 Follow these rules:
