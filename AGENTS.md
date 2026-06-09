@@ -64,11 +64,19 @@ OpenAI API  or  Anthropic Claude API
 
 ---
 
-## Git Workflow
+## Git, Review, and Release Workflow
 
 Before making repository changes, follow:
 
 * `ai/skills/git-best-practices.md`
+
+When reviewing commits, diffs, or pull requests, follow:
+
+* `ai/skills/commit-pr-review.md`
+
+For branch naming, release branches, prereleases, SemVer, tags, and hotfix guidance, follow:
+
+* `ai/skills/git-branching-release-strategy.md`
 
 For AI SQL-related changes, also follow:
 
@@ -89,6 +97,8 @@ For AI SQL-related changes, also follow:
 | Skill | `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
 | Skill | `ai/skills/feature-workflow.md` | Branch → develop → test → merge workflow |
 | Skill | `ai/skills/git-best-practices.md` | Git safety rules for all repository changes |
+| Skill | `ai/skills/commit-pr-review.md` | Commit and PR review checklist |
+| Skill | `ai/skills/git-branching-release-strategy.md` | SemVer, branching, releases, hotfixes, tags |
 | Prompt | `ai/prompts/add-feature.md` | Structured prompt for new features |
 | Prompt | `ai/prompts/review-code.md` | Code review prompt |
 | Prompt | `ai/prompts/debug.md` | Debug investigation prompt |

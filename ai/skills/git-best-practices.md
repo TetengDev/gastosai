@@ -30,25 +30,9 @@ Rules:
 
 ## Branching
 
-**Always branch from `master` before making non-trivial changes.** Never commit features, fixes, refactors, or multi-file changes directly to `master`.
+For non-trivial changes, prefer a dedicated branch.
 
-What counts as trivial (may commit directly to `master`):
-
-* A single-file typo or wording correction
-* A one-line config value fix
-* An urgent one-liner hotfix explicitly approved by the user
-
-Everything else — UI changes, new features, bug fixes that touch logic, documentation overhauls, dependency updates, AI-skill additions — requires a branch.
-
-Branch from master:
-
-```bash
-git checkout master
-git pull
-git checkout -b <prefix>/<short-description>
-```
-
-Branch name prefixes:
+Branch name examples:
 
 ```text
 feature/<short-description>
@@ -70,17 +54,8 @@ test/expense-api-it
 chore/update-dependencies
 ```
 
-Merging back:
-
-```bash
-git checkout master
-git merge --no-ff <branch>   # preserve branch history
-git branch -d <branch>       # safe delete after merge
-```
-
 Rules:
 
-* Do not commit directly to `master` for anything non-trivial — no exceptions without explicit user approval.
 * Do not create, delete, rename, or switch branches if doing so would risk losing uncommitted work.
 * Do not switch branches without checking `git status` first.
 * Do not delete branches unless explicitly instructed.
@@ -97,7 +72,7 @@ A **breaking change** is any change that modifies a public contract, renames/rem
 1. **Branch out** — always start a dedicated branch before beginning a breaking change, even if the scope looks small.
 2. **Commit incrementally** — commit each logical sub-step as soon as it works independently. Do not batch unrelated parts into one large commit.
 3. **Verify before proceeding** — after each commit, confirm the affected layer still works (compile, tests, or manual smoke test as appropriate) before moving to the next step.
-4. **Merge only when fully working** — only merge back to `master` after the complete change is confirmed end-to-end. Never merge a half-finished breaking change.
+4. **Merge only when fully working** — only merge back after the complete change is confirmed end-to-end. Never merge a half-finished breaking change.
 5. **Announce before starting** — if a change will break the API, DB schema, or shared types, state that clearly before making the first edit.
 
 ### What counts as a breaking change
@@ -203,11 +178,6 @@ Common prefixes:
 * `test:` for test-only changes
 * `chore:` for tooling/config/maintenance
 * `ci:` for CI/CD changes
-
-Rules:
-
-* Do not add `Co-Authored-By`, `AI-generated`, or any AI attribution lines to commit messages.
-* Keep messages concise — one line is enough for most commits.
 
 ---
 
