@@ -169,32 +169,74 @@ If neither answer applies, the change is not rollback-safe — reconsider the ap
 
 ---
 
-## 8. Smoke test
+## 8. Mandatory execution testing — no exceptions
 
-For UI or API changes, verify the golden path in the running app before pushing:
+**Every change must be actually run before a PR is opened.** Passing type-checks, a green test suite, or a clean lint run is not sufficient on its own — the code must execute in the affected context at runtime.
+
+Minimum coverage required: **≥ 90% of touched paths must be exercised at runtime** before the PR is opened.
+
+### What "executed" means by change type
+
+| Change type | Minimum execution required |
+|---|---|
+| Backend API change | Start the backend, call the affected endpoint (curl or Swagger), confirm response shape and status code |
+| Frontend UI change | Start the full stack, open the browser, click through the affected flow and at least one edge case |
+| Script change (`.ps1`, `.sh`) | **Run the script.** Every new code path added must be triggered at least once. Observe actual output, not just exit code. |
+| Docker / compose change | `docker compose up` (and `--profile app` if app profile was changed), verify containers reach healthy state |
+| Bootstrap / seed data change | Start the app with a clean DB, confirm the seeded data is correct |
+| Config / env var change | Restart the app with the new config, confirm the value is actually picked up |
+
+### Scripts and tooling — zero tolerance for untested code paths
+
+Scripts are infrastructure — a broken script can block the whole team from starting or stopping the app. Every new function or branch added to a script **must** be invoked and produce the expected output before the PR is opened. Reviewing the code is not enough.
+
+Checklist for script changes:
+- [ ] Every new function was called and produced the expected output
+- [ ] Every new mode/flag/option was triggered at least once
+- [ ] Output messages match the expected text (spot-check key `[OK]`/`[XX]` lines)
+- [ ] No non-ASCII characters in PowerShell scripts — use `--` not `—`, use `->` not `→`
+
+### Smoke test for UI/API changes
 
 1. Start the full stack on the default ports.
-2. Exercise the affected feature end-to-end.
-3. Check one or two edge cases (empty state, error state, validation).
+2. Exercise the affected feature end-to-end (golden path).
+3. Check at least one edge case (empty state, error state, or validation error).
 4. Confirm no obvious regressions in adjacent features.
+
+---
+
+## 9. Encoding and portability (scripts)
+
+PowerShell 5.1 (Windows) reads scripts as Windows-1252 by default unless a UTF-8 BOM is present. Non-ASCII characters inside string literals cause silent mis-parsing.
+
+**Rule:** Never use non-ASCII characters inside PowerShell string literals or variable values. Comments are safe. When in doubt, run:
+
+```powershell
+Select-String -Path your-script.ps1 -Pattern "[^\x00-\x7F]" | Select-Object LineNumber, Line
+```
+
+Any match outside a comment line is a blocker.
 
 ---
 
 ## Checklist summary
 
 ```
-[ ] npm run lint       — 0 errors
-[ ] npm run build      — clean compile
-[ ] Backend tests      — all green
+[ ] npm run lint         — 0 errors
+[ ] npm run build        — clean compile
+[ ] Backend tests        — all green
 [ ] No secrets staged
-[ ] Version bumped     (if required)
-[ ] CHANGELOG updated  (if version bumped)
+[ ] Version bumped       (if required)
+[ ] CHANGELOG updated    (if version bumped)
 [ ] On a feature branch, not main/master
+[ ] EXECUTED at runtime  — every touched code path run; ≥90% coverage
+[ ] Scripts tested       — every new function/mode invoked, output verified
+[ ] No non-ASCII in PS1 string literals
 [ ] Infrastructure migration note in PR body (if compose/Dockerfile/ports changed)
-[ ] All references updated  (if infrastructure changed)
-[ ] CI unaffected      (if infrastructure changed)
-[ ] DB migrations are reversible (if schema changed)
-[ ] API changes are additive or versioned (if contract changed)
+[ ] All references updated   (if infrastructure changed)
+[ ] CI unaffected            (if infrastructure changed)
+[ ] DB migrations reversible (if schema changed)
+[ ] API changes additive or versioned (if contract changed)
 [ ] Rollback plan identified
 [ ] Smoke tested on default ports
 ```
