@@ -64,6 +64,18 @@ OpenAI API  or  Anthropic Claude API
 
 ---
 
+## Git Workflow
+
+Before making repository changes, follow:
+
+* `ai/skills/git-best-practices.md`
+
+For AI SQL-related changes, also follow:
+
+* `ai/skills/ai-sql-safety.md`
+
+---
+
 ## Agent skills and resources
 
 | Type | Path | Purpose |
@@ -76,6 +88,7 @@ OpenAI API  or  Anthropic Claude API
 | Skill | `ai/skills/java-spring-standards.md` | Java 25 + Spring Boot 4 conventions |
 | Skill | `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
 | Skill | `ai/skills/feature-workflow.md` | Branch → develop → test → merge workflow |
+| Skill | `ai/skills/git-best-practices.md` | Git safety rules for all repository changes |
 | Prompt | `ai/prompts/add-feature.md` | Structured prompt for new features |
 | Prompt | `ai/prompts/review-code.md` | Code review prompt |
 | Prompt | `ai/prompts/debug.md` | Debug investigation prompt |
