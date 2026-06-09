@@ -44,6 +44,38 @@ Before issuing any command, determine the OS and shell:
 
 ---
 
+---
+
+## Port management
+
+Before starting any server, verify the required port is free. If it is already in use, confirm it is a stale instance of the same app and reset — do not silently fall back to a different port.
+
+### Check and kill (Windows / PowerShell)
+
+```powershell
+# Check who owns a port
+$owningPid = (Get-NetTCPConnection -LocalPort <PORT> -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1).OwningProcess
+if ($owningPid) {
+    Get-Process -Id $owningPid -ErrorAction SilentlyContinue   # inspect before killing
+    Stop-Process -Id $owningPid -Force
+}
+```
+
+### Check and kill (Unix / Bash)
+
+```bash
+lsof -ti:<PORT> | xargs kill -9 2>/dev/null || true
+```
+
+### Rules
+
+- Always use the project's **default ports** — do not accept a fallback port silently.
+- Before killing a process, confirm it is a stale instance of the expected app (check the process name).
+- After killing, wait briefly (~2 s) for the OS to release the socket before restarting.
+- If the port is held by an unrelated process, stop and tell the user rather than killing it blindly.
+
+---
+
 ## Rule
 
 Always match the tool and path style to the detected OS. If uncertain, check the session header — do not guess and silently fail.
