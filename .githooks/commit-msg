@@ -1,0 +1,55 @@
+#!/bin/sh
+# Enforces a version bump in backend/pom.xml and frontend/package.json
+# for any commit that triggers a SemVer change.
+#
+# Triggers: feat, fix, perf, feat!, fix! (conventional commit prefixes)
+# Also triggers on any commit containing "BREAKING CHANGE:" in the body.
+
+msg=$(cat "$1")
+
+needs_bump=0
+
+# Check conventional commit type in subject line
+if echo "$msg" | grep -qE "^(feat|fix|perf)(\([^)]+\))?!?:"; then
+  needs_bump=1
+fi
+
+# Check for BREAKING CHANGE footer/body
+if echo "$msg" | grep -qE "^BREAKING CHANGE:"; then
+  needs_bump=1
+fi
+
+if [ "$needs_bump" -eq 0 ]; then
+  exit 0
+fi
+
+# Determine bump type for the hint message
+bump_hint="PATCH"
+if echo "$msg" | grep -qE "^(feat)(\([^)]+\))?:"; then
+  bump_hint="MINOR (e.g. 0.2.0 → 0.3.0)"
+fi
+if echo "$msg" | grep -qE "^(feat|fix|perf)(\([^)]+\))?!:|^BREAKING CHANGE:"; then
+  bump_hint="MAJOR if >= 1.0.0, or MINOR if pre-1.0 (e.g. 0.2.0 → 0.3.0)"
+fi
+
+staged=$(git diff --cached --name-only)
+
+pom_changed=0
+pkg_changed=0
+
+echo "$staged" | grep -q "backend/pom.xml"      && pom_changed=1
+echo "$staged" | grep -q "frontend/package.json" && pkg_changed=1
+
+if [ "$pom_changed" -eq 0 ] || [ "$pkg_changed" -eq 0 ]; then
+  echo ""
+  echo "SemVer enforcement: this commit type requires a version bump."
+  echo "  Bump type : $bump_hint"
+  echo "  Missing   :"
+  [ "$pom_changed" -eq 0 ] && echo "    - backend/pom.xml  (update <version>)"
+  [ "$pkg_changed" -eq 0 ] && echo "    - frontend/package.json  (update \"version\")"
+  echo ""
+  echo "Both files must be bumped together and to the same version."
+  echo "Use --no-verify only if you are intentionally deferring the release."
+  echo ""
+  exit 1
+fi

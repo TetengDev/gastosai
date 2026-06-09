@@ -92,6 +92,38 @@ See `ai/skills/project-context.md` for the full domain model and data flow.
 
 ---
 
+## Semantic versioning — required
+
+Both `backend/pom.xml` and `frontend/package.json` must be bumped together to the same version whenever a commit warrants it. A `commit-msg` hook enforces this automatically (see setup below).
+
+Version bump rules:
+
+| Commit type | Bump |
+|---|---|
+| `fix:`, `perf:` | PATCH — e.g. `0.3.0 → 0.3.1` |
+| `feat:` | MINOR — e.g. `0.3.0 → 0.4.0` |
+| `feat!:` / `fix!:` / `BREAKING CHANGE:` footer | MINOR while pre-1.0, MAJOR once at `1.0.0+` |
+| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | No bump required |
+
+After bumping, tag the commit:
+
+```bash
+git tag -a v0.4.0 -m "Release v0.4.0"
+git push origin v0.4.0
+```
+
+### One-time hook setup
+
+Run once per clone to activate the `commit-msg` hook:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook blocks commits of type `feat`, `fix`, or `perf` when either version file is missing from the staged changes. Use `--no-verify` only to defer a release intentionally (e.g. stacked commits where only the final one bumps).
+
+---
+
 ## What to check before committing
 
 1. Working on a feature branch — never commit non-trivial changes directly to `master`
@@ -100,6 +132,7 @@ See `ai/skills/project-context.md` for the full domain model and data flow.
 4. No secrets in staged files (`.env`, API keys)
 5. Commits are atomic and scoped to one concern per commit
 6. No `Co-Authored-By` or AI attribution lines in commit messages
+7. Version bumped in `backend/pom.xml` and `frontend/package.json` if commit type requires it (see above)
 
 ---
 
