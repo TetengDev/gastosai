@@ -21,6 +21,8 @@ npm run build
 
 All three must be green. Do not open a PR with lint errors, build failures, or test failures.
 
+**Also run the changed code.** A PR that was never executed at runtime is not ready. See `shared/pre-pr-checklist.md` Section 8 for the full execution-testing requirement.
+
 ---
 
 ## AI SQL changes — extra rule
