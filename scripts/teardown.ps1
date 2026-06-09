@@ -117,10 +117,12 @@ function Invoke-StopFrontend {
 }
 
 function Invoke-StopDb {
-    Write-Section "Stopping database"
+    Write-Section "Stopping Docker services"
+    # docker compose down stops ALL running containers from this compose file,
+    # including backend and frontend if they were started with --profile app.
     & docker compose -f $COMPOSE_FILE down 2>&1 | Out-Null
     if ($LASTEXITCODE -eq 0) {
-        Write-Ok "Database container stopped (data preserved)"
+        Write-Ok "Docker services stopped (DB data preserved in named volume)"
     } else {
         Write-Warn "docker compose down returned a non-zero exit code"
     }
@@ -160,9 +162,9 @@ function Show-TeardownMenu {
     Write-Host "  ------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [1]  Stop backend          (kill port 8080 + java)" -ForegroundColor White
     Write-Host "  [2]  Stop frontend         (kill port 5173)" -ForegroundColor White
-    Write-Host "  [3]  Stop database         (docker compose down -- data kept)" -ForegroundColor White
+    Write-Host "  [3]  Stop Docker services   (docker compose down -- stops DB + any Docker backend/frontend; data kept)" -ForegroundColor White
     Write-Host "  [4]  Wipe database volume  " -NoNewline -ForegroundColor White
-    Write-Host "(docker compose down -v -- ALL data deleted)" -ForegroundColor Yellow
+    Write-Host "(docker compose down -v -- stops all + deletes DB data)" -ForegroundColor Yellow
     Write-Host "  [5]  Delete log files      (backend\logs\ + frontend\logs\)" -ForegroundColor White
     Write-Host "  [6]  Full teardown         (1 + 2 + 4 + 5)" -ForegroundColor White
     Write-Host "  [0]  Cancel" -ForegroundColor DarkGray
