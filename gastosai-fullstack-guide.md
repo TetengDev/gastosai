@@ -210,7 +210,7 @@ feature backed by a pluggable LLM provider. React + TypeScript frontend.
 - Build (Windows):   mvnw.cmd clean install
 - Run (needs .env):  mvnw.cmd spring-boot:run
 - All tests:         mvnw.cmd test
-- Single test class: mvnw.cmd test -Dtest=ExpenseApiIT
+- Single test class: mvnw.cmd test -Dtest=ExpenseApiIntegrationTest
 - Frontend dev:      cd frontend && npm run dev
 - Local DB:          docker compose up -d
 
@@ -481,7 +481,7 @@ docker compose down
 mvnw.cmd clean install
 mvnw.cmd spring-boot:run
 mvnw.cmd test
-mvnw.cmd test -Dtest=ExpenseApiIT
+mvnw.cmd test -Dtest=ExpenseApiIntegrationTest
 mvnw.cmd clean install -DskipTests
 
 # Frontend (from frontend/)
