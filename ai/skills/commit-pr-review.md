@@ -223,6 +223,23 @@ If tests are missing, list exactly which test cases should be added and mark the
 
 ---
 
+## Dependency review checklist
+
+If the change adds, removes, or upgrades a dependency:
+
+* New dependency has a clear justification (not replaceable by existing code or stdlib)
+* License is compatible with the project
+* Package is actively maintained and not abandoned
+* No known high/critical CVEs (`npm audit` or Maven vulnerability check)
+* Version is pinned or bounded appropriately
+* Frontend: `npm audit --audit-level=high` passes after the change
+* Backend: no direct override of BOM-managed versions unless explicitly justified
+
+Flag as **Blocker** if a dependency introduces a known high/critical vulnerability.
+Flag as **Major** if a dependency is abandoned, unlicensed, or has an unclear security posture.
+
+---
+
 ## PR size and focus
 
 Flag the change if it mixes unrelated work, such as:
