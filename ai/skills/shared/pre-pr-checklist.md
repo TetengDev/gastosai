@@ -114,7 +114,32 @@ git log main..HEAD --oneline       # review commit history
 
 ---
 
-## 7. Production-readiness and rollback safety
+## 7. Infrastructure and breaking changes
+
+Infrastructure changes look harmless but can silently break teammates' local setups or CI. Before opening a PR that touches `docker-compose.yaml`, `Dockerfile`, port bindings, or CI/CD config:
+
+### Is this a breaking change?
+
+A change is **breaking for existing local environments** if it:
+- Adds, renames, or removes a **named volume** — existing data in the old volume is not automatically migrated
+- Changes a **container or service name** — scripts and `docker exec` commands using the old name will fail
+- Adds or removes **compose profiles** — commands without the profile flag won't start new services
+- Changes a **default port** — all references in `.env.example`, skills, scripts, and docs must be updated together
+- Changes the **CI workflow** in a way that affects test isolation or secret availability
+
+### Required for any infrastructure PR
+
+1. **Migration note in the PR body** — what does an existing developer need to do after pulling?
+   - *Example:* "Run `docker compose down -v && docker compose up -d` — the named volume replaces the old anonymous volume; schema re-creates automatically via `create-drop`."
+2. **Update all references** — CLAUDE.md, skills, scripts, `.env.example`, README if applicable.
+3. **Verify CI is not affected** — check `.github/workflows/` to confirm CI does not rely on anything you changed.
+4. **Smoke test the migration path** — pull on a clean checkout and run the documented migration steps.
+
+**Blocker:** Any infrastructure change with no migration note and no reference audit.
+
+---
+
+## 8. Production-readiness and rollback safety
 
 Before opening a PR for any change that touches data, APIs, or deployment config:
 
@@ -165,6 +190,9 @@ For UI or API changes, verify the golden path in the running app before pushing:
 [ ] Version bumped     (if required)
 [ ] CHANGELOG updated  (if version bumped)
 [ ] On a feature branch, not main/master
+[ ] Infrastructure migration note in PR body (if compose/Dockerfile/ports changed)
+[ ] All references updated  (if infrastructure changed)
+[ ] CI unaffected      (if infrastructure changed)
 [ ] DB migrations are reversible (if schema changed)
 [ ] API changes are additive or versioned (if contract changed)
 [ ] Rollback plan identified
