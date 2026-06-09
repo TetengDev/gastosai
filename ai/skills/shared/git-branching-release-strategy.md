@@ -51,12 +51,14 @@ For pre-1.0 projects (`0.x.y`), use MINOR for features and PATCH for fixes.
 
 ## Conventional commits → version bump
 
-| Prefix | Bump |
+See `shared/git-best-practices.md` for the full commit type list. Bump mapping:
+
+| Commit type | Bump |
 |---|---|
 | `fix:`, `perf:` | PATCH |
 | `feat:` | MINOR |
 | `feat!:`, `fix!:`, `BREAKING CHANGE:` | MAJOR (MINOR if pre-1.0) |
-| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | No bump |
+| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | None |
 
 ---
 

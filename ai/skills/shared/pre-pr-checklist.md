@@ -1,6 +1,6 @@
 # Skill: Pre-PR Quality Checklist (Shared)
 
-Run this checklist **before** pushing a branch or creating a pull request. A PR that fails any blocker item must not be opened until the item is resolved.
+Run this checklist **before** pushing a branch or creating a pull request. Every item marked **Blocker** must pass before the PR is opened.
 
 ---
 
@@ -17,18 +17,17 @@ npm run build       # tsc + bundler — must compile clean
 Common lint rules to watch for:
 - `react-hooks/rules-of-hooks` — hooks called conditionally or outside components
 - `react-hooks/exhaustive-deps` — missing effect dependencies
-- `react-hooks/set-state-in-effect` — calling `setState` synchronously inside `useEffect` body; prefer deriving initial state from props/context in `useState`, not syncing via an effect
-- `@typescript-eslint/no-explicit-any` — `any` types; use `unknown` for caught errors
-- `@typescript-eslint/no-unused-vars` — dead variables
-- Import errors — missing or circular imports
+- `react-hooks/set-state-in-effect` — calling `setState` synchronously in a `useEffect` body; derive initial state in `useState` instead
+- `@typescript-eslint/no-explicit-any` — use `unknown` for caught errors
+- `@typescript-eslint/no-unused-vars` — remove dead variables
 
-**Blocker:** Any ESLint error. Warnings are acceptable but should be reviewed.
+**Blocker:** Any ESLint error.
 
 ### Backend (Java / Spring Boot)
 
 ```bash
-# From backend/ (Windows)
-.\mvnw.cmd compile    # zero errors required
+# From backend/ — Windows
+.\mvnw.cmd compile
 
 # Unix
 ./mvnw compile
@@ -40,18 +39,6 @@ Common lint rules to watch for:
 
 ## 2. Tests
 
-### Frontend
-
-```bash
-npm run build   # TypeScript type errors surface here too
-```
-
-If the project has a test runner (Jest, Vitest):
-
-```bash
-npm test -- --run    # run once, no watch mode
-```
-
 ### Backend
 
 ```bash
@@ -62,30 +49,39 @@ npm test -- --run    # run once, no watch mode
 ./mvnw test
 ```
 
+### Frontend (if test runner is configured)
+
+```bash
+npm test -- --run
+```
+
 **Blocker:** Any failing test. All tests must be green before opening a PR.
+
+New features require:
+- Unit test for service/business logic
+- Integration test for the HTTP happy path
+
+Bug fixes require:
+- A regression test that fails before the fix and passes after
 
 ---
 
-## 3. No secrets check
+## 3. No secrets
 
-Before staging files, verify nothing sensitive is included:
+Before staging, verify nothing sensitive is included:
 
 ```bash
 git diff --staged
 git status
 ```
 
-Never commit:
-- `.env` files or any file containing real credentials
-- API keys, tokens, passwords
-- Local machine paths or personal config
-- IDE project files (`.idea/`, `.vscode/` unless intentionally shared)
+Never commit: `.env` files, API keys, tokens, passwords, local machine paths, IDE project files.
 
-**Blocker:** Any secret, credential, or token in staged files.
+**Blocker:** Any secret or credential in staged files.
 
 ---
 
-## 4. Version bump (if applicable)
+## 4. Version bump
 
 Check whether the commit type and changed files require a version bump:
 
@@ -96,54 +92,81 @@ Check whether the commit type and changed files require a version bump:
 | `feat!:` / `BREAKING CHANGE:` | MAJOR (MINOR if pre-1.0) |
 | `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | None |
 
-"App code changed" means source files or package manifests (`pom.xml`, `package.json`) were touched — not docs, CI config, or git hooks.
+"App code" = source files or package manifests. Docs, CI config, and tooling changes do not require a bump.
 
-When a bump is required, update **all version files together** (e.g. both `pom.xml` and `package.json` in a full-stack project) to the same version.
+When a bump is required, update **all version files together** to the same version before committing.
 
 ---
 
 ## 5. CHANGELOG
 
-When a version bump is made, move the relevant `[Unreleased]` notes into the new version section in `CHANGELOG.md` with today's date.
+When a version bump is made, move the relevant `[Unreleased]` notes into a new versioned section in `CHANGELOG.md` with today's date.
 
 ---
 
 ## 6. Branch and diff sanity
 
 ```bash
-git branch --show-current          # confirm you are on a feature branch, not main
-git diff main...HEAD --stat        # review scope of what will be in the PR
+git branch --show-current          # must be a feature branch, not main/master
+git diff main...HEAD --stat        # confirm scope matches the task
 git log main..HEAD --oneline       # review commit history
 ```
 
-Rules:
-- Must be on a feature branch (not `main`/`master`).
-- Diff should only contain changes related to the current task.
-- No unrelated files mixed in.
+---
+
+## 7. Production-readiness and rollback safety
+
+Before opening a PR for any change that touches data, APIs, or deployment config:
+
+### Database changes
+- Every schema change must be **reversible**. If using Flyway, provide a `V<n>__description.sql` migration and ensure a rollback path exists.
+- Never add a `NOT NULL` column without a default or a two-step migration (add nullable → backfill → add constraint).
+- Test the migration against the current schema before opening the PR.
+
+### API contract changes
+- Prefer **additive changes** (new fields, new endpoints) over breaking ones.
+- If a breaking change is unavoidable, version the endpoint (`/v2/...`) or provide a deprecation window.
+- Confirm existing clients (frontend, tests) are updated before merging.
+
+### Risky or large changes
+- Break large changes into a sequence of small, independently-releasable commits. Each commit should leave the app in a working state.
+- If a change is too risky to ship immediately, wrap it in a feature flag rather than merging broken code.
+- The smaller the diff, the easier the rollback. Prefer multiple focused PRs over one large one.
+
+### Rollback plan
+Before merging, be able to answer: *"If this goes wrong in production, how do I revert it in under 5 minutes?"*
+
+Acceptable answers:
+- `git revert <merge-sha>` produces a clean revert → re-deploy.
+- Previous version tag (`v0.5.0`) is deployable → roll back to it.
+
+If neither answer applies, the change is not rollback-safe — reconsider the approach.
 
 ---
 
-## 7. Manual smoke test
+## 8. Smoke test
 
-For UI or API changes, verify the golden path in the running app:
+For UI or API changes, verify the golden path in the running app before pushing:
 
-- Start the full stack locally.
-- Navigate to the affected feature.
-- Confirm the happy path works.
-- Check one or two edge cases (empty state, error state).
-- Confirm no obvious regressions in adjacent features.
+1. Start the full stack on the default ports.
+2. Exercise the affected feature end-to-end.
+3. Check one or two edge cases (empty state, error state, validation).
+4. Confirm no obvious regressions in adjacent features.
 
 ---
 
 ## Checklist summary
 
 ```
-[ ] npm run lint   — 0 errors
-[ ] npm run build  — clean compile
-[ ] Backend tests  — all green
-[ ] No secrets in staged files
-[ ] Version bumped (if required by commit type + app code)
-[ ] CHANGELOG updated (if version bumped)
-[ ] On a feature branch, not main
-[ ] Smoke tested the affected feature
+[ ] npm run lint       — 0 errors
+[ ] npm run build      — clean compile
+[ ] Backend tests      — all green
+[ ] No secrets staged
+[ ] Version bumped     (if required)
+[ ] CHANGELOG updated  (if version bumped)
+[ ] On a feature branch, not main/master
+[ ] DB migrations are reversible (if schema changed)
+[ ] API changes are additive or versioned (if contract changed)
+[ ] Rollback plan identified
+[ ] Smoke tested on default ports
 ```
