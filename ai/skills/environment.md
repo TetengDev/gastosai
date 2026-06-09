@@ -1,19 +1,6 @@
 # Skill: Environment & Shell Awareness
 
-Use this skill before running any shell command, script, or file-path operation.
-
-Choosing the wrong shell or path format causes silent failures and wastes time. Always match the tool to the OS.
-
----
-
-## Detecting the environment
-
-Before issuing any command, check the platform context:
-
-- **Claude Code session info** — the session header states `Platform: win32 / darwin / linux` and the active shell.
-- **`CLAUDE.md` or project notes** — may declare the OS explicitly.
-- **Path separators in user messages** — `D:\Lester\...` → Windows; `/home/user/...` → Unix.
-- **Shell clues in error output** — `/mnt/d/...` paths mean WSL; `C:\...` paths mean native Windows.
+> General OS/shell detection rules live in `ai/skills/shared/environment.md`. This file adds gastosai-specific detail.
 
 ---
 
@@ -26,48 +13,33 @@ Before issuing any command, check the platform context:
 | Path format | `D:\Lester\Practical\PersonalProjects\Others\gastosai` |
 | Avoid | Bash tool — uses WSL-style `/mnt/d/...` paths that fail on this machine |
 
-**Always use the PowerShell tool** for all commands in this project: git, Maven (`mvnw.cmd`), npm, Docker, file checks.
-
-Only use the Bash tool if the user explicitly requests a POSIX/WSL command.
+**Always use the PowerShell tool** for all commands in this project.
 
 ---
 
-## General rules (any project)
+## GitHub CLI
 
-### Windows (win32)
+- Installed at: `C:\Program Files\GitHub CLI\gh.exe`
+- May not be on `$env:PATH` in older sessions — invoke by full path or refresh PATH first.
+- Authentication token is stored in the repo root `.env` file as `GITHUB_TOKEN`.
+- Load it for `gh` with:
 
-- Use the **PowerShell tool**.
-- Paths use backslashes: `D:\path\to\project`.
-- Maven wrapper: `mvnw.cmd` (not `./mvnw`).
-- Environment variables: `$env:VAR_NAME`.
-- No `&&` pipeline chaining — use `;` or `if ($?) { ... }` instead.
-- No `2>&1` on native executables (wraps stderr as ErrorRecord in PS 5.1).
-
-### macOS / Linux (darwin / linux)
-
-- Use the **Bash tool**.
-- Paths use forward slashes: `/home/user/project`.
-- Maven wrapper: `./mvnw`.
-- Environment variables: `$VAR_NAME`.
-- Standard POSIX chaining (`&&`, `||`, `2>&1`) works normally.
+```powershell
+$env:GH_TOKEN = (Get-Content "D:\Lester\Practical\PersonalProjects\Others\gastosai\.env" |
+    Select-String "GITHUB_TOKEN=(.+)" |
+    ForEach-Object { $_.Matches[0].Groups[1].Value })
+```
 
 ---
 
-## Path format quick reference
+## Project commands quick reference
 
-| Context | Windows | Unix |
-|---|---|---|
-| Project root | `D:\Lester\...\gastosai` | `/home/user/.../gastosai` |
-| Backend | `backend\src\main\java\...` | `backend/src/main/java/...` |
-| Frontend | `frontend\src\...` | `frontend/src/...` |
-| Maven | `.\mvnw.cmd compile` | `./mvnw compile` |
-| npm | `npm run dev` | `npm run dev` |
-
----
-
-## Before running any command
-
-1. Confirm the OS (session header, path style, or prior errors).
-2. Select the correct tool (PowerShell vs Bash).
-3. Use the correct path separator and executable names for that OS.
-4. If uncertain, ask — do not guess and silently fail.
+| Task | Windows command (run from indicated dir) |
+|---|---|
+| Start DB | `docker compose up -d` (repo root) |
+| Start backend | `.\mvnw.cmd spring-boot:run` (backend/) |
+| Run backend tests | `.\mvnw.cmd test` (backend/) |
+| Start frontend | `npm run dev` (frontend/) |
+| Lint frontend | `npm run lint` (frontend/) |
+| Build frontend | `npm run build` (frontend/) |
+| Full stack | `.\scripts\start.ps1 -Mode all` (repo root) |
