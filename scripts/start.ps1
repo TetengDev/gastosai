@@ -224,7 +224,7 @@ function Start-FullDockerStack {
     Write-Step "Building and starting all services via docker compose --profile app (first build may take a few minutes)..."
     $composeOut = & docker compose -f $COMPOSE_FILE --profile app up -d --build 2>&1
     if ($LASTEXITCODE -ne 0) {
-        Write-Fail "docker compose failed — check Docker Desktop"
+        Write-Fail "docker compose failed -- check Docker Desktop"
         $composeOut | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
         exit 1
     }
