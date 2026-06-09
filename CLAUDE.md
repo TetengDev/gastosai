@@ -94,18 +94,18 @@ See `ai/skills/project-context.md` for the full domain model and data flow.
 
 ## Semantic versioning — required
 
-Both `backend/pom.xml` and `frontend/package.json` must be bumped together to the same version whenever a commit warrants it. A `commit-msg` hook enforces this automatically (see setup below).
+Both `backend/pom.xml` and `frontend/package.json` must be bumped together to the same version. A `commit-msg` hook enforces this automatically (see setup below).
 
-Version bump rules:
+**The bump is only required when app code changes** (`backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`). Commits that only touch docs, skills, CI config, or git hooks do not need a bump even if they use `feat:` or `fix:`.
 
-| Commit type | Bump |
+| Commit type + app code changed | Bump |
 |---|---|
-| `fix:`, `perf:` | PATCH — e.g. `0.3.0 → 0.3.1` |
-| `feat:` | MINOR — e.g. `0.3.0 → 0.4.0` |
-| `feat!:` / `fix!:` / `BREAKING CHANGE:` footer | MINOR while pre-1.0, MAJOR once at `1.0.0+` |
+| `fix:`, `perf:` | PATCH — e.g. `0.3.1 → 0.3.2` |
+| `feat:` | MINOR — e.g. `0.3.1 → 0.4.0` |
+| `feat!:` / `fix!:` / `BREAKING CHANGE:` | MINOR while pre-1.0, MAJOR at `1.0.0+` |
 | `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | No bump required |
 
-After bumping, tag the commit:
+When bumping, also update `CHANGELOG.md` — move relevant notes from `[Unreleased]` into the new version section. Then tag:
 
 ```bash
 git tag -a v0.4.0 -m "Release v0.4.0"
@@ -120,8 +120,6 @@ Run once per clone to activate the `commit-msg` hook:
 git config core.hooksPath .githooks
 ```
 
-The hook blocks commits of type `feat`, `fix`, or `perf` when either version file is missing from the staged changes. Use `--no-verify` only to defer a release intentionally (e.g. stacked commits where only the final one bumps).
-
 ---
 
 ## What to check before committing
@@ -135,6 +133,7 @@ The hook blocks commits of type `feat`, `fix`, or `perf` when either version fil
 7. Commits are atomic and scoped to one concern per commit
 8. No `Co-Authored-By` or AI attribution lines in commit messages
 9. Version bumped in `backend/pom.xml` and `frontend/package.json` if commit type requires it (see above)
+10. `CHANGELOG.md` updated — move `[Unreleased]` notes into the new version section when releasing
 
 ---
 
