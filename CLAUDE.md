@@ -1,84 +1,112 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Claude Code guidance for the gastosai repository. Read `AGENTS.md` first — this file adds Claude-specific detail on top of it.
 
-## What This Is
-
-GastosAI is an AI-powered expense tracker with natural-language query support. Backend is a Spring Boot REST API; frontend is a React + TypeScript SPA (currently scaffolded, not yet implemented). The AI layer generates PostgreSQL SELECT statements from user questions via OpenAI or Claude, then executes them after safety validation.
+---
 
 ## Commands
 
-### Local database (required before running backend)
+### Database
 ```bash
-docker compose up -d      # start Postgres 17 on :5432
-docker compose down       # stop
+docker compose up -d      # start Postgres 17 on host port 5433
+docker compose down       # stop (data preserved)
+docker compose down -v    # stop + wipe volume
 ```
 
 ### Backend (run from `backend/`)
 ```bash
-./mvnw spring-boot:run          # start API on :8080
-./mvnw test                     # all tests (H2 in-memory)
-./mvnw test -Dtest=ExpenseApiIT # single test class
-./mvnw clean install -DskipTests
+mvnw.cmd spring-boot:run              # Windows
+./mvnw spring-boot:run                # Unix
+mvnw.cmd test                         # all tests (H2 in-memory)
+mvnw.cmd test -Dtest=ExpenseApiIT     # single class
+mvnw.cmd clean install -DskipTests
 ```
-On Windows use `mvnw.cmd` instead of `./mvnw`.
 
 ### Frontend (run from `frontend/`)
 ```bash
-npm run dev      # dev server on :5173
+npm run dev      # Vite dev server on :5173
 npm run build
 npm run lint
 ```
 
-## Environment Setup
-
-Copy `backend/.env.example` to `backend/.env` and fill in values. The app auto-loads `.env` from the working directory or a `gastosai/` subdirectory at startup.
-
-Required: `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, and either `OPENAI_API_KEY` or `CLAUDE_API_KEY`.
-
-`GASTOS_AI_PROVIDER=openai|claude` selects the LLM backend (default: `openai`).  
-`GASTOS_SEED_SAMPLE_DATA=true` seeds 15 sample expenses on first startup.
-
-Frontend needs `VITE_API_URL=http://localhost:8080` in `frontend/.env.local`.
-
-Swagger UI: `http://localhost:8080/swagger-ui.html`
-
-## Architecture
-
-```
-frontend/ (React 19 + Vite + TypeScript + Tailwind + Recharts)
-    ↓ HTTP (Axios)
-backend/ (Spring Boot 4.0.5 / Java 25)
-    ├── Controller → Service → Repository  (CRUD + reporting)
-    └── AiController → AiQueryService → SqlGenerator
-                         → SqlGuard (validation)
-                         → JdbcTemplate (raw execution)
-    ↓
-PostgreSQL 17 (local via Docker; Supabase in prod)
-    ↓ (for NL queries only)
-OpenAI API or Anthropic API
+### Dev launcher (from repo root)
+```powershell
+.\scripts\start.ps1              # interactive menu
+.\scripts\start.ps1 -Mode all   # start DB + backend + frontend
+.\scripts\teardown.ps1           # interactive teardown
+.\scripts\teardown.ps1 -All -Force
 ```
 
-**Backend packages** (`com.teng.app.gastosai`):
-- `entity/` — `Expense` (amount `BigDecimal(19,4)`, date, note, FK to Category), `Category` (unique name)
-- `repository/` — JPA repos with JPQL aggregation queries for monthly/category reports
-- `service/` — business logic; `CategoryService` auto-creates categories on expense creation and blocks deletion if expenses remain
-- `controller/` — `ExpenseController` (CRUD + `/report/monthly`, `/report/category`), `CategoryController`, `AiController` (`POST /ai/query`)
-- `ai/` — `SqlGenerator` interface + `OpenAiSqlGenerator` / `ClaudeSqlGenerator` implementations using Spring `RestClient`; `SqlGuard` validates AI SQL before execution
-- `config/` — `AIClientConfig` wires the correct `SqlGenerator` bean; `WebConfig` sets CORS (currently `*`, restrict to Vercel domain for prod)
-- `bootstrap/` — seeds sample data on startup when enabled
-- `exception/` — `GlobalExceptionHandler` maps domain exceptions to structured JSON error responses
+---
 
-**SqlGuard** is the AI safety boundary: blocks all mutating and DDL statements, requires `SELECT … FROM expenses`, rejects multi-statement input, and blocks system catalog access. Never relax these rules.
+## Environment
 
-**Database DDL**: `hibernate.ddl-auto=create-drop` in dev (schema recreated on every start). Tests use H2 in-memory. Flyway is on the classpath but has no migrations yet.
+`backend/.env` (copy from `backend/.env.example`):
 
-**Currency**: Philippine peso (₱). All monetary values are `BigDecimal`.
+| Variable | Description |
+|---|---|
+| `DB_URL` | `jdbc:postgresql://localhost:5433/gastos` |
+| `DB_USERNAME` | `postgres` |
+| `DB_PASSWORD` | `dev` |
+| `OPENAI_API_KEY` | Required if using OpenAI provider |
+| `OPENAI_MODEL` | e.g. `gpt-4o-mini` |
+| `CLAUDE_API_KEY` | Required if using Claude provider |
+| `CLAUDE_MODEL` | e.g. `claude-3-5-sonnet-20241022` |
+| `GASTOS_AI_PROVIDER` | `openai` (default) or `claude` |
+| `GASTOS_SEED_SAMPLE_DATA` | `true` seeds 15 sample expenses on empty DB |
 
-## Deployment (production targets)
+`frontend/.env.local`:
+```
+VITE_API_URL=http://localhost:8080
+```
 
-- Backend → Koyeb (512 MB free tier); tune JVM: `-Xmx320m -XX:+UseSerialGC`
-- Frontend → Vercel (static); set `VITE_API_URL` to the Koyeb HTTPS URL
-- Database → Supabase (free PostgreSQL; note: pauses after ~1 week idle)
+---
 
-See `gastosai-fullstack-guide.md` for the full deployment walkthrough including multi-stage Dockerfile and GitHub Actions CI.
+## Architecture detail
+
+See `ai/skills/project-context.md` for the full domain model and data flow.
+
+### AI safety — read before touching the AI path
+
+`SqlGuard` (`ai/SqlGuard.java`) is the security boundary:
+
+- Blocks all non-SELECT statements (INSERT, UPDATE, DELETE, DROP, TRUNCATE, …)
+- Requires the query to include `FROM expenses` (or alias)
+- Rejects multi-statement input (`;` separator check)
+- Blocks system catalog access (`pg_`, `information_schema`)
+
+**Never bypass or weaken SqlGuard.** See `ai/skills/ai-sql-safety.md` for the full rule set.
+
+---
+
+## Coding conventions Claude should follow
+
+- **No comments by default.** Only add a comment when the WHY is non-obvious.
+- **No unused imports.** Run `mvnw.cmd compile` after every backend change.
+- **Records for DTOs.** Prefer Java records over classes for request/response types.
+- **@Transactional on service methods.** Read-only queries get `@Transactional(readOnly = true)`.
+- **BigDecimal for money.** Scale to 2 for display (`setScale(2, RoundingMode.HALF_UP)`), store at precision 19 scale 4.
+- **Category auto-creation.** `CategoryService.getOrCreateByName()` is the correct path; do not save categories directly in other services.
+- **DTOs only through controllers.** Never return entity objects from controller methods.
+- Frontend TypeScript: no `any`, prefer `unknown` for caught errors.
+
+---
+
+## What to check before committing
+
+1. `mvnw.cmd compile` — zero errors
+2. `mvnw.cmd test` — all green
+3. No secrets in staged files (`.env`, API keys)
+4. Commits are atomic and scoped to one concern per commit
+
+---
+
+## Deployment targets
+
+| Layer | Service | Notes |
+|---|---|---|
+| Backend | Koyeb | 512 MB free tier; `-Xmx320m -XX:+UseSerialGC` |
+| Frontend | Vercel | Set `VITE_API_URL` to Koyeb HTTPS URL |
+| Database | Supabase | Free PostgreSQL; pauses after ~1 week idle |
+
+See `ai/skills/deployment.md` for the full deployment walkthrough.
