@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.0] - 2026-06-09
+
+### Added
+- Chat widget now accepts CSV, image, and other file types via the attach button
+- CSV files are routed to the expense import endpoint; import summary (imported/skipped counts and any errors) is shown in the conversation
+- Images continue to be routed to the AI vision endpoint for receipt analysis
+- Unsupported file types (e.g. PDF, Excel, JSON) receive an inline error message in the chat instead of a silent failure
+
+---
+
 ## [0.3.2] - 2026-06-09
 
 ### Fixed
