@@ -53,22 +53,60 @@ Wait ~3 seconds after killing a process before restarting the same service.
 
 ## Starting the stack
 
+### Option A — Native dev (fast iteration, hot-reload)
+
 ```powershell
-# DB
+# DB only
 docker compose up -d                          # from repo root
 
-# Backend
-cd backend; .\mvnw.cmd spring-boot:run        # stays in foreground; use Start-Process for background
+# Backend (separate terminal)
+cd backend; .\mvnw.cmd spring-boot:run
 
-# Frontend
+# Frontend (separate terminal)
 cd frontend; npm run dev                      # must start on :5173
 ```
 
-Or use the launcher script (interactive):
+Or via the launcher script:
 
 ```powershell
 .\scripts\start.ps1              # interactive menu
-.\scripts\start.ps1 -Mode all   # start all three at once
+.\scripts\start.ps1 -Mode all   # start all three natively
+```
+
+### Option B — Full Docker stack (prod-like, all services in containers)
+
+```powershell
+# Start (builds images on first run — may take a few minutes)
+docker compose --profile app up -d --build
+
+# Force rebuild after code changes
+docker compose --profile app up -d --build
+
+# Stop all (data preserved in postgres_data volume)
+docker compose down
+
+# Stop all + wipe DB volume
+docker compose down -v
+```
+
+Or via the launcher script:
+
+```powershell
+.\scripts\start.ps1 -Mode docker   # full Docker stack
+```
+
+> **Note:** The frontend Docker image is built with `VITE_API_URL=http://localhost:8080` baked
+> in at build time. If you change the backend URL, rebuild with:
+> `VITE_API_URL=http://... docker compose --profile app up -d --build`
+
+---
+
+### Checking logs (Docker mode)
+
+```powershell
+docker compose logs backend --tail=50 -f
+docker compose logs frontend --tail=50
+docker compose logs db --tail=20
 ```
 
 ---
@@ -97,12 +135,15 @@ $env:GH_TOKEN = (Get-Content "D:\Lester\Practical\PersonalProjects\Others\gastos
 | Task | Command | Directory |
 |---|---|---|
 | Start DB | `docker compose up -d` | repo root |
-| Stop DB | `docker compose down` | repo root |
-| Start backend | `.\mvnw.cmd spring-boot:run` | `backend/` |
+| Stop all Docker services | `docker compose down` | repo root |
+| Wipe DB volume | `docker compose down -v` | repo root |
+| Full Docker stack | `docker compose --profile app up -d --build` | repo root |
+| Start backend (native) | `.\mvnw.cmd spring-boot:run` | `backend/` |
 | Run backend tests | `.\mvnw.cmd test` | `backend/` |
 | Compile backend | `.\mvnw.cmd compile` | `backend/` |
-| Start frontend | `npm run dev` | `frontend/` |
+| Start frontend (native) | `npm run dev` | `frontend/` |
 | Lint frontend | `npm run lint` | `frontend/` |
 | Build frontend | `npm run build` | `frontend/` |
-| Full stack (script) | `.\scripts\start.ps1 -Mode all` | repo root |
+| Full stack native (script) | `.\scripts\start.ps1 -Mode all` | repo root |
+| Full Docker stack (script) | `.\scripts\start.ps1 -Mode docker` | repo root |
 | Teardown | `.\scripts\teardown.ps1 -All -Force` | repo root |

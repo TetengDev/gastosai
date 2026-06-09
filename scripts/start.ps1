@@ -24,7 +24,7 @@
     .\scripts\start.ps1 -Mode backend -SkipChecks
 #>
 param(
-    [ValidateSet("all", "db", "backend", "frontend", "reset", "")]
+    [ValidateSet("all", "db", "backend", "frontend", "reset", "docker", "")]
     [string]$Mode = "",
 
     [switch]$ClearLogs,
@@ -213,6 +213,59 @@ function Start-Backend {
     }
 }
 
+# ── Full Docker stack ──────────────────────────────────────────────────────────
+function Start-FullDockerStack {
+    Write-Section "Full Docker Stack"
+
+    Stop-Port -Port 8080 -Name "backend (native)"
+    Stop-Port -Port 5173 -Name "frontend (native)"
+    Get-Process java -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+
+    Write-Step "Building and starting all services via docker compose --profile app (first build may take a few minutes)..."
+    $composeOut = & docker compose -f $COMPOSE_FILE --profile app up -d --build 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Fail "docker compose failed — check Docker Desktop"
+        $composeOut | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
+        exit 1
+    }
+    Write-Ok "Containers started"
+
+    Write-Step "Waiting for backend (up to 120s)..."
+    $deadline = (Get-Date).AddSeconds(120)
+    $backendReady = $false
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Seconds 3
+        try {
+            $r = Invoke-WebRequest -Uri "http://localhost:8080/actuator/info" -UseBasicParsing -TimeoutSec 2 -ErrorAction Stop
+            if ($r.StatusCode -eq 200) { $backendReady = $true; break }
+        } catch { }
+    }
+    if ($backendReady) {
+        Write-Ok "Backend ready   -> http://localhost:8080"
+        Write-Info "Swagger UI    -> http://localhost:8080/swagger-ui.html"
+    } else {
+        Write-Warn "Backend did not become ready in 120s"
+        Write-Info "Check logs:  docker compose logs backend"
+    }
+
+    Write-Step "Waiting for frontend (up to 30s)..."
+    $deadline = (Get-Date).AddSeconds(30)
+    $frontendReady = $false
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Seconds 2
+        try {
+            $r = Invoke-WebRequest -Uri "http://localhost:5173" -UseBasicParsing -TimeoutSec 2 -ErrorAction Stop
+            if ($r.StatusCode -eq 200) { $frontendReady = $true; break }
+        } catch { }
+    }
+    if ($frontendReady) {
+        Write-Ok "Frontend ready  -> http://localhost:5173"
+    } else {
+        Write-Warn "Frontend did not become ready in 30s"
+        Write-Info "Check logs:  docker compose logs frontend"
+    }
+}
+
 # ── Frontend ───────────────────────────────────────────────────────────────────
 function Start-Frontend {
     Write-Section "Frontend"
@@ -250,12 +303,14 @@ function Start-Frontend {
 function Show-StartMenu {
     Write-Host "  Select what to start:" -ForegroundColor White
     Write-Host "  ------------------------------------------" -ForegroundColor DarkGray
-    Write-Host "  [1]  All services  (DB -> Backend -> Frontend)" -ForegroundColor White
+    Write-Host "  [1]  All services  (DB -> Backend -> Frontend, native)" -ForegroundColor White
     Write-Host "  [2]  Database only" -ForegroundColor White
-    Write-Host "  [3]  Backend only" -ForegroundColor White
-    Write-Host "  [4]  Frontend only" -ForegroundColor White
+    Write-Host "  [3]  Backend only  (native mvnw)" -ForegroundColor White
+    Write-Host "  [4]  Frontend only (native npm)" -ForegroundColor White
     Write-Host "  [5]  Reset + start all  " -NoNewline -ForegroundColor White
     Write-Host "(wipes DB volume -- all data deleted)" -ForegroundColor Yellow
+    Write-Host "  [6]  Full Docker stack  " -NoNewline -ForegroundColor White
+    Write-Host "(DB + Backend + Frontend via docker compose)" -ForegroundColor Cyan
     Write-Host "  [0]  Exit" -ForegroundColor DarkGray
     Write-Host ""
     return (Read-Host "  Choice")
@@ -275,6 +330,7 @@ if ([string]::IsNullOrEmpty($Mode)) {
         "3"     { $Mode = "backend" }
         "4"     { $Mode = "frontend" }
         "5"     { $Mode = "reset" }
+        "6"     { $Mode = "docker" }
         "0"     { Write-Host "  Cancelled." -ForegroundColor DarkGray; exit 0 }
         default { Write-Fail "Invalid choice '$choice'."; exit 1 }
     }
@@ -297,6 +353,7 @@ switch ($Mode) {
     "db"       { Start-Database }
     "backend"  { Start-Backend }
     "frontend" { Start-Frontend }
+    "docker"   { Start-FullDockerStack }
     "reset" {
         Stop-Port -Port 8080 -Name "backend"
         Stop-Port -Port 5173 -Name "frontend"
