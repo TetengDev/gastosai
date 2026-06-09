@@ -20,7 +20,7 @@ H2 is configured to replace PostgreSQL for all tests. The schema is created via 
 ```bash
 # From backend/ directory
 mvnw.cmd test                           # all tests
-mvnw.cmd test -Dtest=ExpenseApiIT       # single class
+mvnw.cmd test -Dtest=ExpenseApiIntegrationTest       # single class
 mvnw.cmd test -Dtest=SqlGuardTest       # single class
 mvnw.cmd test -pl backend               # from repo root
 ```
@@ -35,7 +35,7 @@ Use `@SpringBootTest` + `@AutoConfigureMockMvc` for full-stack tests:
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class MyFeatureIT {
+class MyFeatureIntegrationTest {
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper mapper;

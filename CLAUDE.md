@@ -18,7 +18,7 @@ docker compose down -v    # stop + wipe volume
 mvnw.cmd spring-boot:run              # Windows
 ./mvnw spring-boot:run                # Unix
 mvnw.cmd test                         # all tests (H2 in-memory)
-mvnw.cmd test -Dtest=ExpenseApiIT     # single class
+mvnw.cmd test -Dtest=ExpenseApiIntegrationTest     # single class
 mvnw.cmd clean install -DskipTests
 ```
 
