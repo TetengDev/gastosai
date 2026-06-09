@@ -129,10 +129,12 @@ The hook blocks commits of type `feat`, `fix`, or `perf` when either version fil
 1. Working on a feature branch — never commit non-trivial changes directly to `master`
 2. `mvnw.cmd compile` — zero errors
 3. `mvnw.cmd test` — all green
-4. No secrets in staged files (`.env`, API keys)
-5. Commits are atomic and scoped to one concern per commit
-6. No `Co-Authored-By` or AI attribution lines in commit messages
-7. Version bumped in `backend/pom.xml` and `frontend/package.json` if commit type requires it (see above)
+4. New features include a unit test for service logic + an integration test for the happy path
+5. Bug fixes include a regression test that fails before the fix
+6. No secrets in staged files (`.env`, API keys)
+7. Commits are atomic and scoped to one concern per commit
+8. No `Co-Authored-By` or AI attribution lines in commit messages
+9. Version bumped in `backend/pom.xml` and `frontend/package.json` if commit type requires it (see above)
 
 ---
 

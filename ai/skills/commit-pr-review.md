@@ -188,6 +188,25 @@ If Flyway migrations are introduced, review migration safety carefully.
 
 ---
 
+## Test requirements
+
+Tests are required, not optional, for the following:
+
+| Change type | Required tests |
+|---|---|
+| New feature or endpoint | Unit test for the service logic + integration test for the happy path |
+| Bug fix | Regression test that fails before the fix and passes after |
+| New validation rule | Test the invalid case is rejected and the valid case passes |
+| New repository query | Test the query returns correct results |
+| AI SQL path change | Test unsafe SQL is still rejected by `SqlGuard` |
+| Schema or entity change | Integration test that reads/writes the affected fields |
+
+A PR that introduces a feature or fix without tests is **not merge-ready**. Flag it as a Blocker.
+
+Exception: pure documentation, tooling, or configuration changes with no runtime behavior change do not require tests.
+
+---
+
 ## Test review checklist
 
 Check whether the change includes or updates tests for:
@@ -200,7 +219,7 @@ Check whether the change includes or updates tests for:
 * AI SQL unsafe-query rejection
 * Regression cases for bug fixes
 
-If tests are missing, explain which tests should be added.
+If tests are missing, list exactly which test cases should be added and mark them as Blockers in the review output.
 
 ---
 
