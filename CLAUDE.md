@@ -94,10 +94,12 @@ See `ai/skills/project-context.md` for the full domain model and data flow.
 
 ## What to check before committing
 
-1. `mvnw.cmd compile` — zero errors
-2. `mvnw.cmd test` — all green
-3. No secrets in staged files (`.env`, API keys)
-4. Commits are atomic and scoped to one concern per commit
+1. Working on a feature branch — never commit non-trivial changes directly to `master`
+2. `mvnw.cmd compile` — zero errors
+3. `mvnw.cmd test` — all green
+4. No secrets in staged files (`.env`, API keys)
+5. Commits are atomic and scoped to one concern per commit
+6. No `Co-Authored-By` or AI attribution lines in commit messages
 
 ---
 

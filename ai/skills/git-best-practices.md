@@ -30,9 +30,25 @@ Rules:
 
 ## Branching
 
-For non-trivial changes, prefer a dedicated branch.
+**Always branch from `master` before making non-trivial changes.** Never commit features, fixes, refactors, or multi-file changes directly to `master`.
 
-Branch name examples:
+What counts as trivial (may commit directly to `master`):
+
+* A single-file typo or wording correction
+* A one-line config value fix
+* An urgent one-liner hotfix explicitly approved by the user
+
+Everything else — UI changes, new features, bug fixes that touch logic, documentation overhauls, dependency updates, AI-skill additions — requires a branch.
+
+Branch from master:
+
+```bash
+git checkout master
+git pull
+git checkout -b <prefix>/<short-description>
+```
+
+Branch name prefixes:
 
 ```text
 feature/<short-description>
@@ -54,8 +70,17 @@ test/expense-api-it
 chore/update-dependencies
 ```
 
+Merging back:
+
+```bash
+git checkout master
+git merge --no-ff <branch>   # preserve branch history
+git branch -d <branch>       # safe delete after merge
+```
+
 Rules:
 
+* Do not commit directly to `master` for anything non-trivial — no exceptions without explicit user approval.
 * Do not create, delete, rename, or switch branches if doing so would risk losing uncommitted work.
 * Do not switch branches without checking `git status` first.
 * Do not delete branches unless explicitly instructed.
@@ -142,6 +167,11 @@ Common prefixes:
 * `test:` for test-only changes
 * `chore:` for tooling/config/maintenance
 * `ci:` for CI/CD changes
+
+Rules:
+
+* Do not add `Co-Authored-By`, `AI-generated`, or any AI attribution lines to commit messages.
+* Keep messages concise — one line is enough for most commits.
 
 ---
 
