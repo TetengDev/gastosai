@@ -75,6 +75,7 @@ OpenAI API  or  Anthropic Claude API
 | Skill | `ai/skills/ai-sql-safety.md` | SqlGuard rules in detail |
 | Skill | `ai/skills/java-spring-standards.md` | Java 25 + Spring Boot 4 conventions |
 | Skill | `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
+| Skill | `ai/skills/feature-workflow.md` | Branch → develop → test → merge workflow |
 | Prompt | `ai/prompts/add-feature.md` | Structured prompt for new features |
 | Prompt | `ai/prompts/review-code.md` | Code review prompt |
 | Prompt | `ai/prompts/debug.md` | Debug investigation prompt |
