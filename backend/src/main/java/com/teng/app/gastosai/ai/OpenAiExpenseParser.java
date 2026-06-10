@@ -1,0 +1,82 @@
+package com.teng.app.gastosai.ai;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.teng.app.gastosai.config.OpenAiProperties;
+import com.teng.app.gastosai.dto.ParsedExpenseResult;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+@Component
+@RequiredArgsConstructor
+public class OpenAiExpenseParser implements ExpenseParser {
+
+    private static final String PARSE_SYSTEM_PROMPT = """
+            You are an expense parser for a Filipino user tracking expenses in Philippine Peso (₱).
+            Given a free-form text, extract expense information and return ONLY a JSON object — no markdown, no extra text.
+
+            JSON fields:
+            - amount: number (required, positive, Philippine Peso)
+            - category: string (required; choose the closest from: Food, Transport, Utilities, Shopping, Entertainment, Health, Hygiene Essentials, Meal Plan, Monthly Utilities, Training/Upskilling, Transaction Fees, Transporation, Date, Family Contributions, Monthly Personal, Vacation, Cleaning Essentials, Extras; use "Uncategorized" if none fit)
+            - date: string or null (ISO 8601 "yyyy-MM-ddTHH:mm:ss"; null if no date is mentioned in the text)
+            - description: string (required, concise description of what was spent on)
+            - confidence: "HIGH" if amount and description are clearly identifiable; "LOW" if uncertain
+            """;
+
+    private final RestClient openAiRestClient;
+    private final OpenAiProperties openAiProperties;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public ParsedExpenseResult parse(String text) {
+        if (openAiProperties.getApiKey() == null || openAiProperties.getApiKey().isBlank()) {
+            throw new IllegalStateException("OPENAI_API_KEY is not configured");
+        }
+
+        ObjectNode body = objectMapper.createObjectNode();
+        body.put("model", openAiProperties.getModel());
+        body.putObject("response_format").put("type", "json_object");
+        ArrayNode messages = body.putArray("messages");
+        ObjectNode system = messages.addObject();
+        system.put("role", "system");
+        system.put("content", PARSE_SYSTEM_PROMPT);
+        ObjectNode user = messages.addObject();
+        user.put("role", "user");
+        user.put("content", text);
+
+        String raw = openAiRestClient.post()
+                .uri("/v1/chat/completions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body.toString())
+                .retrieve()
+                .body(String.class);
+
+        try {
+            JsonNode root = objectMapper.readTree(raw);
+            String content = root.path("choices").path(0).path("message").path("content").asText("");
+            return parseJson(objectMapper.readTree(content));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to parse OpenAI expense response", e);
+        }
+    }
+
+    static ParsedExpenseResult parseJson(JsonNode node) {
+        BigDecimal amount = new BigDecimal(node.path("amount").asText("0"));
+        String category = node.path("category").asText("Uncategorized");
+        JsonNode dateNode = node.path("date");
+        LocalDateTime date = (!dateNode.isNull() && !dateNode.asText("").isBlank())
+                ? LocalDateTime.parse(dateNode.asText())
+                : LocalDateTime.now(ZoneId.of("Asia/Manila"));
+        String description = node.path("description").asText("");
+        String confidence = node.path("confidence").asText("LOW");
+        return new ParsedExpenseResult(amount, category, date, description, confidence);
+    }
+}

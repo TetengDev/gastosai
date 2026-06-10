@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.8.0] - 2026-06-10
+
+### Added
+- `POST /expenses/parse` — natural-language text parse endpoint; accepts free-form text (e.g. "spent 250 on lunch") and returns a draft expense with amount, category, date, description, and confidence level without saving
+- `ExpenseParser` interface with OpenAI and Claude implementations; active provider follows the existing `GASTOS_AI_PROVIDER` env var
+- Philippine time (UTC+8) is used as the default date when no date is mentioned in the parsed text
+
+---
+
 ## [0.7.0] - 2026-06-10
 
 ### Added
