@@ -31,6 +31,8 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | Touching the AI query path | `ai-sql-safety.md` | — |
 | Deploying to production | `deployment.md` | `git-branching-release-strategy.md` |
 | Understanding the domain model | `project-context.md` | — |
+| Implementing with parallel agents | `agents.md` | — |
+| Auditing / cleaning up stale docs | `doc-audit.md` | — |
 
 ---
 
@@ -59,7 +61,9 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | `testing.md` | Test stack, patterns, and what not to do |
 | `ai-sql-safety.md` | SqlGuard rules — never bypass |
 | `deployment.md` | Koyeb / Vercel / Supabase deploy walkthrough |
-| `project-context.md` | Domain model, DTO contracts, request flow, env vars |
+| `project-context.md` | Domain model, DTO contracts, request flow, env vars, frontend structure |
+| `agents.md` | Parallel agent system — planner, backend-dev, frontend-dev, pre-pr |
+| `doc-audit.md` | Documentation audit checklist — detect and fix stale docs |
 
 ---
 

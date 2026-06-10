@@ -1,98 +1,87 @@
 # Skill: Feature Branch Workflow
 
-## When to Use
+## When to use
 
-Any change that introduces new functionality, a significant refactor, or a risky modification
-should live on its own feature branch — not directly on `master`. Merge only after the feature
-works correctly end-to-end.
+Any change that introduces new functionality, a significant refactor, or a risky modification should live on its own feature branch — never directly on `master`. Merge only after the feature works correctly end-to-end.
 
-## Workflow Steps
+For full-stack features (backend + frontend), use the parallel agent workflow described in `ai/skills/agents.md` instead of implementing both layers sequentially.
 
-### 1. Branch out from master
+---
 
-```bash
+## Workflow steps
+
+### 1. Branch from master
+
+```powershell
 git checkout master
-git pull                          # make sure master is up to date
-git checkout -b feature/<name>    # e.g. feature/chatbot-ui, feature/category-crud
+git pull
+git checkout -b feat/<name>    # e.g. feat/budget-tracking, fix/dark-mode-badges
 ```
-
-Name the branch after the feature, not the task (e.g. `feature/expense-filters` not `feature/add-filter-param`).
 
 ### 2. Develop and commit incrementally
 
-Commit in logical units — one concern per commit. Keep commits atomic so they can be
-reviewed or reverted independently.
-
-```bash
-git add <specific files>
-git commit -m "feature: <what and why>"
-```
-
-Avoid `git add .` — it can accidentally stage `.env` or generated files.
-
-### 3. Verify before merging
-
-Run the full stack and manually test the golden path and edge cases:
+One concern per commit. Stage specific files — never `git add .` (risks committing `.env`).
 
 ```powershell
-.\scripts\start.ps1 -Mode all    # or start each layer individually
+git add backend/src/... frontend/src/...
+git commit -m "feat: add Budget entity and CRUD endpoints"
 ```
 
-For backend changes, also run tests:
+### 3. Verify before opening a PR
 
-```bash
-cd backend && mvnw.cmd test
+Run the full pre-PR checklist from `ai/skills/shared/pre-pr-checklist.md`. Minimum:
+
+```powershell
+cd frontend; npm run lint; npm run build
+cd ..\backend; .\mvnw.cmd test
 ```
 
-Only merge when:
-- The feature works as expected in the running app
-- No regressions visible in other features
-- Backend tests are green (`mvnw.cmd test`)
-- TypeScript compiles clean (`npm run build` from `frontend/`)
+Then run the app and test the golden path + at least one edge case in the browser or via curl. Do not open a PR without runtime execution evidence.
 
-### 4. Merge into master
+### 4. Open the PR
 
-```bash
-git checkout master
-git merge --no-ff feature/<name>   # preserve branch history
+Use `gh pr create` with a summary and test plan. The project squash-merges via GitHub PRs — do not use `git merge` locally.
+
+### 5. After merge — delete the branch
+
+```powershell
+git branch -d feat/<name>                    # delete local
+git push origin --delete feat/<name>         # delete remote
+git checkout master && git pull              # sync master
 ```
 
-`--no-ff` creates a merge commit so the feature boundary is visible in git log.
-Do not squash — individual commits carry useful context.
+---
 
-### 5. Delete the branch
-
-After a successful merge, remove the branch to keep the repo clean:
-
-```bash
-git branch -d feature/<name>       # safe delete (only if merged)
-```
-
-Use `git branch --merged` to confirm before deleting.
-
-## Branch Naming Conventions
+## Branch naming
 
 | Prefix | When to use |
 |---|---|
-| `feature/` | New user-visible functionality |
-| `fix/` | Bug fix for a specific issue |
+| `feat/` | New user-visible functionality |
+| `fix/` | Bug fix |
 | `refactor/` | Internal restructuring, no behavior change |
-| `docs/` | Documentation-only changes |
-| `chore/` | Build, tooling, dependency updates |
+| `chore/` | Build, tooling, dependency, or documentation updates |
+| `ci/` | CI/CD pipeline changes only |
 
-## What NOT to Merge
+Name after the concern, not the task — `feat/expense-filters` not `feat/add-filter-param`.
+
+---
+
+## What not to merge
 
 - Feature is broken or partially implemented
 - Backend tests fail
 - TypeScript errors present
-- Causes regressions in existing pages
+- Causes regressions in adjacent features
+- No runtime execution evidence
 
-If the feature is not ready, stay on the branch and keep iterating. Never merge broken code to
-master with the intention of fixing it there.
+Stay on the branch and keep iterating. Never merge broken code with intent to fix it on master.
 
-## Checking Branch State
+---
 
-```bash
-git branch --merged     # branches already merged into current HEAD (safe to delete)
-git branch --no-merged  # branches with unmerged commits (retain)
+## Checking branch state
+
+```powershell
+git branch --merged     # branches already merged — safe to delete
+git branch --no-merged  # branches with unmerged commits — retain
+git log main..HEAD --oneline   # commits unique to this branch
 ```

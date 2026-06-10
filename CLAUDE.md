@@ -50,9 +50,29 @@ npm run lint
 
 ---
 
+## Shell & runtime defaults
+
+These apply in every session without exception — do not wait to be reminded:
+
+- **Shell tool**: Always use the **PowerShell tool** for every command. Never use the Bash tool — this machine is Windows 11 and Bash uses WSL paths (`/mnt/d/...`) that fail here.
+- **Default run mode**: Run the app as a **full Docker stack** (`docker compose --profile app up -d --build`). Use native dev mode only when the user explicitly asks for it.
+- **Default ports**: backend `:8080` · frontend `:5173` · database `:5433`. Never silently accept a fallback port.
+- **GitHub CLI**: Installed at `C:\Program Files\GitHub CLI\gh.exe`. The `GITHUB_TOKEN` is in the repo root `.env`. Load it before any `gh` command:
+  ```powershell
+  $env:GH_TOKEN = (Get-Content ".env" | Select-String "GITHUB_TOKEN=(.+)" | ForEach-Object { $_.Matches[0].Groups[1].Value })
+  ```
+
+---
+
 ## Environment
 
-`backend/.env` (copy from `backend/.env.example`):
+**Repo root `.env`** (not committed — contains secrets):
+
+| Variable | Description |
+|---|---|
+| `GITHUB_TOKEN` | Personal access token for `gh` CLI — loaded into `$env:GH_TOKEN` before gh commands |
+
+**`backend/.env`** (copy from `backend/.env.example`):
 
 | Variable | Description |
 |---|---|
@@ -66,7 +86,7 @@ npm run lint
 | `GASTOS_AI_PROVIDER` | `openai` (default) or `claude` |
 | `GASTOS_SEED_SAMPLE_DATA` | `true` seeds 15 sample expenses on empty DB |
 
-`frontend/.env.local`:
+**`frontend/.env.local`**:
 ```
 VITE_API_URL=http://localhost:8080
 ```
@@ -145,6 +165,21 @@ git config core.hooksPath .githooks
 8. No `Co-Authored-By` or AI attribution lines in commit messages
 9. Version bumped in `backend/pom.xml` and `frontend/package.json` if commit type requires it (see above)
 10. `CHANGELOG.md` updated — move `[Unreleased]` notes into the new version section when releasing
+
+---
+
+## Agents
+
+Sub-agent definitions live in `.claude/agents/`. Use them when implementing features that touch both layers simultaneously. See `ai/skills/agents.md` for the full parallel workflow.
+
+| Agent | Role |
+|---|---|
+| `full-stack-planner` | Read-only; decomposes a feature into backend + frontend tasks with agreed DTO contracts |
+| `backend-dev` | Implements Spring Boot changes; verifies with compile + tests before finishing |
+| `frontend-dev` | Implements React/TypeScript changes; verifies with lint + build before finishing |
+| `pre-pr` | Runs the full quality gate before any PR (lint, build, tests, runtime execution, version) |
+
+Workflow: `full-stack-planner` → `backend-dev` + `frontend-dev` (parallel) → `pre-pr`
 
 ---
 

@@ -86,19 +86,41 @@ For AI SQL-related changes, also follow:
 
 ## Agent skills and resources
 
+### Sub-agents (parallel execution via `.claude/agents/`)
+
+| Agent | Path | Purpose |
+|---|---|---|
+| `full-stack-planner` | `.claude/agents/full-stack-planner.md` | Read-only; decomposes a feature into backend + frontend tasks with DTO contracts |
+| `backend-dev` | `.claude/agents/backend-dev.md` | Implements Spring Boot changes; verifies with compile + tests |
+| `frontend-dev` | `.claude/agents/frontend-dev.md` | Implements React/TypeScript changes; verifies with lint + build |
+| `pre-pr` | `.claude/agents/pre-pr.md` | Runs the full quality gate before any PR |
+
+See `ai/skills/agents.md` for the full parallel workflow.
+
+### Skills (reference documents in `ai/skills/`)
+
+| Skill | Purpose |
+|---|---|
+| `ai/skills/README.md` | Skill index — reading order by task, non-negotiable rules |
+| `ai/skills/agents.md` | Parallel agent workflow — when and how to use sub-agents |
+| `ai/skills/project-context.md` | Full domain model, DTO contracts, frontend structure, env variables |
+| `ai/skills/environment.md` | Windows/PowerShell setup, default ports, reset procedure, GitHub CLI |
+| `ai/skills/java-spring-standards.md` | Java 25 + Spring Boot 4 conventions |
+| `ai/skills/feature-builder.md` | How to add a feature end-to-end |
+| `ai/skills/testing.md` | Test strategy and commands |
+| `ai/skills/backend-review.md` | Backend code review checklist |
+| `ai/skills/commit-pr-review.md` | Commit and PR review checklist |
+| `ai/skills/ai-sql-safety.md` | SqlGuard rules in detail |
+| `ai/skills/git-best-practices.md` | Git safety rules for all repository changes |
+| `ai/skills/git-branching-release-strategy.md` | SemVer, branching, releases, hotfixes, tags |
+| `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
+| `ai/skills/feature-workflow.md` | Branch → develop → verify → squash-merge workflow |
+| `ai/skills/doc-audit.md` | Documentation audit checklist — run to detect stale docs |
+
+### Prompts and templates
+
 | Type | Path | Purpose |
 |---|---|---|
-| Skill | `ai/skills/project-context.md` | Full domain model, data flow, env variables |
-| Skill | `ai/skills/backend-review.md` | Backend code review checklist |
-| Skill | `ai/skills/feature-builder.md` | How to add a feature end-to-end |
-| Skill | `ai/skills/testing.md` | Test strategy and commands |
-| Skill | `ai/skills/ai-sql-safety.md` | SqlGuard rules in detail |
-| Skill | `ai/skills/java-spring-standards.md` | Java 25 + Spring Boot 4 conventions |
-| Skill | `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
-| Skill | `ai/skills/feature-workflow.md` | Branch → develop → test → merge workflow |
-| Skill | `ai/skills/git-best-practices.md` | Git safety rules for all repository changes |
-| Skill | `ai/skills/commit-pr-review.md` | Commit and PR review checklist |
-| Skill | `ai/skills/git-branching-release-strategy.md` | SemVer, branching, releases, hotfixes, tags |
 | Prompt | `ai/prompts/add-feature.md` | Structured prompt for new features |
 | Prompt | `ai/prompts/review-code.md` | Code review prompt |
 | Prompt | `ai/prompts/debug.md` | Debug investigation prompt |

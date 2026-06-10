@@ -20,25 +20,43 @@ Full reference for the gastosai domain model, data flow, and runtime configurati
 |---|---|---|
 | `id` | `Long` | Auto-generated PK |
 | `name` | `String(50)` | Unique; trimmed before save |
+| `icon` | `String(50)` | Nullable; lucide-react icon name |
 
 **Predefined categories** (seeded by `CategoryDataLoader` on every startup):
 Cleaning Essentials, Date, Extras, Family Contributions, Hygiene Essentials,
 Meal Plan, Monthly Personal, Monthly Utilities, Training/Upskilling,
 Transaction Fees, Transporation, Uncategorized, Vacation
 
+### User
+| Field | Type | Notes |
+|---|---|---|
+| `id` | `Long` | Auto-generated PK |
+| `email` | `String` | Unique; used as JWT subject |
+| `name` | `String` | Display name |
+| `nickname` | `String` | Optional short name |
+| `avatarColor` | `String(20)` | Key into `AVATAR_COLORS` preset in formatters.ts |
+| `password` | `String` | BCrypt hash |
+| `createdAt` | `LocalDateTime` | Set on creation |
+
+JWT is issued on login, register, and profile update. Subject = email. Use `JwtUtil.generate(email)`.
+
 ---
 
 ## DTO contracts
 
 ```
-ExpenseRequest   amount (required, >0), category (optional → "Uncategorized"), date (optional → now), description (required)
-ExpenseResponse  id, amount, category (name string), date, description
-CategoryRequest  name (required, max 50)
-CategoryResponse id, name
-AiQueryRequest   question (string)
-AiQueryResponse  columns (list), rows (list of lists), rawSql, summary
-MonthlyReportItem  month (YYYY-MM), total
-CategoryReportItem category, total
+ExpenseRequest        amount (required, >0), category (optional → "Uncategorized"), date (optional → now), description (required)
+ExpenseResponse       id, amount, category (name string), date, description
+CategoryRequest       name (required, max 50), icon (optional, max 50)
+CategoryResponse      id, name, icon
+UserProfileRequest    email, name, nickname, avatarColor
+UserProfileResponse   id, email, name, nickname, avatarColor
+UpdateProfileResponse email, name, nickname, avatarColor, token  ← new JWT on email change
+AuthResponse          token, email, name, nickname, avatarColor
+AiQueryRequest        question (string)
+AiQueryResponse       columns (list), rows (list of lists), rawSql, summary
+MonthlyReportItem     month (YYYY-MM), total
+CategoryReportItem    category, total
 ```
 
 ---
@@ -107,11 +125,33 @@ POST /ai/query  { question: "..." }
 
 ```
 frontend/src/
-  api/          client.ts (Axios), expenses.ts, categories.ts, ai.ts, types.ts
-  components/   Navbar.tsx, ExpenseModal.tsx
-  hooks/        useExpenses.ts
-  lib/          formatters.ts (formatCurrency, formatDate, toDateTimeLocal)
-  pages/        Dashboard.tsx, Expenses.tsx, Categories.tsx, Ask.tsx
+  api/
+    client.ts           Axios instance; injects Bearer token from localStorage
+    types.ts            All shared domain types (Expense, Category, AuthResponse, etc.)
+    expenses.ts         Expense CRUD + reports
+    categories.ts       Category CRUD
+    auth.ts             login, register — returns AuthResponse
+    profile.ts          getProfile, updateProfile — updateProfile returns UpdateProfileResponse (with token)
+    ai.ts               askQuery, askWithAttachment
+  components/
+    Navbar.tsx          Top nav; avatar rendered with getAvatarGradient(user.avatarColor)
+    ExpenseModal.tsx    Add/edit expense form
+    ChatWidget.tsx      Floating AI chat, 3 modes (plain / professional / genz)
+  context/
+    AuthContext.tsx     Global auth state (user, login, logout, updateProfile); token in localStorage
+  hooks/
+    useExpenses.ts      add / update / remove / removeAll / refresh
+    useFeatures.ts      Feature flags (csvImport, chatAttachments)
+  lib/
+    formatters.ts       formatCurrency, formatDate, getCategoryColor, getAvatarGradient, AVATAR_COLORS
+  pages/
+    Dashboard.tsx       Donut chart + category breakdown + recent expenses
+    Expenses.tsx        Table CRUD + CSV import
+    Categories.tsx      Card grid + add/edit/delete modal with icon picker
+    Settings.tsx        Profile form — avatar color picker, email, name, nickname
+    LoginPage.tsx
+    RegisterPage.tsx
+    Ask.tsx             AI natural-language query UI
 ```
 
-Routes: `/` (Dashboard), `/expenses`, `/categories`, `/ask`
+Routes: `/` (Dashboard), `/expenses`, `/categories`, `/settings`, `/ask`
