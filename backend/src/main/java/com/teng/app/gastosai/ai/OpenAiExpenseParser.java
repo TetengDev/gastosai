@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -19,17 +20,6 @@ import java.time.ZoneId;
 @RequiredArgsConstructor
 public class OpenAiExpenseParser implements ExpenseParser {
 
-    private static final String PARSE_SYSTEM_PROMPT = """
-            You are an expense parser for a Filipino user tracking expenses in Philippine Peso (₱).
-            Given a free-form text, extract expense information and return ONLY a JSON object — no markdown, no extra text.
-
-            JSON fields:
-            - amount: number (required, positive, Philippine Peso)
-            - category: string (required; choose the closest from: Food, Transport, Utilities, Shopping, Entertainment, Health, Hygiene Essentials, Meal Plan, Monthly Utilities, Training/Upskilling, Transaction Fees, Transporation, Date, Family Contributions, Monthly Personal, Vacation, Cleaning Essentials, Extras; use "Uncategorized" if none fit)
-            - date: string or null (ISO 8601 "yyyy-MM-ddTHH:mm:ss"; null if no date is mentioned in the text)
-            - description: string (required, concise description of what was spent on)
-            - confidence: "HIGH" if amount and description are clearly identifiable; "LOW" if uncertain
-            """;
 
     private final RestClient openAiRestClient;
     private final OpenAiProperties openAiProperties;
@@ -41,13 +31,14 @@ public class OpenAiExpenseParser implements ExpenseParser {
             throw new IllegalStateException("OPENAI_API_KEY is not configured");
         }
 
+        String systemPrompt = ExpenseParser.buildSystemPrompt(LocalDate.now(ZoneId.of("Asia/Manila")));
         ObjectNode body = objectMapper.createObjectNode();
         body.put("model", openAiProperties.getModel());
         body.putObject("response_format").put("type", "json_object");
         ArrayNode messages = body.putArray("messages");
         ObjectNode system = messages.addObject();
         system.put("role", "system");
-        system.put("content", PARSE_SYSTEM_PROMPT);
+        system.put("content", systemPrompt);
         ObjectNode user = messages.addObject();
         user.put("role", "user");
         user.put("content", text);

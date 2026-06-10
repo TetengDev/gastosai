@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,19 +20,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class ClaudeExpenseParser implements ExpenseParser {
 
-    private static final String PARSE_SYSTEM_PROMPT = """
-            You are an expense parser for a Filipino user tracking expenses in Philippine Peso (₱).
-            Given a free-form text, extract expense information and return ONLY a JSON object — no markdown, no extra text, no explanation.
-
-            JSON fields:
-            - amount: number (required, positive, Philippine Peso)
-            - category: string (required; choose the closest from: Food, Transport, Utilities, Shopping, Entertainment, Health, Hygiene Essentials, Meal Plan, Monthly Utilities, Training/Upskilling, Transaction Fees, Transporation, Date, Family Contributions, Monthly Personal, Vacation, Cleaning Essentials, Extras; use "Uncategorized" if none fit)
-            - date: string or null (ISO 8601 "yyyy-MM-ddTHH:mm:ss"; null if no date is mentioned in the text)
-            - description: string (required, concise description of what was spent on)
-            - confidence: "HIGH" if amount and description are clearly identifiable; "LOW" if uncertain
-
-            Respond with only the JSON object. No other text.
-            """;
 
     private static final Pattern JSON_FENCE = Pattern.compile("(?s)```(?:json)?\\s*(\\{.*?})\\s*```");
     private static final Pattern JSON_BARE = Pattern.compile("(?s)(\\{.*})");
@@ -45,10 +34,11 @@ public class ClaudeExpenseParser implements ExpenseParser {
             throw new IllegalStateException("CLAUDE_API_KEY is not configured");
         }
 
+        String systemPrompt = ExpenseParser.buildSystemPrompt(LocalDate.now(ZoneId.of("Asia/Manila")));
         ObjectNode body = objectMapper.createObjectNode();
         body.put("model", claudeProperties.getModel());
         body.put("max_tokens", 512);
-        body.put("system", PARSE_SYSTEM_PROMPT);
+        body.put("system", systemPrompt);
         ArrayNode messages = body.putArray("messages");
         ObjectNode user = messages.addObject();
         user.put("role", "user");
