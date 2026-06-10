@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.0] - 2026-06-10
+
+### Added
+- `lucide-react` icon library; all inline SVG icons replaced with lucide equivalents (`Pencil`, `Trash2`, `Upload`, `Loader2`, `Sun`, `Moon`, `LogOut`)
+- Category cards now display a semantic icon per category name (e.g. Car for Transportation, Utensils for Meal Plan, GraduationCap for Training/Upskilling); user-created categories fall back to the Tag icon
+- Navbar profile link replaced with an avatar button showing user initials in a circle — clearly clickable with hover state and active highlight; name label visible on sm+ screens
+- Settings page now shows a gradient avatar with user initials and email summary at the top of the profile section
+- `getInitials` utility exported from `lib/formatters.ts`
+
+---
+
 ## [0.5.3] - 2026-06-10
 
 ### Fixed
