@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.7.0] - 2026-06-10
+
+### Added
+- Avatar color picker in Settings — users can choose from 6 gradient presets; selection is persisted and reflected immediately in the Navbar avatar and Settings header
+- Category icon picker — add/edit category modal now shows a 24-icon grid; selected icon is stored on the backend and displayed on the category card; falls back to name-based icon mapping if none set
+- Email editing in Settings — email field is now editable; backend validates uniqueness and issues a fresh JWT so the session stays valid after an email change
+
+### Fixed
+- Dark mode text visibility in ChatWidget — suggestion chips and accent text in all 3 modes (Plain, Pro, Gen Z) now have proper dark-mode colour variants
+- Category colour badges (Expenses table, Dashboard recent list) and category cards (Categories page) now use dark-tinted backgrounds and light text in dark mode instead of light-on-dark
+
+---
+
 ## [0.6.0] - 2026-06-10
 
 ### Added
