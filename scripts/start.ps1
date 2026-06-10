@@ -41,9 +41,10 @@ $FRONTEND_DIR = Join-Path $ROOT "frontend"
 $COMPOSE_FILE = Join-Path $ROOT "docker-compose.yaml"
 $MVNW         = Join-Path $BACKEND_DIR "mvnw.cmd"
 $ENV_FILE     = Join-Path $BACKEND_DIR ".env"
-$BACKEND_LOG  = Join-Path $BACKEND_DIR "logs\backend.log"
-$BACKEND_ERR  = Join-Path $BACKEND_DIR "logs\backend-err.log"
-$FRONTEND_LOG = Join-Path $FRONTEND_DIR "logs\frontend.log"
+$LOGS_DIR     = Join-Path $ROOT "logs"
+$BACKEND_LOG  = Join-Path $LOGS_DIR "backend.log"
+$BACKEND_ERR  = Join-Path $LOGS_DIR "backend-err.log"
+$FRONTEND_LOG = Join-Path $LOGS_DIR "frontend.log"
 
 # ── Output helpers ─────────────────────────────────────────────────────────────
 function Write-Banner {
@@ -178,11 +179,11 @@ function Start-Backend {
     Get-Process java -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
     Start-Sleep -Milliseconds 500
 
-    New-Item -ItemType Directory -Path (Join-Path $BACKEND_DIR "logs") -Force | Out-Null
-    Write-Step "Starting Spring Boot (logs -> backend\logs\backend.log)..."
+    if (-not (Test-Path $LOGS_DIR)) { New-Item -ItemType Directory -Path $LOGS_DIR | Out-Null }
+    Write-Step "Starting Spring Boot (logs -> logs\backend.log)..."
 
     Start-Process -NoNewWindow -FilePath $MVNW `
-        -ArgumentList "spring-boot:run" `
+        -ArgumentList "spring-boot:run", "-Dspring-boot.run.jvmArguments=-XX:ErrorFile=`"$LOGS_DIR\hs_err_%p.log`"" `
         -WorkingDirectory $BACKEND_DIR `
         -RedirectStandardOutput $BACKEND_LOG `
         -RedirectStandardError  $BACKEND_ERR
@@ -203,12 +204,12 @@ function Start-Backend {
             Write-Info "Swagger UI    -> http://localhost:8080/swagger-ui.html"
         }
         "failed" {
-            Write-Fail "Backend failed to start -- check backend\logs\backend.log"
+            Write-Fail "Backend failed to start -- check logs\backend.log"
             exit 1
         }
         "timeout" {
             Write-Warn "Backend did not report ready within 90s (may still be compiling)"
-            Write-Info "Tail the log: Get-Content backend\logs\backend.log -Wait"
+            Write-Info "Tail the log: Get-Content logs\backend.log -Wait"
         }
     }
 }
@@ -271,7 +272,7 @@ function Start-Frontend {
     Write-Section "Frontend"
     Stop-Port -Port 5173 -Name "frontend"
 
-    New-Item -ItemType Directory -Path (Join-Path $FRONTEND_DIR "logs") -Force | Out-Null
+    if (-not (Test-Path $LOGS_DIR)) { New-Item -ItemType Directory -Path $LOGS_DIR | Out-Null }
 
     if (-not (Test-Path (Join-Path $FRONTEND_DIR "node_modules"))) {
         Write-Step "node_modules not found -- running npm install..."
@@ -279,7 +280,7 @@ function Start-Frontend {
         Write-Ok "npm install complete"
     }
 
-    Write-Step "Starting Vite dev server (logs -> frontend\logs\frontend.log)..."
+    Write-Step "Starting Vite dev server (logs -> logs\frontend.log)..."
     Start-Process -NoNewWindow -FilePath "cmd.exe" `
         -ArgumentList "/c npm run dev > `"$FRONTEND_LOG`" 2>&1" `
         -WorkingDirectory $FRONTEND_DIR
@@ -295,7 +296,7 @@ function Start-Frontend {
     if ($ready) {
         Write-Ok "Frontend ready  -> http://localhost:5173"
     } else {
-        Write-Warn "Frontend did not report ready in time -- check frontend\logs\frontend.log"
+        Write-Warn "Frontend did not report ready in time -- check logs\frontend.log"
     }
 }
 
