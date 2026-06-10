@@ -73,6 +73,11 @@ venv/
 __pycache__/
 *.py[cod]
 
+# --- Internal / session tracking (never commit) ---
+.claude/ROADMAP-PROGRESS.md
+.claude/scheduled_tasks.lock
+.claude/settings.json
+
 # --- Misc ---
 *.tmp
 *.temp
