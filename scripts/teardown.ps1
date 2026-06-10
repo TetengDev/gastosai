@@ -20,7 +20,7 @@
     All data is permanently lost. Prompts for confirmation unless -Force is set.
 
 .PARAMETER DeleteLogs
-    Delete all log files in backend\logs\ and frontend\logs\.
+    Delete all log files in logs\.
 
 .PARAMETER All
     Equivalent to -StopBackend -StopFrontend -WipeDb -DeleteLogs.
@@ -52,9 +52,10 @@ $ROOT          = Split-Path $PSScriptRoot -Parent
 $BACKEND_DIR   = Join-Path $ROOT "backend"
 $FRONTEND_DIR  = Join-Path $ROOT "frontend"
 $COMPOSE_FILE  = Join-Path $ROOT "docker-compose.yaml"
-$BACKEND_LOG   = Join-Path $BACKEND_DIR "logs\backend.log"
-$BACKEND_ERR   = Join-Path $BACKEND_DIR "logs\backend-err.log"
-$FRONTEND_LOG  = Join-Path $FRONTEND_DIR "logs\frontend.log"
+$LOGS_DIR      = Join-Path $ROOT "logs"
+$BACKEND_LOG   = Join-Path $LOGS_DIR "backend.log"
+$BACKEND_ERR   = Join-Path $LOGS_DIR "backend-err.log"
+$FRONTEND_LOG  = Join-Path $LOGS_DIR "frontend.log"
 
 # -- Output helpers ------------------------------------------------------------
 function Write-Banner {
@@ -165,7 +166,7 @@ function Show-TeardownMenu {
     Write-Host "  [3]  Stop Docker services   (docker compose down -- stops DB + any Docker backend/frontend; data kept)" -ForegroundColor White
     Write-Host "  [4]  Wipe database volume  " -NoNewline -ForegroundColor White
     Write-Host "(docker compose down -v -- stops all + deletes DB data)" -ForegroundColor Yellow
-    Write-Host "  [5]  Delete log files      (backend\logs\ + frontend\logs\)" -ForegroundColor White
+    Write-Host "  [5]  Delete log files      (logs\)" -ForegroundColor White
     Write-Host "  [6]  Full teardown         (1 + 2 + 4 + 5)" -ForegroundColor White
     Write-Host "  [0]  Cancel" -ForegroundColor DarkGray
     Write-Host ""
