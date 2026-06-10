@@ -114,7 +114,8 @@ See `ai/skills/agents.md` for the full parallel workflow.
 | `ai/skills/git-best-practices.md` | Git safety rules for all repository changes |
 | `ai/skills/git-branching-release-strategy.md` | SemVer, branching, releases, hotfixes, tags |
 | `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
-| `ai/skills/feature-workflow.md` | Branch → develop → test → merge workflow |
+| `ai/skills/feature-workflow.md` | Branch → develop → verify → squash-merge workflow |
+| `ai/skills/doc-audit.md` | Documentation audit checklist — run to detect stale docs |
 
 ### Prompts and templates
 
