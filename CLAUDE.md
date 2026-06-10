@@ -133,8 +133,10 @@ Both `backend/pom.xml` and `frontend/package.json` must be bumped **together** t
 |---|---|
 | `fix:`, `perf:` | PATCH — e.g. `0.3.1 → 0.3.2` |
 | `feat:` | MINOR — e.g. `0.3.1 → 0.4.0` |
-| `feat!:` / `fix!:` / `BREAKING CHANGE:` | MINOR while pre-1.0, MAJOR at `1.0.0+` |
+| `feat!:` / `fix!:` / `BREAKING CHANGE:` | MAJOR always — e.g. `0.9.0 → 1.0.0`, `1.2.3 → 2.0.0` |
 | `docs:`, `test:`, `chore:`, `refactor:`, `ci:` only | No bump required |
+
+**Breaking change** = removes/renames an existing endpoint or field, changes request/response shape or HTTP status, renames a public env var or CLI flag, or drops a runtime version. Adding new endpoints, fields, env vars, or DB tables is `feat:`, not a breaking change.
 
 **App code** = `backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`. Docs, skills, CI config, and git hook changes do not trigger a bump.
 
@@ -185,8 +187,11 @@ Sub-agent definitions live in `.claude/agents/`. Use them when implementing feat
 | `backend-dev` | Implements Spring Boot changes; verifies with compile + tests before finishing |
 | `frontend-dev` | Implements React/TypeScript changes; verifies with lint + build before finishing |
 | `pre-pr` | Runs the full quality gate before any PR (lint, build, tests, runtime execution, version) |
+| `prompt-compressor` | Compresses verbose agent prompts to minimum tokens before spawning sub-agents |
 
-Workflow: `full-stack-planner` → `backend-dev` + `frontend-dev` (parallel) → `pre-pr`
+Workflow: `full-stack-planner` → **`prompt-compressor`** (compress each agent prompt) → `backend-dev` + `frontend-dev` (parallel) → `pre-pr`
+
+Token-efficiency rules: `ai/skills/token-optimization.md`
 
 ---
 

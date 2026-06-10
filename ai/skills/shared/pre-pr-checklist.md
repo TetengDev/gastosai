@@ -98,8 +98,10 @@ git log master..HEAD --oneline
 |---|---|
 | `fix:`, `perf:` | PATCH |
 | `feat:` | MINOR |
-| `feat!:` / `BREAKING CHANGE:` | MAJOR (MINOR if pre-1.0) |
+| `feat!:` / `fix!:` / `BREAKING CHANGE:` | MAJOR always — `0.9.0 → 1.0.0`, `1.2.3 → 2.0.0` |
 | `docs:`, `test:`, `chore:`, `refactor:`, `ci:` only | None |
+
+**Breaking change** = removes/renames an existing endpoint or field, changes request/response shape or HTTP status, renames a public env var or CLI flag, or drops a runtime version. Adding new endpoints, fields, env vars, or DB tables is `feat:`, not a breaking change.
 
 "App code" = `backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`. Docs, CI config, and skills changes do not trigger a bump.
 

@@ -10,7 +10,7 @@ Prefer a simple trunk-based workflow with short-lived branches.
 
 Default long-lived branch: `main` (or `master`).
 
-Optional: `release/<major>.<minor>.x` when stabilising a release line.
+Optional: `release/<major>.<minor>.x` when stabilizing a release line.
 
 Avoid long-lived `develop` branches unless the project explicitly uses GitFlow.
 
@@ -45,8 +45,6 @@ MAJOR.MINOR.PATCH
 | Backward-compatible new feature | MINOR |
 | Backward-compatible bug fix | PATCH |
 
-For pre-1.0 projects (`0.x.y`), use MINOR for features and PATCH for fixes.
-
 ---
 
 ## Conventional commits → version bump
@@ -57,8 +55,10 @@ See `shared/git-best-practices.md` for the full commit type list. Bump mapping:
 |---|---|
 | `fix:`, `perf:` | PATCH |
 | `feat:` | MINOR |
-| `feat!:`, `fix!:`, `BREAKING CHANGE:` | MAJOR (MINOR if pre-1.0) |
+| `feat!:`, `fix!:`, `BREAKING CHANGE:` | MAJOR always — `0.9.0 → 1.0.0`, `1.2.3 → 2.0.0` |
 | `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | None |
+
+**Breaking change** = removes/renames an existing endpoint or field, changes request/response shape or HTTP status, renames a public env var or CLI flag, or drops a runtime version. Adding new endpoints, fields, env vars, or DB tables is `feat:`, not a breaking change.
 
 ---
 
