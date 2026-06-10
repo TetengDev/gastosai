@@ -48,6 +48,13 @@ npm run lint
 .\scripts\teardown.ps1 -All -Force
 ```
 
+### Version bump (from repo root)
+```powershell
+.\scripts\bump-version.ps1                     # dry-run: show recommended bump + release prep table
+.\scripts\bump-version.ps1 -Bump MINOR -Apply  # apply bump to pom.xml, package.json, CHANGELOG.md
+.\scripts\bump-version.ps1 -CutRelease         # bump + create release/x.y.z branch + annotated tag + push
+```
+
 ---
 
 ## Shell & runtime defaults
