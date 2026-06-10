@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.3] - 2026-06-10
+
+### Fixed
+- Expenses and Categories pages: "Delete All" button relocated from the primary action cluster to beneath the page title as a low-prominence text link, separating destructive actions from primary actions per UX best practices
+- Dark mode: app now resets to system preference (`prefers-color-scheme`) on logout instead of persisting the last user's theme choice
+
+---
+
 ## [0.5.2] - 2026-06-10
 
 ### Added
