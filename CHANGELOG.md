@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.10.0] - 2026-06-10
+
+### Added
+- Budgets feature — set monthly spending limits per category via `POST /budgets`; full CRUD (`GET`, `PUT`, `DELETE`) with per-user ownership enforcement
+- `GET /budgets/summary?month=YYYY-MM` — returns per-category spent vs budgeted, remaining, percent used, and status (`ON_TRACK` / `WARNING` at 80% / `OVER_BUDGET` at 100%)
+- Safe-to-spend and daily allowance calculated from total budget minus total spent; daily allowance prorates over remaining calendar days in the month
+- Budget page (`/budget`) — month picker, budget list with inline add/edit/delete modal, category dropdown
+- Budget Overview card on Dashboard — headline safe-to-spend, daily allowance, status-coloured progress bars per category
+
+### Changed
+- Semantic versioning rules updated: `BREAKING CHANGE` / `feat!:` / `fix!:` now always bumps MAJOR (e.g. `0.9.0 → 1.0.0`); pre-1.0 exception removed to follow Conventional Commits spec
+- Breaking change definition added to CLAUDE.md and pre-PR checklist: adding new endpoints/fields/tables is `feat:`, not a breaking change
+
+---
+
 ## [0.9.0] - 2026-06-10
 
 ### Changed
