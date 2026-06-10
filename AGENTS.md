@@ -94,6 +94,13 @@ For AI SQL-related changes, also follow:
 | `backend-dev` | `.claude/agents/backend-dev.md` | Implements Spring Boot changes; verifies with compile + tests |
 | `frontend-dev` | `.claude/agents/frontend-dev.md` | Implements React/TypeScript changes; verifies with lint + build |
 | `pre-pr` | `.claude/agents/pre-pr.md` | Runs the full quality gate before any PR |
+| `prompt-compressor` | `.claude/agents/prompt-compressor.md` | Compresses verbose agent prompts to < 800 tokens before spawning sub-agents |
+| `resource-finder` | `.claude/agents/resource-finder.md` | Researches and ranks libraries/tools by adoption, security, and community before adding new dependencies |
+| `ui-ux-reviewer` | `.claude/agents/ui-ux-reviewer.md` | Reviews UI/UX decisions against best practices for dashboards and data visualization |
+| `feature-prioritizer` | `.claude/agents/feature-prioritizer.md` | Scores feature candidates using ICE + revenue multiplier; returns ranked table with top-pick recommendation |
+| `tech-workflow` | `.claude/agents/tech-workflow.md` | Engineering process advisor for branching, PR sizing, sprint discipline, and incident response |
+| `cleanup` | `.claude/agents/cleanup.md` | Scans for stale/irrelevant files and reports deletion candidates; never deletes without confirmation |
+| `agent-auditor` | `.claude/agents/agent-auditor.md` | Audits agent/skill indexes for completeness, overlap, and consolidation; auto-fixes missing registrations |
 
 See `ai/skills/agents.md` for the full parallel workflow.
 
@@ -116,6 +123,7 @@ See `ai/skills/agents.md` for the full parallel workflow.
 | `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
 | `ai/skills/feature-workflow.md` | Branch → develop → verify → squash-merge workflow |
 | `ai/skills/doc-audit.md` | Documentation audit checklist — run to detect stale docs |
+| `ai/skills/token-optimization.md` | Token efficiency rules for agent prompts — < 800 tokens per prompt, reference over copy |
 
 ### Prompts and templates
 

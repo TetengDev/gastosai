@@ -54,10 +54,13 @@ Read the staged diff (`git diff --staged --stat`) and identify which change type
 Ask the user: "Was this executed at runtime? Describe what you ran and what you observed."
 
 ### 7. Version bump check
-- Read current version from `backend/pom.xml` (the `<version>` tag for the project, not the parent)
-- Read current version from `frontend/package.json`
-- Both must match
-- Check the commit type (`feat:` → MINOR bump required; `fix:`/`perf:` → PATCH; others → no bump required if no app code changed)
+Run the version bump script in dry-run mode to get the recommended bump:
+```powershell
+.\scripts\bump-version.ps1
+```
+Then verify manually:
+- Current version in `backend/pom.xml` (project `<version>`, not the Spring Boot parent) matches `frontend/package.json`
+- Commit type determines required bump: `feat:` → MINOR; `fix:`/`perf:` → PATCH; `chore:`/`docs:`/`refactor:`/`test:` → no bump if no app code changed
 - Confirm the version was bumped correctly if required
 
 ### 8. CHANGELOG check

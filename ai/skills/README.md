@@ -32,6 +32,7 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | Deploying to production | `deployment.md` | `git-branching-release-strategy.md` |
 | Understanding the domain model | `project-context.md` | — |
 | Implementing with parallel agents | `agents.md` | — |
+| Writing agent prompts | `agents.md` | `token-optimization.md` |
 | Auditing / cleaning up stale docs | `doc-audit.md` | — |
 
 ---
@@ -64,6 +65,7 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | `project-context.md` | Domain model, DTO contracts, request flow, env vars, frontend structure |
 | `agents.md` | Parallel agent system — planner, backend-dev, frontend-dev, pre-pr |
 | `doc-audit.md` | Documentation audit checklist — detect and fix stale docs |
+| `token-optimization.md` | Token efficiency rules for agent prompts — < 800 tokens per prompt, reference over copy |
 
 ---
 

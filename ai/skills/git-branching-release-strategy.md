@@ -17,33 +17,75 @@ The `commit-msg` hook is a **format linter only** — it validates the `type(sco
 
 ---
 
-## Tag on merge to protected branches — required
+## Release branch workflow
 
-`master` and `release/*` are protected branches. **Every merge to these branches must be immediately followed by a version tag.** Do not skip tagging.
+This project uses a **release branch strategy**: features merge to `master` via PRs, then a `release/x.y.z` branch is cut for each release. The release branch is tagged, protected, and never deleted — it is the permanent record of that shipped state. Hotfixes branch from the relevant `release/x.y.z` branch and are cherry-picked back to `master`.
 
-### Procedure
+### Automated (recommended)
+
+Use `scripts/bump-version.ps1 -CutRelease`. The script:
+1. Auto-detects the bump type from git log (or accepts `-Bump MAJOR|MINOR|PATCH`)
+2. Updates `backend/pom.xml`, `frontend/package.json`, and `CHANGELOG.md`
+3. Creates `release/x.y.z` from the current HEAD
+4. Commits the version files, creates an annotated tag, and pushes both
+5. Prints the `gh api` command to enable branch protection
 
 ```powershell
-# 1. Confirm you are on master (or the release branch) and it is clean
+# Dry-run first — see the recommended bump before applying
+.\scripts\bump-version.ps1
+
+# Apply bump + cut release branch
+.\scripts\bump-version.ps1 -CutRelease
+```
+
+### Manual procedure
+
+If the script is unavailable, follow these steps:
+
+```powershell
+# 1. Confirm clean working tree on master
 git status
 git log --oneline -3
 
-# 2. Read the current version from pom.xml
-$version = (Select-String '<version>(\d+\.\d+\.\d+)</version>' backend/pom.xml |
-    Where-Object { $_.LineNumber -eq 13 } |
-    ForEach-Object { $_.Matches[0].Groups[1].Value })
-Write-Output "Tagging v$version"
+# 2. Read the project version from pom.xml (line ~13, skip Spring Boot parent)
+$version = (Get-Content backend/pom.xml |
+    Select-String '<version>(\d+\.\d+\.\d+)</version>' |
+    Select-Object -Skip 1 -First 1).Matches[0].Groups[1].Value
+Write-Output "Version: $version"
 
-# 3. Create annotated tag
+# 3. Cut the release branch
+git checkout -b "release/$version"
+
+# 4. Commit any last-minute version-bump files (if not already on branch)
+git add backend/pom.xml frontend/package.json CHANGELOG.md
+git commit -m "chore: release v$version"
+
+# 5. Create annotated tag
 git tag -a "v$version" -m "Release v$version"
 
-# 4. Push the tag
+# 6. Push branch and tag
+git push origin "release/$version"
 git push origin "v$version"
 ```
+
+After pushing, set branch protection via the GitHub UI or the `gh api` command printed by the script.
 
 ### Why annotated tags
 
 Annotated tags store the tagger, date, and message — they make it possible to `git checkout v0.5.1` to reproduce any released state exactly. Lightweight tags do not carry this metadata.
+
+---
+
+## Tag on merge — required
+
+`master` and `release/*` are protected branches. **Every merge to these branches must have a corresponding version tag.** Do not skip tagging.
+
+Use `scripts/bump-version.ps1 -CutRelease` — it creates the tag automatically. For master-only merges without a release branch cut, create the tag manually:
+
+```powershell
+git tag -a "v$version" -m "Release v$version"
+git push origin "v$version"
+```
 
 ---
 

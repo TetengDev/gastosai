@@ -10,7 +10,21 @@ Prefer a simple trunk-based workflow with short-lived branches.
 
 Default long-lived branch: `main` (or `master`).
 
-Optional: `release/<major>.<minor>.x` when stabilizing a release line.
+### Release branch from main (recommended for production releases)
+
+Cut a `release/x.y.z` branch from `main` when shipping a release:
+
+1. All feature PRs merge to `main` first.
+2. Cut `release/x.y.z` from `main` HEAD.
+3. Apply the version bump commit on the release branch.
+4. Tag the release branch with `vx.y.z` (annotated).
+5. Protect the branch: no direct pushes, no deletions, require PR for changes.
+6. Keep the branch permanently — it is the historical record of that release.
+7. Hotfixes: branch from `release/x.y.z`, fix, PR to both `release/x.y.z` and `main`.
+
+Benefits over tagging `main` directly: release branches isolate shipped state, simplify hotfixes without disturbing active development, and allow multiple release lines to coexist.
+
+Optional: `release/<major>.<minor>.x` (without patch) when stabilizing a release line.
 
 Avoid long-lived `develop` branches unless the project explicitly uses GitFlow.
 
