@@ -38,6 +38,14 @@ jobs:
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
+      - name: Sync package-lock.json if out of date
+        working-directory: frontend
+        run: |
+          npm install --package-lock-only
+          if ! git diff --quiet package-lock.json; then
+            echo "::warning::package-lock.json was out of sync with package.json. Commit the updated lock file."
+          fi
+
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
