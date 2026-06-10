@@ -11,22 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.9.0] - 2026-06-10
-
-### Added
-- `ParsedExpenseResult` now includes `saveable` (boolean) and `hint` (string|null) fields; HIGH-confidence parses with a positive amount are marked saveable, LOW-confidence parses return a hint asking for more detail
-- ChatWidget: expense-logging intent detection — messages containing spending keywords (English + Filipino) are routed to `POST /expenses/parse` instead of the AI query endpoint
-- ChatWidget: draft expense card in chat — shows amount, category, date, and description with a "Save expense" button; on save, creates the expense directly without opening the modal; shows "Saved to expenses" on success
-- Suggestion chip: "spent 250 on Jollibee lunch" as an example to guide users toward the log-expense flow
-
----
-
 ## [0.8.0] - 2026-06-10
 
 ### Added
 - `POST /expenses/parse` — natural-language text parse endpoint; accepts free-form text (e.g. "spent 250 on lunch") and returns a draft expense with amount, category, date, description, and confidence level without saving
 - `ExpenseParser` interface with OpenAI and Claude implementations; active provider follows the existing `GASTOS_AI_PROVIDER` env var
-- Philippine time (UTC+8) is used as the default date when no date is mentioned in the parsed text
+- `ParsedExpenseResult` includes `saveable` (boolean) and `hint` (string|null); HIGH-confidence parses with a positive amount are marked saveable, LOW-confidence returns a hint asking for more detail
+- ChatWidget: expense-logging intent detection — messages with spending keywords (English + Filipino), currency indicators, or a numeric amount without a query phrase are routed to `POST /expenses/parse`
+- ChatWidget: draft expense card — shows amount, category, date, and description with a "Save expense" button; fires `gastosai:expense-created` on save so Expenses and Dashboard lists refresh immediately
+- Suggestion chip: "spent 250 on Jollibee lunch" to guide users toward the log-expense flow
+- AI parse prompt injects current Philippine Time date and predefined category mapping rules to improve accuracy
+
+### Fixed
+- Expenses list and Dashboard recent expenses now sorted by date DESC — newly added expenses appear at the top
 
 ---
 
