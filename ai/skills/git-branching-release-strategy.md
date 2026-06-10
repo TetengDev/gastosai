@@ -11,7 +11,9 @@ Both files must be bumped **together** to the same version:
 - `backend/pom.xml` — the `<version>` tag at ~line 13 (not the Spring Boot parent version at line 8)
 - `frontend/package.json` — the `"version"` field
 
-A bump is only required when **app code** changes (`backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`). Commits touching only docs, CI config, skills, or git hooks do not need a bump.
+**Bump once per PR, not once per commit.** Commit freely on the feature branch. Before opening the PR, check `git log master..HEAD --oneline`, find the highest-impact commit type, and bump accordingly. Commits touching only docs, CI config, skills, or git hooks do not need a bump.
+
+The `commit-msg` hook is a **format linter only** — it validates the `type(scope): description` shape but does not block on version bumps.
 
 ---
 

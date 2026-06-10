@@ -27,7 +27,7 @@ git add backend/src/... frontend/src/...
 git commit -m "feat: add Budget entity and CRUD endpoints"
 ```
 
-### 3. Verify before opening a PR
+### 3. Verify — automated checks
 
 Run the full pre-PR checklist from `ai/skills/shared/pre-pr-checklist.md`. Minimum:
 
@@ -36,13 +36,29 @@ cd frontend; npm run lint; npm run build
 cd ..\backend; .\mvnw.cmd test
 ```
 
-Then run the app and test the golden path + at least one edge case in the browser or via curl. Do not open a PR without runtime execution evidence.
+### 4. Verify — user acceptance (REQUIRED before merge)
 
-### 4. Open the PR
+**Never merge, never mark a feature done, and never open a PR without this step.**
+
+Start the app so the user can exercise the new feature:
+
+```powershell
+# Full Docker stack (default)
+docker compose --profile app up -d --build
+```
+
+Then explicitly ask the user:
+- Which endpoint or UI flow to test
+- What the expected behavior looks like
+- Whether to test any edge cases
+
+Only after the user confirms the feature works as expected may the branch be merged or the feature marked ✅ Done in the roadmap tracker.
+
+### 5. Open the PR
 
 Use `gh pr create` with a summary and test plan. The project squash-merges via GitHub PRs — do not use `git merge` locally.
 
-### 5. After merge — delete the branch
+### 6. After merge — delete the branch
 
 ```powershell
 git branch -d feat/<name>                    # delete local
