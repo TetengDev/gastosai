@@ -10,7 +10,7 @@ Prefer a simple trunk-based workflow with short-lived branches.
 
 Default long-lived branch: `main` (or `master`).
 
-Optional: `release/<major>.<minor>.x` when stabilising a release line.
+Optional: `release/<major>.<minor>.x` when stabilizing a release line.
 
 Avoid long-lived `develop` branches unless the project explicitly uses GitFlow.
 
@@ -35,30 +35,63 @@ All names: lowercase kebab-case, short, descriptive.
 
 ## Semantic Versioning
 
+References: [SemVer 2.0.0](https://semver.org/) · [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) · [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) · [semantic-release](https://github.com/semantic-release/semantic-release)
+
 ```
 MAJOR.MINOR.PATCH
+Pre-release:    1.2.0-alpha.1 / 1.2.0-beta.1 / 1.2.0-rc.1
+Build metadata: 1.2.0+build.sha  (informational only; ignored by precedence)
 ```
 
 | Change | Bump |
 |---|---|
-| Breaking / incompatible | MAJOR |
+| Breaking / incompatible API or behavior change | MAJOR |
 | Backward-compatible new feature | MINOR |
 | Backward-compatible bug fix | PATCH |
-
-For pre-1.0 projects (`0.x.y`), use MINOR for features and PATCH for fixes.
 
 ---
 
 ## Conventional commits → version bump
 
-See `shared/git-best-practices.md` for the full commit type list. Bump mapping:
-
 | Commit type | Bump |
 |---|---|
 | `fix:`, `perf:` | PATCH |
 | `feat:` | MINOR |
-| `feat!:`, `fix!:`, `BREAKING CHANGE:` | MAJOR (MINOR if pre-1.0) |
-| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | None |
+| Any type with `!` (e.g. `feat!:`, `fix!:`) or `BREAKING CHANGE:` footer | MAJOR |
+| `docs:`, `style:`, `refactor:`, `test:`, `chore:`, `build:`, `ci:`, `revert:` | None |
+
+Notes:
+- `perf:` → PATCH unless behaviorally incompatible (then MAJOR).
+- `refactor:` → no bump unless it changes user-facing behavior.
+- If uncertain whether a change is breaking, **explain the risk and ask before choosing the version.**
+
+**Breaking change** = removes/renames an existing endpoint or field, changes request/response shape or HTTP status codes, renames a public env var or CLI flag, drops runtime version support. Adding new endpoints, fields, env vars, or DB tables is `feat:`, not a breaking change.
+
+## Release decision process
+
+Before bumping, inspect commits since the last release tag:
+
+1. Any breaking change → MAJOR
+2. Else any `feat:` → MINOR
+3. Else any `fix:` / `perf:` / security patch → PATCH
+4. Else no bump
+
+Never downgrade. Never skip versions. Do not call a breaking change a patch or minor.
+
+## Release preparation output
+
+Produce this output and **wait for explicit approval** before committing, tagging, pushing, or publishing. Do not push tags unless explicitly asked.
+
+```
+- Current version:
+- Latest tag:
+- Recommended bump:
+- Reason:
+- Proposed next version:
+- Changelog entry:
+- Files to change:
+- Commands to run:
+```
 
 ---
 
@@ -101,6 +134,8 @@ Every release must have an entry in `CHANGELOG.md` following [Keep a Changelog](
 ## [1.2.0] - YYYY-MM-DD
 ### Added
 ### Changed
+### Deprecated
+### Removed
 ### Fixed
 ### Security
 ```
@@ -109,6 +144,7 @@ Every release must have an entry in `CHANGELOG.md` following [Keep a Changelog](
 - Move its contents to a versioned section when releasing.
 - Write entries from the user/operator perspective, not the developer's.
 - `Security` entries are highest priority — list them first.
+- Omit noisy internal changes unless they affect users, developers, deployment, APIs, config, security, or behavior.
 
 ---
 

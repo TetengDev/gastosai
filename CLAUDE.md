@@ -125,24 +125,75 @@ See `ai/skills/project-context.md` for the full domain model and data flow.
 
 ## Semantic versioning — required
 
+References: [SemVer 2.0.0](https://semver.org/) · [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) · [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) · [semantic-release](https://github.com/semantic-release/semantic-release)
+
 Both `backend/pom.xml` and `frontend/package.json` must be bumped **together** to the same version.
 
-**Version bump is a pre-PR concern, not a per-commit concern.** Commit freely on a feature branch. Before opening a PR, bump the version **once** based on the highest-impact commit type across all commits on the branch since `master`.
+**Version bump is a pre-PR concern, not a per-commit concern.** Commit freely on a feature branch. Before opening a PR, bump once based on the highest-impact change since the last release tag.
 
-| Highest commit type on branch (app code touched) | Bump |
+### Version format
+
+```
+MAJOR.MINOR.PATCH
+Pre-release:    1.2.0-alpha.1 / 1.2.0-beta.1 / 1.2.0-rc.1
+Build metadata: 1.2.0+build.sha  (informational only; ignored by precedence rules)
+```
+
+### Commit type → version bump
+
+| Commit type | Bump |
 |---|---|
-| `fix:`, `perf:` | PATCH — e.g. `0.3.1 → 0.3.2` |
-| `feat:` | MINOR — e.g. `0.3.1 → 0.4.0` |
-| `feat!:` / `fix!:` / `BREAKING CHANGE:` | MINOR while pre-1.0, MAJOR at `1.0.0+` |
-| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` only | No bump required |
+| `fix:`, `perf:` | PATCH |
+| `feat:` | MINOR |
+| Any type with `!` (e.g. `feat!:`, `fix!:`) or `BREAKING CHANGE:` footer | MAJOR |
+| `docs:`, `style:`, `refactor:`, `test:`, `chore:`, `build:`, `ci:`, `revert:` | None |
 
-**App code** = `backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`. Docs, skills, CI config, and git hook changes do not trigger a bump.
+Notes:
+- `perf:` → PATCH unless the change is behaviorally incompatible (then MAJOR).
+- `refactor:` → no bump unless it changes user-facing behavior.
+- If uncertain whether a change is breaking, **explain the risk and ask before choosing the version.**
 
-When bumping, update `CHANGELOG.md` — move `[Unreleased]` notes into the new version section. Then tag after merge:
+### Breaking change defined
+
+Breaking = removes or renames an existing endpoint or field, changes request/response shape or HTTP status codes, renames a public env var or CLI flag, drops support for a runtime version. Adding new endpoints, fields, env vars, or DB tables is `feat:`, not a breaking change.
+
+### Release decision process
+
+Before bumping, inspect commits since the last release tag (`git log <last-tag>..HEAD --oneline`):
+
+1. Any breaking change → MAJOR
+2. Else any `feat:` → MINOR
+3. Else any `fix:` / `perf:` / security patch → PATCH
+4. Else no bump
+
+Never downgrade. Never skip versions. Do not call a breaking change a patch or minor release.
+
+### Release preparation output
+
+When preparing a release, produce this output and **wait for explicit approval** before committing, tagging, pushing, or publishing. Do not push tags unless explicitly asked.
+
+```
+- Current version:
+- Latest tag:
+- Recommended bump:
+- Reason:
+- Proposed next version:
+- Changelog entry:
+- Files to change:
+- Commands to run:
+```
+
+### Applying the bump
+
+1. Update `backend/pom.xml` `<version>` and `frontend/package.json` `"version"` to the same new value.
+2. Update `CHANGELOG.md` — move `[Unreleased]` entries into a new `## [x.y.z] - YYYY-MM-DD` section.
+3. Stage and commit before opening the PR.
+
+After merge to master, tag with explicit approval:
 
 ```powershell
-git tag -a v0.4.0 -m "Release v0.4.0"
-git push origin v0.4.0
+git tag -a v0.10.0 -m "Release v0.10.0"
+git push origin v0.10.0
 ```
 
 ### One-time hook setup
@@ -185,8 +236,11 @@ Sub-agent definitions live in `.claude/agents/`. Use them when implementing feat
 | `backend-dev` | Implements Spring Boot changes; verifies with compile + tests before finishing |
 | `frontend-dev` | Implements React/TypeScript changes; verifies with lint + build before finishing |
 | `pre-pr` | Runs the full quality gate before any PR (lint, build, tests, runtime execution, version) |
+| `prompt-compressor` | Compresses verbose agent prompts to minimum tokens before spawning sub-agents |
 
-Workflow: `full-stack-planner` → `backend-dev` + `frontend-dev` (parallel) → `pre-pr`
+Workflow: `full-stack-planner` → **`prompt-compressor`** (compress each agent prompt) → `backend-dev` + `frontend-dev` (parallel) → `pre-pr`
+
+Token-efficiency rules: `ai/skills/token-optimization.md`
 
 ---
 

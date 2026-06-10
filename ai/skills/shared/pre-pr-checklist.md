@@ -87,26 +87,43 @@ Never commit: `.env` files, API keys, tokens, passwords, local machine paths, ID
 
 **Blocker:** Version must be bumped before the PR is opened if any app code changed on the branch.
 
-Version bumps happen **once per PR**, not once per commit. Determine the required bump by scanning all commits on this branch since `master`:
+References: [SemVer 2.0.0](https://semver.org/) · [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
+
+Version bumps happen **once per PR**, not once per commit. Inspect commits since the last release tag:
 
 ```powershell
-# List all commit types on this branch vs master
 git log master..HEAD --oneline
 ```
 
-| Highest commit type on branch (with app code changes) | Bump |
+### Release decision
+
+1. Any breaking change → MAJOR
+2. Else any `feat:` → MINOR
+3. Else any `fix:` / `perf:` / security patch → PATCH
+4. Else no bump
+
+Never downgrade. Never skip versions. Do not call a breaking change a patch or minor.
+
+### Commit type → bump
+
+| Commit type | Bump |
 |---|---|
 | `fix:`, `perf:` | PATCH |
 | `feat:` | MINOR |
-| `feat!:` / `BREAKING CHANGE:` | MAJOR (MINOR if pre-1.0) |
-| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` only | None |
+| Any type with `!` or `BREAKING CHANGE:` footer | MAJOR |
+| `docs:`, `style:`, `refactor:`, `test:`, `chore:`, `build:`, `ci:`, `revert:` | None |
 
-"App code" = `backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`. Docs, CI config, and skills changes do not trigger a bump.
+`perf:` → PATCH unless behaviorally incompatible (then MAJOR). `refactor:` → no bump unless user-facing behavior changes. If uncertain whether a change is breaking, **explain the risk and ask before choosing the version.**
 
-When a bump is required:
+**Breaking change** = removes/renames existing endpoint or field, changes request/response shape or HTTP status codes, renames public env var or CLI flag, drops runtime version support. Adding new endpoints, fields, env vars, or DB tables is `feat:`, not a breaking change.
+
+### Applying the bump
+
 1. Update `backend/pom.xml` `<version>` and `frontend/package.json` `"version"` to the same new value
 2. Update `CHANGELOG.md` — move `[Unreleased]` entries into a new `## [x.y.z] - YYYY-MM-DD` section
-3. Stage and commit these changes before creating the PR
+3. Stage and commit before creating the PR
+
+Do not push tags unless explicitly asked.
 
 **After merge to master:** tag the release commit:
 ```powershell
