@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.9.0] - 2026-06-10
+
+### Changed
+- Category lookups and creation are now case-insensitive — `"food"`, `"Food"`, and `"FOOD"` resolve to the same category; duplicate creation via different casings is rejected
+
+---
+
 ## [0.8.0] - 2026-06-10
 
 ### Added
