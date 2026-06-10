@@ -168,8 +168,10 @@ git config core.hooksPath .githooks
 
 ## What to check before opening a PR
 
-9. Version bumped in `backend/pom.xml` and `frontend/package.json` (see bump table above)
-10. `CHANGELOG.md` updated — move `[Unreleased]` notes into the new version section
+9. `mvnw.cmd verify` — tests pass; JaCoCo report generated at `target/site/jacoco/index.html`; if line coverage < 70%, note in PR body and add follow-up task (does not block build)
+10. `npm run test:coverage` — tests pass; if line coverage < 70%, note in PR body and add follow-up task (does not block build)
+11. Version bumped in `backend/pom.xml` and `frontend/package.json` (see bump table above)
+12. `CHANGELOG.md` updated — move `[Unreleased]` notes into the new version section
 
 ---
 
