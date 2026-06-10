@@ -37,28 +37,30 @@ Common lint rules to watch for:
 
 ---
 
-## 2. Tests
+## 2. Tests and coverage
 
 ### Backend
 
-```bash
-# Windows
-.\mvnw.cmd test
+```powershell
+# Windows — runs tests + JaCoCo coverage report; fails build if below threshold
+.\mvnw.cmd verify
 
 # Unix
-./mvnw test
+./mvnw verify
 ```
 
-### Frontend (if test runner is configured)
+### Frontend
 
 ```bash
-npm test -- --run
+npm run test:coverage   # vitest with c8 — fails if below threshold
 ```
 
 **Blocker:** Any failing test. All tests must be green before opening a PR.
 
+**Warning (not a build blocker):** If line coverage is below 70%, note it in the PR description and add a follow-up task to improve coverage. New features and bug fixes must include tests; coverage below 70% signals missing tests that must be addressed before or shortly after merge.
+
 New features require:
-- Unit test for service/business logic
+- Unit test for service/business logic (mocked dependencies)
 - Integration test for the HTTP happy path
 
 Bug fixes require:
@@ -240,7 +242,9 @@ Any match outside a comment line is a blocker.
 ```
 [ ] npm run lint         — 0 errors
 [ ] npm run build        — clean compile
-[ ] Backend tests        — all green
+[ ] Backend tests green       — `mvnw test` (or `mvnw verify` for coverage report)
+[ ] Frontend tests green      — `npm run test:run`
+[ ] Coverage checked          — run `mvnw verify` + `npm run test:coverage`; if line coverage < 70%, note in PR and add follow-up task
 [ ] No secrets staged
 [ ] On a feature branch, not main/master
 [ ] Version bumped       — once for the branch based on highest commit type (BLOCKER if app code changed)
