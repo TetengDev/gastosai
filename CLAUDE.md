@@ -55,7 +55,7 @@ npm run lint
 These apply in every session without exception — do not wait to be reminded:
 
 - **Shell tool**: Always use the **PowerShell tool** for every command. Never use the Bash tool — this machine is Windows 11 and Bash uses WSL paths (`/mnt/d/...`) that fail here.
-- **Default run mode**: Run the app as a **full Docker stack** (`docker compose --profile app up -d --build`). Use native dev mode only when the user explicitly asks for it.
+- **Default run mode**: Run **natively** to save memory — Docker for the DB only (`docker compose up -d`), backend via `mvnw.cmd spring-boot:run`, frontend via `npm run dev`. Use the full Docker stack (`docker compose --profile app up -d --build`) only when the user explicitly asks for it. Always check if ports `:8080` / `:5173` / `:5433` are already occupied before starting; tear down existing processes first if they are.
 - **Default ports**: backend `:8080` · frontend `:5173` · database `:5433`. Never silently accept a fallback port.
 - **GitHub CLI**: Installed at `C:\Program Files\GitHub CLI\gh.exe`. The `GITHUB_TOKEN` is in the repo root `.env`. Load it before any `gh` command:
   ```powershell
@@ -125,27 +125,29 @@ See `ai/skills/project-context.md` for the full domain model and data flow.
 
 ## Semantic versioning — required
 
-Both `backend/pom.xml` and `frontend/package.json` must be bumped together to the same version. A `commit-msg` hook enforces this automatically (see setup below).
+Both `backend/pom.xml` and `frontend/package.json` must be bumped **together** to the same version.
 
-**The bump is only required when app code changes** (`backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`). Commits that only touch docs, skills, CI config, or git hooks do not need a bump even if they use `feat:` or `fix:`.
+**Version bump is a pre-PR concern, not a per-commit concern.** Commit freely on a feature branch. Before opening a PR, bump the version **once** based on the highest-impact commit type across all commits on the branch since `master`.
 
-| Commit type + app code changed | Bump |
+| Highest commit type on branch (app code touched) | Bump |
 |---|---|
 | `fix:`, `perf:` | PATCH — e.g. `0.3.1 → 0.3.2` |
 | `feat:` | MINOR — e.g. `0.3.1 → 0.4.0` |
 | `feat!:` / `fix!:` / `BREAKING CHANGE:` | MINOR while pre-1.0, MAJOR at `1.0.0+` |
-| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | No bump required |
+| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` only | No bump required |
 
-When bumping, also update `CHANGELOG.md` — move relevant notes from `[Unreleased]` into the new version section. Then tag:
+**App code** = `backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`. Docs, skills, CI config, and git hook changes do not trigger a bump.
 
-```bash
+When bumping, update `CHANGELOG.md` — move `[Unreleased]` notes into the new version section. Then tag after merge:
+
+```powershell
 git tag -a v0.4.0 -m "Release v0.4.0"
 git push origin v0.4.0
 ```
 
 ### One-time hook setup
 
-Run once per clone to activate the `commit-msg` hook:
+Run once per clone to activate the `commit-msg` hook (format linter only — no version enforcement):
 
 ```bash
 git config core.hooksPath .githooks
@@ -163,8 +165,11 @@ git config core.hooksPath .githooks
 6. No secrets in staged files (`.env`, API keys)
 7. Commits are atomic and scoped to one concern per commit
 8. No `Co-Authored-By` or AI attribution lines in commit messages
-9. Version bumped in `backend/pom.xml` and `frontend/package.json` if commit type requires it (see above)
-10. `CHANGELOG.md` updated — move `[Unreleased]` notes into the new version section when releasing
+
+## What to check before opening a PR
+
+9. Version bumped in `backend/pom.xml` and `frontend/package.json` (see bump table above)
+10. `CHANGELOG.md` updated — move `[Unreleased]` notes into the new version section
 
 ---
 

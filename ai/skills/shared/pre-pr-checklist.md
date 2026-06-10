@@ -83,18 +83,34 @@ Never commit: `.env` files, API keys, tokens, passwords, local machine paths, ID
 
 ## 4. Version bump
 
-Check whether the commit type and changed files require a version bump:
+**Blocker:** Version must be bumped before the PR is opened if any app code changed on the branch.
 
-| Commit type + app code changed | Bump |
+Version bumps happen **once per PR**, not once per commit. Determine the required bump by scanning all commits on this branch since `master`:
+
+```powershell
+# List all commit types on this branch vs master
+git log master..HEAD --oneline
+```
+
+| Highest commit type on branch (with app code changes) | Bump |
 |---|---|
 | `fix:`, `perf:` | PATCH |
 | `feat:` | MINOR |
 | `feat!:` / `BREAKING CHANGE:` | MAJOR (MINOR if pre-1.0) |
-| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` | None |
+| `docs:`, `test:`, `chore:`, `refactor:`, `ci:` only | None |
 
-"App code" = source files or package manifests. Docs, CI config, and tooling changes do not require a bump.
+"App code" = `backend/src/`, `frontend/src/`, `backend/pom.xml`, `frontend/package.json`. Docs, CI config, and skills changes do not trigger a bump.
 
-When a bump is required, update **all version files together** to the same version before committing.
+When a bump is required:
+1. Update `backend/pom.xml` `<version>` and `frontend/package.json` `"version"` to the same new value
+2. Update `CHANGELOG.md` — move `[Unreleased]` entries into a new `## [x.y.z] - YYYY-MM-DD` section
+3. Stage and commit these changes before creating the PR
+
+**After merge to master:** tag the release commit:
+```powershell
+git tag -a v<version> -m "Release v<version>"
+git push origin v<version>
+```
 
 ---
 
@@ -226,9 +242,9 @@ Any match outside a comment line is a blocker.
 [ ] npm run build        — clean compile
 [ ] Backend tests        — all green
 [ ] No secrets staged
-[ ] Version bumped       (if required)
-[ ] CHANGELOG updated    (if version bumped)
 [ ] On a feature branch, not main/master
+[ ] Version bumped       — once for the branch based on highest commit type (BLOCKER if app code changed)
+[ ] CHANGELOG updated    — [Unreleased] moved to new version section
 [ ] EXECUTED at runtime  — every touched code path run; ≥90% coverage
 [ ] Scripts tested       — every new function/mode invoked, output verified
 [ ] No non-ASCII in PS1 string literals
