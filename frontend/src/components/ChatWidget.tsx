@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { askQuery, askWithAttachment, type ChatMode } from "../api/ai";
-import { importExpensesCsv } from "../api/expenses";
+import { createExpense, importExpensesCsv, parseExpense } from "../api/expenses";
+import type { ParsedExpenseResult } from "../api/types";
 import { useAuth } from "../context/AuthContext";
 import { useFeatures } from "../hooks/useFeatures";
 import { formatCurrency, formatDate } from "../lib/formatters";
@@ -12,6 +13,19 @@ interface Message {
   timestamp: Date;
   attachmentUrl?: string;
   attachmentName?: string;
+  draft?: ParsedExpenseResult;
+  draftSaved?: boolean;
+}
+
+const EXPENSE_LOG_KEYWORDS = [
+  "spent", "bought", "paid", "purchased", "ordered", "charged",
+  "nagbayad", "binayad", "nagastos", "bumili", "nagbili",
+  "nagkain", "nagorder", "nag-order", "nag-bayad", "nakabili",
+];
+
+function looksLikeExpenseLog(text: string): boolean {
+  const lower = text.toLowerCase();
+  return EXPENSE_LOG_KEYWORDS.some((k) => lower.includes(k));
 }
 
 interface ModeTheme {
@@ -89,6 +103,7 @@ const SUGGESTED_PROMPTS = [
   "Total expenses this month",
   "List all expenses over ₱500",
   "How much did I spend last week?",
+  "spent 250 on Jollibee lunch",
 ];
 
 function makeWelcomeMessage(displayName?: string | null): Message {
@@ -358,6 +373,23 @@ export default function ChatWidget() {
           ...prev,
           { role: "assistant", content: summary, timestamp: new Date() },
         ]);
+      } else if (!file && looksLikeExpenseLog(trimmed)) {
+        const draft = await parseExpense(trimmed);
+        if (draft.saveable) {
+          setMessages((prev) => [
+            ...prev,
+            { role: "assistant", content: null, timestamp: new Date(), draft },
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: draft.hint ?? "I couldn't parse that as an expense. Try something like: 'spent 250 on lunch at Jollibee'.",
+              timestamp: new Date(),
+            },
+          ]);
+        }
       } else if (!file || isImageFile(file)) {
         const res = file
           ? await askWithAttachment(trimmed, file)
@@ -397,6 +429,22 @@ export default function ChatWidget() {
     setMessages([makeWelcomeMessage(user?.nickname || user?.name)]);
     setError(null);
     inputRef.current?.focus();
+  };
+
+  const saveDraft = async (msgIndex: number, draft: ParsedExpenseResult) => {
+    try {
+      await createExpense({
+        amount: draft.amount,
+        category: draft.category,
+        date: draft.date,
+        description: draft.description,
+      });
+      setMessages((prev) =>
+        prev.map((m, i) => (i === msgIndex ? { ...m, draftSaved: true } : m))
+      );
+    } catch {
+      setError("Failed to save expense. Please try again.");
+    }
   };
 
   const showSuggestions = messages.length === 1 && !loading;
@@ -506,6 +554,40 @@ export default function ChatWidget() {
                         {(m.content as string) !== "Analyze this image" || !m.attachmentUrl ? (
                           <span>{m.content as string}</span>
                         ) : null}
+                      </div>
+                    ) : m.draft ? (
+                      <div className="space-y-2">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Draft expense</p>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">Amount</span>
+                            <span className={`text-sm font-semibold ${theme.accentText}`}>{formatCurrency(m.draft.amount)}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">Category</span>
+                            <span className="text-sm dark:text-gray-200">{m.draft.category}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">Date</span>
+                            <span className="text-sm dark:text-gray-200">{formatDate(m.draft.date)}</span>
+                          </div>
+                          {m.draft.description && (
+                            <div className="flex justify-between items-center gap-3">
+                              <span className="text-xs text-gray-500 dark:text-gray-400 shrink-0">Note</span>
+                              <span className="text-sm dark:text-gray-200 text-right">{m.draft.description}</span>
+                            </div>
+                          )}
+                        </div>
+                        {m.draftSaved ? (
+                          <p className="text-xs text-green-600 dark:text-green-400 font-medium pt-1">Saved to expenses</p>
+                        ) : (
+                          <button
+                            onClick={() => void saveDraft(i, m.draft!)}
+                            className={`mt-1 w-full text-xs font-medium py-1.5 rounded-lg bg-gradient-to-r ${theme.sendBtn} text-white transition-all`}
+                          >
+                            Save expense
+                          </button>
+                        )}
                       </div>
                     ) : (
                       renderAnswer(m.content, theme.accentText)

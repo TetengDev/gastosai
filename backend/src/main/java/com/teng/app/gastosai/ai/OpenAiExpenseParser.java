@@ -77,6 +77,10 @@ public class OpenAiExpenseParser implements ExpenseParser {
                 : LocalDateTime.now(ZoneId.of("Asia/Manila"));
         String description = node.path("description").asText("");
         String confidence = node.path("confidence").asText("LOW");
-        return new ParsedExpenseResult(amount, category, date, description, confidence);
+
+        boolean saveable = "HIGH".equals(confidence) && amount.compareTo(BigDecimal.ZERO) > 0;
+        String hint = saveable ? null : "Amount or description unclear - please provide more details.";
+
+        return new ParsedExpenseResult(amount, category, date, description, confidence, saveable, hint);
     }
 }

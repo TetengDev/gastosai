@@ -11,5 +11,7 @@ public record ParsedExpenseResult(
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime date,
         String description,
-        String confidence
+        String confidence,
+        boolean saveable,
+        String hint
 ) {}

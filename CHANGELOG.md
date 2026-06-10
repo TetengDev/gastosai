@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.9.0] - 2026-06-10
+
+### Added
+- `ParsedExpenseResult` now includes `saveable` (boolean) and `hint` (string|null) fields; HIGH-confidence parses with a positive amount are marked saveable, LOW-confidence parses return a hint asking for more detail
+- ChatWidget: expense-logging intent detection — messages containing spending keywords (English + Filipino) are routed to `POST /expenses/parse` instead of the AI query endpoint
+- ChatWidget: draft expense card in chat — shows amount, category, date, and description with a "Save expense" button; on save, creates the expense directly without opening the modal; shows "Saved to expenses" on success
+- Suggestion chip: "spent 250 on Jollibee lunch" as an example to guide users toward the log-expense flow
+
+---
+
 ## [0.8.0] - 2026-06-10
 
 ### Added

@@ -62,13 +62,15 @@ class ExpenseParseIntegrationTest {
     }
 
     @Test
-    void parseReturnsDraftExpense() throws Exception {
+    void parseReturnsSaveableDraftWhenHighConfidence() throws Exception {
         ParsedExpenseResult draft = new ParsedExpenseResult(
                 new BigDecimal("250.00"),
                 "Food",
                 LocalDateTime.of(2026, 6, 10, 12, 0),
                 "Lunch at Jollibee",
-                "HIGH"
+                "HIGH",
+                true,
+                null
         );
         when(expenseParser.parse("spent 250 on lunch at Jollibee")).thenReturn(draft);
 
@@ -82,7 +84,33 @@ class ExpenseParseIntegrationTest {
                 .andExpect(jsonPath("$.amount").value(250.00))
                 .andExpect(jsonPath("$.category").value("Food"))
                 .andExpect(jsonPath("$.description").value("Lunch at Jollibee"))
-                .andExpect(jsonPath("$.confidence").value("HIGH"));
+                .andExpect(jsonPath("$.confidence").value("HIGH"))
+                .andExpect(jsonPath("$.saveable").value(true))
+                .andExpect(jsonPath("$.hint").doesNotExist());
+    }
+
+    @Test
+    void parseReturnsNotSaveableWhenLowConfidence() throws Exception {
+        ParsedExpenseResult vague = new ParsedExpenseResult(
+                BigDecimal.ZERO,
+                "Uncategorized",
+                LocalDateTime.of(2026, 6, 10, 0, 0),
+                "Payment, details not specified",
+                "LOW",
+                false,
+                "Amount or description unclear - please provide more details."
+        );
+        when(expenseParser.parse("may binayad ako kanina")).thenReturn(vague);
+
+        mockMvc.perform(post("/expenses/parse")
+                        .header("Authorization", authHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"text": "may binayad ako kanina"}
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.saveable").value(false))
+                .andExpect(jsonPath("$.hint").value("Amount or description unclear - please provide more details."));
     }
 
     @Test
