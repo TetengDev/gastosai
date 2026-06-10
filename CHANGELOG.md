@@ -11,6 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.11.0] - 2026-06-11
+
+### Added
+- `GET /expenses?from=YYYY-MM-DD&to=YYYY-MM-DD` — date-range filtering on expense list; either param is optional; admin users see all matching expenses, regular users see only their own
+- `GET /expenses/report/monthly-comparison?month=YYYY-MM` — returns current month total, previous month total, and percentage change; `changePercent` is null when no previous data exists
+- Dashboard: Monthly Trend bar chart — visualises up to 12 months of spending using recharts `BarChart`
+- Dashboard: Spending Trend card — side-by-side "This month / Last month" amounts with a plain-English change sentence ("You spent 11.8% more than May 2026") colour-coded green/red
+- Expenses page: date-range filter bar (From / To date inputs + Clear); results debounce 350 ms before hitting the API; stale data stays visible during fetch with an inline spinner
+- `ui-ux-reviewer` agent — reviews dashboard and table UI/UX decisions against data-viz and financial-app best practices; sourced from TanStack Table, Pencil & Paper, UXPin
+- `resource-finder` agent — searches and ranks libraries/tools by adoption, community consensus, security posture, and real-user satisfaction before any new dependency is introduced
+
+### Changed
+- Expense list default sort is date DESC (newest first)
+
+---
+
 ## [0.10.0] - 2026-06-10
 
 ### Added
