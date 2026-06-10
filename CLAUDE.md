@@ -237,6 +237,8 @@ Sub-agent definitions live in `.claude/agents/`. Use them when implementing feat
 | `frontend-dev` | Implements React/TypeScript changes; verifies with lint + build before finishing |
 | `pre-pr` | Runs the full quality gate before any PR (lint, build, tests, runtime execution, version) |
 | `prompt-compressor` | Compresses verbose agent prompts to minimum tokens before spawning sub-agents |
+| `feature-prioritizer` | Scores feature candidates using ICE + revenue multiplier; returns ranked table with top-pick recommendation |
+| `tech-workflow` | Engineering process advisor — branching, PR sizing, review gates, sprint discipline, incident response |
 
 Workflow: `full-stack-planner` → **`prompt-compressor`** (compress each agent prompt) → `backend-dev` + `frontend-dev` (parallel) → `pre-pr`
 
