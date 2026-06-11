@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.12.0] - 2026-06-11
+
+### Changed
+- `POST /ai/vision` now returns `ParsedExpenseResult` (structured JSON) instead of a plain-text `AiQueryResponse`; the AI is prompted to extract amount, category, date, description, and confidence from receipt images; non-receipt images return `saveable: false` with a text description in `hint`
+- ChatWidget: uploading a receipt image now renders a saveable draft card (same UI as the text-parse flow) with pre-filled amount, category, and date; non-receipt images render the hint as a plain chat bubble
+
+---
+
 ## [0.11.0] - 2026-06-11
 
 ### Added
