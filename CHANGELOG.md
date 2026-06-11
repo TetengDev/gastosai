@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.16.0] - 2026-06-11
+
+### Added
+- `GET /expenses/export?from=&to=` — exports all expenses matching the current date filter as a CSV file; both params optional; respects per-user scoping
+- CSV columns: `Date` (yyyy-MM-dd HH:mm), `Description`, `Category`, `Amount` — roundtrippable with the existing CSV import format
+- Expenses page: **Export CSV** button in the filter toolbar; passes active `from`/`to` filter so "what you see is what you download"; shows "Exporting…" spinner while download is in progress
+
+---
+
 ## [0.15.0] - 2026-06-11
 
 ### Added
