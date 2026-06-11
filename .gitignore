@@ -61,6 +61,15 @@ docker-compose.override.yml
 *.lcov
 .jacoco/
 
+# --- Test data fixtures (never commit real data; only .gitkeep allowed) ---
+**/testdata/**/*.csv
+**/testdata/**/*.json
+**/testdata/**/*.png
+**/testdata/**/*.jpg
+**/testdata/**/*.jpeg
+**/testdata/**/*.pdf
+!**/.gitkeep
+
 # --- Node (if you add a frontend later) ---
 node_modules/
 npm-debug.log*
