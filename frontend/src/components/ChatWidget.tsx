@@ -402,7 +402,11 @@ export default function ChatWidget() {
             ...prev,
             {
               role: "assistant",
-              content: "That doesn't look like a receipt or expense document. Please attach a receipt, invoice, or bill to extract expense details.",
+              content: mode === "genz"
+                ? "bestie that's not a receipt 💀 drop a bill, invoice, or receipt and we'll log that gastos fr fr"
+                : mode === "professional"
+                  ? "This image does not appear to contain expense-related information. Please attach a receipt, invoice, or financial document to proceed."
+                  : "That doesn't look like a receipt or expense document. Please attach a receipt, invoice, or bill to extract expense details.",
               timestamp: new Date(),
             },
           ]);
