@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.17.0] - 2026-06-11
+
+### Added
+- `SavingsGoal` entity — named goal with `targetAmount`, `savedAmount`, optional `targetDate`, `paused` flag; per-user scoped
+- Status derivation: `PAUSED` → `COMPLETED` (saved ≥ target) → `ON_TRACK` / `BEHIND` (linear interpolation against elapsed time fraction when `targetDate` present; `ON_TRACK` when no deadline)
+- `GET /goals`, `POST /goals`, `GET /goals/{id}`, `PUT /goals/{id}`, `DELETE /goals/{id}` — full CRUD for savings goals
+- Goals page (`/goals`) — card grid with progress bar, status badge, add/edit/delete modals
+- Dashboard: **Goal Progress** card — shows up to 4 active (non-PAUSED, non-COMPLETED) goals sorted by target date; links to Goals page
+- Goals nav link in Navbar
+
+---
+
 ## [0.16.0] - 2026-06-11
 
 ### Added
