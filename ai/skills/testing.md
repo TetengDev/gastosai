@@ -104,6 +104,44 @@ void rejectsInsert() {
 
 ---
 
+## Test data / fixtures
+
+Pre-made files (CSV, JSON, images) for use in tests live in two standard locations:
+
+### Backend
+
+```
+backend/src/test/resources/testdata/
+  csv/       ← CSV import files, bulk data samples
+  images/    ← image upload test files
+  json/      ← request/response fixtures, mock payloads
+```
+
+Access in JUnit:
+```java
+InputStream csv = getClass().getResourceAsStream("/testdata/csv/expenses.csv");
+URL jsonFile = getClass().getResource("/testdata/json/expense_list.json");
+```
+
+### Frontend
+
+```
+frontend/src/__tests__/fixtures/
+  csv/       ← parsed CSV fixtures
+  images/    ← image file fixtures
+  json/      ← mock API response fixtures
+```
+
+Access in Vitest:
+```typescript
+import sampleData from '../__tests__/fixtures/json/expenses.json';
+// or use fetch/fs mocks pointing to the fixtures path
+```
+
+Each subdirectory contains a `.gitkeep` to track the empty directory in git. Remove it once real files are added.
+
+---
+
 ## What not to do
 
 - Do not mock the database — use H2 for integration tests. Mock-vs-real divergence has caused issues before.
