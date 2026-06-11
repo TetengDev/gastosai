@@ -398,7 +398,7 @@ export default function ChatWidget() {
             ...prev,
             {
               role: "assistant",
-              content: draft.hint ?? "Couldn't extract expense info from this image.",
+              content: "That doesn't look like a receipt or expense document. Please attach a receipt, invoice, or bill to extract expense details.",
               timestamp: new Date(),
             },
           ]);
