@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.14.0] - 2026-06-11
+
+### Added
+- `GET /ai/insights/top-category?month=YYYY-MM` — returns the top spending category, total, and percentage of month total for the given month
+- `GET /ai/insights/month-summary?month=YYYY-MM` — returns an AI-generated natural-language spending summary for the month
+- `GET /ai/insights/recommendations?month=YYYY-MM` — returns 2–3 AI-generated actionable spending recommendations based on category and MoM data
+- Dashboard: AI Insights card — displays top category, month summary paragraph, and recommendations list; renders below Budget Overview; supports dark mode and animated skeleton loading state
+- `ExpenseService.categoryReportForMonth()` — month-scoped category aggregation used by all three insight endpoints
+
+---
+
 ## [0.13.0] - 2026-06-11
 
 ### Changed
