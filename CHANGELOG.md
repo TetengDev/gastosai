@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.13.0] - 2026-06-11
+
+### Changed
+- `POST /ai/vision` now accepts a `mode` form parameter (`plain` / `professional` / `genz`; defaults to `plain`); the AI generates a mode-appropriate `rejectionMessage` in `ParsedExpenseResult` when `saveable=false`, replacing the previous hardcoded frontend strings
+- ChatWidget: non-receipt image rejection message is now AI-generated and contextual (references what the image actually shows, toned to the active chat mode); falls back to a generic message if `rejectionMessage` is null
+- `ParsedExpenseResult` fields `amount`, `category`, `date`, `description` corrected to nullable in the TypeScript type
+
+---
+
 ## [0.12.0] - 2026-06-11
 
 ### Changed
