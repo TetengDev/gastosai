@@ -11,6 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.15.0] - 2026-06-11
+
+### Added
+- Recurring Bills page (`/recurring`) — CRUD for expenses that repeat monthly, weekly, or yearly; YEARLY bills scoped to a specific month via `monthOfYear` field; monthly day capped at 28 for MONTHLY frequency to fire every month including February; YEARLY respects target month's actual length
+- `GET /recurring/upcoming?month=YYYY-MM` — returns all bills due in the given month with ISO due dates; weekly bills expand to individual occurrences
+- Dashboard: Upcoming Bills card — shows up to 5 upcoming bills for the current month; links to Recurring page
+- Recurring nav link in sidebar
+- `CategoryCombobox` shared component — type-to-filter + select from existing categories; "Create" affordance when typed name has no match; `allowCreate` prop; used in both Budget and Recurring forms
+- Budget page: editable category in edit mode with inline amber retarget warning; create-new-category from the modal via `CategoryCombobox`; `formatMonth` display replacing raw ISO strings; reload icon button; Delete All for current month (with confirm modal and error display)
+- Recurring page: reload icon button; Delete All (with confirm modal and error display)
+- `DELETE /budgets?month=YYYY-MM` — deletes all budgets for the authenticated user in the given month
+- `DELETE /recurring` — deletes all recurring expenses for the authenticated user
+- Categories page: delete error stays visible inside the modal on failure; modal does not dismiss until the user acknowledges
+- Demo seed data: 54 synthetic expenses spanning Jan–Jun 2026 across all 13 predefined categories; 5 sample budgets for June 2026; 6 recurring expenses seeded on first startup when `GASTOS_SEED_SAMPLE_DATA=true`
+
+---
+
 ## [0.14.0] - 2026-06-11
 
 ### Added
