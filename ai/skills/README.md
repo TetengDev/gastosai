@@ -31,6 +31,7 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | Touching the AI query path | `ai-sql-safety.md` | — |
 | Deploying to production | `deployment.md` | `git-branching-release-strategy.md` |
 | Understanding the domain model | `project-context.md` | — |
+| Choosing agents for a task | `agents.md` (Task Routing section) | — |
 | Implementing with parallel agents | `agents.md` | — |
 | Writing agent prompts | `agents.md` | `token-optimization.md` |
 | Auditing / cleaning up stale docs | `doc-audit.md` | — |

@@ -5,6 +5,73 @@ Use them instead of (or alongside) the skill docs when implementing features.
 
 ---
 
+## Task routing — start here
+
+Before picking an agent, classify the task. The type determines which skills to read first and which agents to invoke in which order.
+
+### Classification table
+
+| Task type | Signal words | Pre-flight skills (read first) | Agent sequence |
+|---|---|---|---|
+| New full-stack feature | "add X", "build X", "new page + endpoint" | `README.md` → `feature-builder.md` → `project-context.md` | `full-stack-planner` → `prompt-compressor` → `backend-dev` ‖ `frontend-dev` → `pre-pr` |
+| Backend-only feature | "new endpoint", "new service", "add field" | `README.md` → `java-spring-standards.md` → `project-context.md` | `backend-dev` → `pre-pr` |
+| Frontend-only feature | "new component", "new page", "UI for" | `README.md` → `project-context.md` | `frontend-dev` → `pre-pr` |
+| Bug fix | "broken", "error", "fix", "wrong behavior" | `README.md` → `project-context.md` | `Explore` (locate) → `backend-dev` or `frontend-dev` → `pre-pr` |
+| New dependency | "add library", "use X package" | `README.md` | `resource-finder` → `backend-dev` or `frontend-dev` → `pre-pr` |
+| UI/UX change | "chart", "dashboard", "layout", "visual" | `project-context.md` | `ui-ux-reviewer` → `frontend-dev` → `pre-pr` |
+| Prioritization / roadmap | "what to build", "next feature", "rank" | — | `feature-prioritizer` (terminal) |
+| Process / branching advice | "how to structure", "PR size", "sprint" | — | `tech-workflow` (terminal) |
+| Chore / docs / config | "update docs", "bump version", "rename" | `README.md` | Direct (no agent) → `pre-pr` if substantial |
+| Release | "release", "cut v", "tag" | `git-branching-release-strategy.md` | Manual steps → `pre-pr` |
+| After adding agent or skill | — | — | `agent-auditor` |
+| Stale file cleanup | "clean up", "remove unused", "audit" | `doc-audit.md` | `cleanup` |
+
+### Mandatory gates
+
+```
+Gate 0 — Classify : determine task type before picking any agent
+Gate 1 — Read     : load the pre-flight skills for that task type
+Gate 2 — Plan     : (full-stack only) full-stack-planner must finish before backend-dev/frontend-dev start
+Gate 3 — Compress : run prompt-compressor on each agent prompt before spawning
+Gate 4 — Verify   : pre-pr must pass before any PR is opened
+Gate 5 — UAT      : user must confirm feature works before merge
+```
+
+### Flowchart
+
+```
+START
+  |
+  v
+[Classify task type]
+  |
+  +-- full-stack feature --> full-stack-planner --> prompt-compressor
+  |                                                      |
+  |                                         +------------+------------+
+  |                                   backend-dev               frontend-dev
+  |                                         +------------+------------+
+  |                                                      |
+  |                                                   pre-pr --> PR
+  |
+  +-- backend-only -----------------------> backend-dev --> pre-pr --> PR
+  |
+  +-- frontend-only ----------------------> frontend-dev --> pre-pr --> PR
+  |
+  +-- bug fix -----------> Explore (locate) --> backend-dev or frontend-dev --> pre-pr --> PR
+  |
+  +-- new dependency ------> resource-finder --> backend-dev or frontend-dev --> pre-pr --> PR
+  |
+  +-- UI/UX ------------> ui-ux-reviewer --> frontend-dev --> pre-pr --> PR
+  |
+  +-- prioritization ------> feature-prioritizer  (terminal — returns ranked list)
+  |
+  +-- process advice ------> tech-workflow  (terminal — returns recommendation)
+  |
+  +-- chore/docs ----------> direct impl --> pre-pr (if > trivial) --> PR
+```
+
+---
+
 ## Available agents
 
 ### Feature agents
