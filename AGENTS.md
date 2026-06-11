@@ -102,7 +102,7 @@ For AI SQL-related changes, also follow:
 | `cleanup` | `.claude/agents/cleanup.md` | Scans for stale/irrelevant files and reports deletion candidates; never deletes without confirmation |
 | `agent-auditor` | `.claude/agents/agent-auditor.md` | Audits agent/skill indexes for completeness, overlap, and consolidation; auto-fixes missing registrations |
 
-See `ai/skills/agents.md` for the full parallel workflow.
+See `ai/skills/agents.md` — Task Routing section — for how to classify any task and choose the right agent sequence.
 
 ### Skills (reference documents in `ai/skills/`)
 
