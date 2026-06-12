@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.20.0] - 2026-06-12
+
+### Added
+- `GET /expenses/report/daily?month=YYYY-MM` — returns daily spending totals for all days in a month (missing days = 0); enables day-by-day trend analysis
+- `GET /expenses/report/top?month=YYYY-MM&limit=5` — returns top N expenses by amount descending for a given month
+- Daily Trend card on Dashboard — bar chart showing per-day spending with recharts BarChart
+- Top Expenses card on Dashboard — ranked list of highest single expenses for the current month
+- Seed data updated: `expenseType`/`reimbursable` seeded on sample expenses; June entries spread across 19+ days for realistic daily trend display
+
+---
+
 ## [0.19.0] - 2026-06-12
 
 ### Added
