@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.19.0] - 2026-06-12
+
+### Added
+- `expenseType` field on `Expense` — enum (PERSONAL/BUSINESS); defaults to PERSONAL
+- `reimbursable` boolean field on `Expense` — tracks whether expense can be reimbursed; defaults to false
+- `ExpenseRequest` and `ExpenseResponse` DTOs updated to include expenseType and reimbursable
+- Expense modal UI updated to allow selection of expense type and reimbursable flag
+- Backend service and integration tests updated to handle new fields
+
+---
+
 ## [0.18.0] - 2026-06-11
 
 ### Added
