@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.18.0] - 2026-06-11
+
+### Added
+- `Alert` entity — stores budget warnings, budget-exceeded alerts, and spending-spike nudges per user per month; tracks read/dismissed state
+- `GET /alerts?month=YYYY-MM` — auto-generates alerts from live budget + expense data (idempotent upsert); returns non-dismissed alerts sorted by severity
+- `PATCH /alerts/{id}/read` — mark alert as read; `PATCH /alerts/{id}/dismiss` — dismiss alert (hides from future responses); `DELETE /alerts/{id}` — hard delete
+- Alert types: `BUDGET_WARNING` (≥80% of budget spent), `BUDGET_EXCEEDED` (≥100%), `SPENDING_SPIKE` (current month > previous month × 1.5)
+- Alerts page (`/alerts`) — month picker, severity badges (CRITICAL/WARNING/INFO), mark-read and dismiss per alert
+- Dashboard: **Spending Alerts** card — shows up to 4 active alerts; mark-read button inline
+- Alerts nav link in Navbar
+- `@OnDelete(CASCADE)` added to `Expense.user` FK (fixes cross-test FK violations in integration test suite)
+
+---
+
 ## [0.17.0] - 2026-06-11
 
 ### Added
