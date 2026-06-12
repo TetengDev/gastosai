@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.20.1] - 2026-06-12
+
+### Fixed
+- Dashboard cards (BudgetOverview, DailyTrend, TopExpenses, AlertsCard, GoalProgress, UpcomingBills) now re-fetch whenever any related data changes — not just on mount
+- Renamed internal event `gastosai:expense-created` to `gastosai:expense-changed` for semantic accuracy
+- `useExpenses` hook dispatches `gastosai:expense-changed` after every add, update, delete, and delete-all
+- Budget, Goals, Recurring, and Categories pages dispatch entity-specific events (`gastosai:budget-changed`, `gastosai:goal-changed`, `gastosai:recurring-changed`, `gastosai:expense-changed`) on every mutation so dashboard cards stay in sync with off-screen changes
+
+---
+
 ## [0.20.0] - 2026-06-12
 
 ### Added
