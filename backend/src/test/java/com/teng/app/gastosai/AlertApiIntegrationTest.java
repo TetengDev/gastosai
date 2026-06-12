@@ -2,9 +2,11 @@ package com.teng.app.gastosai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teng.app.gastosai.config.JwtUtil;
+import com.teng.app.gastosai.entity.Category;
 import com.teng.app.gastosai.entity.User;
 import com.teng.app.gastosai.repository.AlertRepository;
 import com.teng.app.gastosai.repository.BudgetRepository;
+import com.teng.app.gastosai.repository.CategoryRepository;
 import com.teng.app.gastosai.repository.ExpenseRepository;
 import com.teng.app.gastosai.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +46,9 @@ class AlertApiIntegrationTest {
 
     @Autowired
     BudgetRepository budgetRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Autowired
     ExpenseRepository expenseRepository;
@@ -189,14 +194,10 @@ class AlertApiIntegrationTest {
                 .andExpect(jsonPath("$.length()").value(0));
     }
 
-    private long createCategory(String name) throws Exception {
-        MvcResult result = mockMvc.perform(post("/categories")
-                        .header("Authorization", authHeader)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"%s\"}".formatted(name)))
-                .andExpect(status().isCreated())
-                .andReturn();
-        return objectMapper.readTree(result.getResponse().getContentAsString()).get("id").asLong();
+    private long createCategory(String name) {
+        return categoryRepository.findByNameIgnoreCase(name)
+                .orElseGet(() -> categoryRepository.save(Category.builder().name(name).build()))
+                .getId();
     }
 
     private void createBudget(long categoryId, String month, double amountLimit) throws Exception {
