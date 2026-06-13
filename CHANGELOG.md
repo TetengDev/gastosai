@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.22.0] - 2026-06-13
+
+### Added
+- Flyway baseline migration (`V1__initial_schema.sql`) covering all seven tables: `users`, `categories`, `expenses`, `recurring_expenses`, `budgets`, `savings_goals`, `alerts`
+- `flyway-core` and `flyway-database-postgresql` dependencies added to `pom.xml`
+
+### Changed
+- `spring.jpa.hibernate.ddl-auto` switched from `create-drop` to `validate` — schema now managed exclusively by Flyway migrations
+- Flyway disabled in test profile; H2 in-memory tests continue to use `create-drop`
+
+---
+
 ## [0.21.0] - 2026-06-13
 
 ### Added
