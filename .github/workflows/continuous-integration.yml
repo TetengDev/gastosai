@@ -10,6 +10,20 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  validate-release-branch:
+    name: Validate release branch
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Check source branch is release/*
+        run: |
+          branch="${{ github.head_ref }}"
+          if [[ "$branch" != release/* ]]; then
+            echo "::error::PRs to master must come from a release/* branch. Got: $branch"
+            exit 1
+          fi
+          echo "Branch '$branch' is valid."
+
   backend:
     name: Backend tests
     runs-on: ubuntu-latest
