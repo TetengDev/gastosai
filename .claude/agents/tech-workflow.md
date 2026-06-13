@@ -25,12 +25,30 @@ Fetch these when the user asks about a practice not covered below or needs evide
 - `fix/` — bug fix
 - `chore/` — tooling, config, dependency update, internal file (no version bump)
 - `refactor/` — internal restructuring with no behavior change
+- `release/x.y.z` — pre-PR release branch; required for merging to master
 
 **Rules:**
 - One concern per branch. Mixed concerns = split the branch.
 - Never commit non-trivial changes directly to `master`.
 - Short-lived branches preferred: merge within 1 week. If a branch lives longer, it needs decomposition or a flag in the PR description explaining why.
 - Rebase onto `master` before opening a PR if the branch is more than a few commits behind.
+- **All PRs to `master` must come from a `release/*` branch** — enforced by the `Validate release branch` CI job. PRs from any other prefix will fail a required status check and cannot be merged.
+- **`master` and `release/*` branches are protected** — no direct push (requires PR), no deletion, no force push. These rules are enforced by GitHub rulesets.
+- **After PR merge to `master`**: the `auto-release.yml` workflow automatically creates a GitHub Release using the CHANGELOG.md section for the current version. No manual tagging needed unless the tag pre-exists.
+
+**Release branch workflow:**
+1. Create a `release/x.y.z` branch from `master` (via GitHub refs API or `git checkout -b release/x.y.z origin/master`)
+2. Commit the version bump + CHANGELOG update to the release branch
+3. Open PR from `release/x.y.z` → `master`
+4. CI runs: `Validate release branch` (passes), `Backend tests`, `Frontend audit & lint`
+5. All three required checks pass → merge
+6. `auto-release.yml` fires and creates GitHub Release from CHANGELOG content
+
+**Branch cleanup:**
+- Delete merged feature/fix/chore/docs branches after their PR is merged — they serve no purpose after merge
+- Never delete `master` or `release/*` branches
+- Run `.\scripts\cleanup-branches.ps1` to list merged branches and delete with per-branch confirmation
+- Use `.\scripts\cleanup-branches.ps1 -Force` only when you are certain all listed branches are safe to remove
 
 ## PR sizing
 
