@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.21.0] - 2026-06-13
+
+### Added
+- Multi-currency support on `Expense`: `currency`, `exchangeRate`, `amountInBaseCurrency` fields; all report queries normalise to PHP via `amountInBaseCurrency`
+- `CurrencySelect` component with country flag images (flagcdn.com) for PHP, USD, EUR, SGD, JPY, GBP, AUD
+- Live exchange-rate suggestion from `open.er-api.com` with 1-hour module-level cache; rate rounded to 4 dp; disclaimer shown to user
+- Category list cache (5-min TTL) in shared `src/lib/cache.ts` to avoid redundant API calls
+- Multi-currency support on `RecurringExpense`: `currency`, `exchangeRate` fields; UpcomingBills response includes `currency`
+- Multi-currency support on `SavingsGoal`: `currency` field; goal amounts display with correct symbol
+- Multi-currency support on `Budget`: `currency`, `exchangeRate`, `amountLimitInBaseCurrency` fields; budget summary comparison normalised to PHP
+- Currency badge in Expenses, Recurring, and Budget tables for non-PHP entries (shows original amount + PHP equivalent)
+- `GoalProgressCard` and `UpcomingBillsCard` dashboard cards display currency-aware amounts
+
+---
+
 ## [0.20.1] - 2026-06-12
 
 ### Fixed
