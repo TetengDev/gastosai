@@ -11,6 +11,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.25.0] - 2026-06-15
+
+### Added
+- Chatbot CRUD actions via LLM function-calling (`POST /ai/chat`) — create/delete expenses, budgets, goals, and recurring items in plain language
+- Editable preview/confirm cards for create actions, with a free-text category combobox
+- Draft expense cards now include an editable time field (defaults to current local time) and a cancel action
+- Disambiguation flow: multi-select when delete keywords match several rows
+- Budget create conflict (409) returns an `update_budget` preview to confirm raising the existing limit
+- Sample savings goals seeded for the demo user on an empty database
+
+### Fixed
+- AI natural-language query user-scoping: `appendUserFilter` now collapses whitespace before matching clauses, fixing duplicate `WHERE` and misplaced filter on newline-formatted SQL
+- AI query failures now return a friendly message instead of a 500
+- Aggregation/report queries route to the NL query path; SQL prompt declares the `categories` join so by-category queries resolve names
+
+### Changed
+- Seeded budgets derive from the current month (`YearMonth.now`) instead of a hardcoded value
+
+---
+
 ## [0.24.0] - 2026-06-14
 
 ### Added
