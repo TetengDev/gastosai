@@ -19,7 +19,17 @@ The `commit-msg` hook is a **format linter only** — it validates the `type(sco
 
 ## Release branch workflow
 
-This project uses a **release branch strategy**: features merge to `master` via PRs, then a `release/x.y.z` branch is cut for each release. The release branch is tagged, protected, and never deleted — it is the permanent record of that shipped state. Hotfixes branch from the relevant `release/x.y.z` branch and are cherry-picked back to `master`.
+**CI gate:** `.github/workflows/continuous-integration.yml` runs `validate-release-branch` on every PR to `master`. It rejects any source branch that is not `release/*`. PRs from `feat/*`, `fix/*`, `chore/*`, etc. fail CI with: `PRs to master must come from a release/* branch`.
+
+**Two-PR flow (strictly enforced):**
+1. PR: `feat/*` (or any non-release branch) → `release/x.y.z`
+2. PR: `release/x.y.z` → `master`
+
+**Branch deletion rules (strictly enforced):**
+- `master` and `release/*` — NEVER delete, local or remote. They are permanent records.
+- All other branches (`feat/*`, `fix/*`, `chore/*`, etc.) — delete after PR is merged.
+
+This project uses a **release branch strategy**: feature branches are developed on `feat/*`, then merged into a `release/x.y.z` branch via PR, which then PRs to `master`. The release branch is tagged, protected, and never deleted — it is the permanent record of that shipped state. Hotfixes branch from the relevant `release/x.y.z` branch and are cherry-picked back to `master`.
 
 ### Automated (recommended)
 

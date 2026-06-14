@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.23.1] - 2026-06-14
+
+### Added
+- Backend integration tests: AI SQL generator, expense parser, `AppDataLoader`
+- Frontend Vitest setup + backend unit tests for `AlertService`, `SavingsGoalService`, `CsvImportService`
+
+---
+
 ## [0.23.0] - 2026-06-14
 
 ### Added
