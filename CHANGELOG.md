@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.25.1] - 2026-06-15
+
+### Fixed
+- Expense timestamps are stored as wall-clock values (removed `hibernate.jdbc.time_zone=UTC`). Under a non-UTC JVM the previous setting shifted `LocalDateTime` values to UTC, so month/year/day aggregation (alerts, monthly/category/daily reports) bucketed day-boundary expenses into the adjacent month while the UI showed the correct local date
+
+---
+
 ## [0.25.0] - 2026-06-15
 
 ### Added
