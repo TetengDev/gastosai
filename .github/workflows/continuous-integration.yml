@@ -71,3 +71,20 @@ jobs:
       - name: Lint
         working-directory: frontend
         run: npm run lint
+
+  security-scan:
+    name: Dependency vulnerability scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Report-only (exit-code 0): surfaces vulnerable dependencies without blocking the build.
+      # Promote to exit-code 1 once the baseline is clean.
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
