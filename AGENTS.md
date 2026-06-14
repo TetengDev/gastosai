@@ -131,6 +131,7 @@ See `ai/skills/agents.md` — Task Routing section — for how to classify any t
 
 | Type | Path | Purpose |
 |---|---|---|
+| Prompt | `ai/prompts/chatgpt-session-starter.md` | Paste-ready briefing for ChatGPT when switching from Claude Code mid-task |
 | Prompt | `ai/prompts/add-feature.md` | Structured prompt for new features |
 | Prompt | `ai/prompts/review-code.md` | Code review prompt |
 | Prompt | `ai/prompts/debug.md` | Debug investigation prompt |
