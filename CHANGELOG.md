@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.24.0] - 2026-06-14
+
+### Added
+- `RECURRING_DUE` alert type — generates reminders when a recurring expense is due within 3 days
+- `NotificationBell` component in Navbar — Bell icon with unread count badge, replaces text "Alerts" link
+- Alerts page renamed to "Notifications"; shows budget alerts and recurring due reminders in unified inbox
+- Flyway V2 migration: `recurring_expense_id` FK column on `alerts` table
+
+---
+
 ## [0.23.2] - 2026-06-14
 
 ### Chores
