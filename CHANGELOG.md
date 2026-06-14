@@ -11,6 +11,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.27.0] - 2026-06-15
+
+Production-refactor batch (Phases 3–4): frontend entitlement gating + backend hardening.
+Monetization enforcement remains **disabled** by default — no UX change.
+
+### Added
+- Frontend entitlement gating: `useEntitlements` hook, `<FeatureGate>` + `<UpgradePrompt>`
+  components (`api/entitlements.ts`); the Dashboard AI Insights card is gated behind
+  `ADVANCED_INSIGHTS` (renders normally while enforcement is off).
+- Per-user rate limiting on `/ai/**` (`AiRateLimitInterceptor`, 429 past quota;
+  `gastos.ratelimit.ai-per-minute`, default 20).
+- `application-prod.properties`: HikariCP pool for the 512 MB tier, sample-seeding off,
+  `/actuator/health` exposed, quieter logging.
+- V4 migration: indexes on user-scoped read paths (expenses, budgets, recurring, alerts, goals).
+- CI: report-only Trivy dependency vulnerability scan.
+- Demo account seeded an open-ended PREMIUM subscription so it stays fully featured under enforcement.
+
+### Changed / Fixed
+- `SqlGuard` now rejects subqueries/CTEs, guaranteeing the fallback NL→SQL path is a single flat
+  SELECT — closes the `appendUserFilter` user-scoping bypass flagged in the AI-path security review.
+- `SecurityStartupValidator` warns when sample-data seeding targets a remote database.
+
+### Deferred
+- ChatWidget decomposition and a Resilience4j circuit breaker (need focused review / dependency vetting).
+
+---
+
 ## [0.26.0] - 2026-06-15
 
 Production-refactor batch (Phases 0–2). All changes are backwards compatible and additive;
