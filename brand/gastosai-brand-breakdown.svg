@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1080" viewBox="0 0 1400 1080">
+  <defs>
+    <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="nodeG" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="aiG" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#4338CA"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="aiGL" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="1080" fill="#F8FAFC"/>
+  <text y="58" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="700"><tspan x="56" fill="#0F172A">GastosAI</tspan><tspan fill="#4338CA"> Brand System</tspan></text>
+  <line x1="56" y1="76" x2="1344" y2="76" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="56.0" y="96.0" width="190.0" height="190.0" rx="36.1" fill="url(#bgG)"/>
+  <rect x="75.0" y="219.5" width="13.3" height="32.3" rx="3.0" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="92.5" y="196.7" width="13.3" height="55.1" rx="3.0" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="110.0" y="168.2" width="13.3" height="83.6" rx="3.0" fill="#FFFFFF" opacity="0.28"/>
+  <text x="143.4" y="228.0" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="82.7" fill="#FFFFFF" text-anchor="middle">&#x20B1;</text>
+  <line x1="161.4" y1="176.8" x2="216.5" y2="131.2" stroke="url(#nodeG)" stroke-width="6.1" stroke-linecap="round"/>
+  <circle cx="219.0" cy="127.9" r="15.6" fill="url(#nodeG)"/>
+  <circle cx="219.0" cy="127.9" r="7.2" fill="#FFFFFF" opacity="0.92"/>
+
+  <text x="151" y="303" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">App Icon  512×512</text>
+  <g transform="translate(270,96) scale(1.3750)">  <rect x="0" y="0" width="64" height="64" rx="14.1" fill="url(#bgG)"/>
+  <text x="29.4" y="44.5" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="32.0" fill="white" text-anchor="middle">&#x20B1;</text>
+  <line x1="36.5" y1="28.2" x2="52.5" y2="14.1" stroke="url(#nodeG)" stroke-width="3.8" stroke-linecap="round"/>
+  <circle cx="53.4" cy="12.8" r="7.0" fill="url(#nodeG)"/>
+  <circle cx="53.4" cy="12.8" r="3.2" fill="white"/>
+</g>
+  <text x="314" y="202" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Favicon  64×64</text>
+  <text font-family="'Inter','Helvetica Neue',Arial,sans-serif" letter-spacing="-0.8"><tspan x="390.0" y="158.0" font-size="60.0" fill="#0F172A" font-weight="700">Gastos</tspan><tspan font-size="63.0" fill="url(#aiG)" font-weight="800">AI</tspan></text>
+
+  <text x="560" y="186" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Wordmark only</text>
+  <line x1="56" y1="326" x2="1344" y2="326" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="56" y="350" width="620" height="160" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="76.0" y="381.4" width="97.2" height="97.2" rx="18.5" fill="url(#bgG)"/>
+  <rect x="85.7" y="444.6" width="6.8" height="16.5" rx="1.6" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="94.7" y="432.9" width="6.8" height="28.2" rx="1.6" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="103.6" y="418.3" width="6.8" height="42.8" rx="1.6" fill="#FFFFFF" opacity="0.28"/>
+  <text x="120.7" y="449.0" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="42.3" fill="#FFFFFF" text-anchor="middle">&#x20B1;</text>
+  <line x1="129.9" y1="422.7" x2="158.1" y2="399.4" stroke="url(#nodeG)" stroke-width="3.1" stroke-linecap="round"/>
+  <circle cx="159.4" cy="397.7" r="8.0" fill="url(#nodeG)"/>
+  <circle cx="159.4" cy="397.7" r="3.7" fill="#FFFFFF" opacity="0.92"/>
+
+  <text font-family="'Inter','Helvetica Neue',Arial,sans-serif" letter-spacing="-0.8"><tspan x="187.2" y="448.2" font-size="50.5" fill="#0F172A" font-weight="700">Gastos</tspan><tspan font-size="53.1" fill="url(#aiG)" font-weight="800">AI</tspan></text>
+
+  <text x="366" y="528" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Primary — Light</text>
+  <rect x="696" y="350" width="620" height="160" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
+  <rect x="716.0" y="381.4" width="97.2" height="97.2" rx="18.5" fill="url(#bgG)"/>
+  <rect x="725.7" y="444.6" width="6.8" height="16.5" rx="1.6" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="734.7" y="432.9" width="6.8" height="28.2" rx="1.6" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="743.6" y="418.3" width="6.8" height="42.8" rx="1.6" fill="#FFFFFF" opacity="0.28"/>
+  <text x="760.7" y="449.0" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="42.3" fill="#FFFFFF" text-anchor="middle">&#x20B1;</text>
+  <line x1="769.9" y1="422.7" x2="798.1" y2="399.4" stroke="url(#nodeG)" stroke-width="3.1" stroke-linecap="round"/>
+  <circle cx="799.4" cy="397.7" r="8.0" fill="url(#nodeG)"/>
+  <circle cx="799.4" cy="397.7" r="3.7" fill="#FFFFFF" opacity="0.92"/>
+
+  <text font-family="'Inter','Helvetica Neue',Arial,sans-serif" letter-spacing="-0.8"><tspan x="827.2" y="448.2" font-size="50.5" fill="#FFFFFF" font-weight="700">Gastos</tspan><tspan font-size="53.1" fill="url(#aiGL)" font-weight="800">AI</tspan></text>
+
+  <text x="1006" y="528" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Primary — Dark</text>
+  <line x1="56" y1="550" x2="1344" y2="550" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="56" y="574" width="380" height="130" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="72.0" y="603.0" width="72.0" height="72.0" rx="13.7" fill="#0F172A"/>
+  <rect x="79.2" y="649.8" width="5.0" height="12.2" rx="1.2" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="85.8" y="641.2" width="5.0" height="20.9" rx="1.2" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="92.4" y="630.4" width="5.0" height="31.7" rx="1.2" fill="#FFFFFF" opacity="0.28"/>
+  <text x="105.1" y="653.0" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="31.3" fill="#FFFFFF" text-anchor="middle">&#x20B1;</text>
+  <line x1="112.0" y1="633.6" x2="132.8" y2="616.3" stroke="#FFFFFF" stroke-width="2.3" stroke-linecap="round"/>
+  <circle cx="133.8" cy="615.1" r="5.9" fill="#FFFFFF"/>
+  <circle cx="133.8" cy="615.1" r="2.7" fill="#FFFFFF" opacity="0.92"/>
+
+  <text font-family="'Inter','Helvetica Neue',Arial,sans-serif" letter-spacing="-0.8"><tspan x="154.0" y="652.5" font-size="37.4" fill="#0F172A" font-weight="700">Gastos</tspan><tspan font-size="39.3" fill="#0F172A" font-weight="800">AI</tspan></text>
+
+  <text x="246" y="722" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Monochrome Dark</text>
+  <rect x="456" y="574" width="380" height="130" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
+  <rect x="472.0" y="603.0" width="72.0" height="72.0" rx="13.7" fill="#FFFFFF"/>
+  <rect x="479.2" y="649.8" width="5.0" height="12.2" rx="1.2" fill="#0F172A" opacity="0.28"/>
+  <rect x="485.8" y="641.2" width="5.0" height="20.9" rx="1.2" fill="#0F172A" opacity="0.28"/>
+  <rect x="492.4" y="630.4" width="5.0" height="31.7" rx="1.2" fill="#0F172A" opacity="0.28"/>
+  <text x="505.1" y="653.0" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="31.3" fill="#0F172A" text-anchor="middle">&#x20B1;</text>
+  <line x1="512.0" y1="633.6" x2="532.8" y2="616.3" stroke="#4F46E5" stroke-width="2.3" stroke-linecap="round"/>
+  <circle cx="533.8" cy="615.1" r="5.9" fill="#4F46E5"/>
+  <circle cx="533.8" cy="615.1" r="2.7" fill="#0F172A" opacity="0.92"/>
+
+  <text font-family="'Inter','Helvetica Neue',Arial,sans-serif" letter-spacing="-0.8"><tspan x="554.0" y="652.5" font-size="37.4" fill="#FFFFFF" font-weight="700">Gastos</tspan><tspan font-size="39.3" fill="#FFFFFF" font-weight="800">AI</tspan></text>
+
+  <text x="646" y="722" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Monochrome Light</text>
+  <rect x="856" y="574" width="488" height="130" rx="10" fill="#1E1B4B" stroke="#312E81" stroke-width="1"/>
+  <rect x="872.0" y="603.0" width="72.0" height="72.0" rx="13.7" fill="url(#bgG)"/>
+  <rect x="879.2" y="649.8" width="5.0" height="12.2" rx="1.2" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="885.8" y="641.2" width="5.0" height="20.9" rx="1.2" fill="#FFFFFF" opacity="0.28"/>
+  <rect x="892.4" y="630.4" width="5.0" height="31.7" rx="1.2" fill="#FFFFFF" opacity="0.28"/>
+  <text x="905.1" y="653.0" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="31.3" fill="#FFFFFF" text-anchor="middle">&#x20B1;</text>
+  <line x1="912.0" y1="633.6" x2="932.8" y2="616.3" stroke="url(#nodeG)" stroke-width="2.3" stroke-linecap="round"/>
+  <circle cx="933.8" cy="615.1" r="5.9" fill="url(#nodeG)"/>
+  <circle cx="933.8" cy="615.1" r="2.7" fill="#FFFFFF" opacity="0.92"/>
+
+  <text font-family="'Inter','Helvetica Neue',Arial,sans-serif" letter-spacing="-0.8"><tspan x="954.0" y="652.5" font-size="37.4" fill="#FFFFFF" font-weight="700">Gastos</tspan><tspan font-size="39.3" fill="url(#aiGL)" font-weight="800">AI</tspan></text>
+
+  <text x="1100" y="722" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">Reverse Logo</text>
+  <line x1="56" y1="746" x2="1344" y2="746" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="56" y="770" width="138" height="72" rx="8" fill="#1E1B4B"/>
+  <text x="125" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Indigo 950</text>
+  <text x="125" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#1E1B4B</text>
+  <text x="125" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Deep BG</text>
+  <rect x="205" y="770" width="138" height="72" rx="8" fill="#4338CA"/>
+  <text x="274" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Indigo 700</text>
+  <text x="274" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#4338CA</text>
+  <text x="274" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Brand Core</text>
+  <rect x="354" y="770" width="138" height="72" rx="8" fill="#4F46E5"/>
+  <text x="423" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Indigo 600</text>
+  <text x="423" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#4F46E5</text>
+  <text x="423" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Primary</text>
+  <rect x="503" y="770" width="138" height="72" rx="8" fill="#1D4ED8"/>
+  <text x="572" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Blue 700</text>
+  <text x="572" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#1D4ED8</text>
+  <text x="572" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Secondary</text>
+  <rect x="652" y="770" width="138" height="72" rx="8" fill="#818CF8"/>
+  <text x="721" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Indigo 400</text>
+  <text x="721" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#818CF8</text>
+  <text x="721" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Accent</text>
+  <rect x="801" y="770" width="138" height="72" rx="8" fill="#38BDF8"/>
+  <text x="870" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Sky 400</text>
+  <text x="870" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#38BDF8</text>
+  <text x="870" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">AI Node</text>
+  <rect x="950" y="770" width="138" height="72" rx="8" fill="#0F172A"/>
+  <text x="1019" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Slate 900</text>
+  <text x="1019" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#0F172A</text>
+  <text x="1019" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Wordmark</text>
+  <rect x="1099" y="770" width="138" height="72" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="1168" y="858" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="11" fill="#0F172A" text-anchor="middle" font-weight="600">Slate 50</text>
+  <text x="1168" y="872" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#64748B" text-anchor="middle">#F8FAFC</text>
+  <text x="1168" y="886" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Light BG</text>
+  <text x="56" y="910" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="13" fill="#475569">Symbol reads: peso (₱) = finance identity • upward line = tracking & progress • node dot = AI intelligence • ascending bars = analytics depth</text>
+  <text x="56" y="932" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="13" fill="#475569">Use Primary Light on white/light surfaces • Primary Dark or Reverse on dark backgrounds • Monochrome for single-ink print</text></svg>

@@ -11,6 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.23.0] - 2026-06-14
+
+### Added
+- Dashboard KPI strip (5 cards): total spent, MoM change, daily average, biggest category, remaining budget
+- Real-time unread alert badge on Alerts nav link (`useUnreadAlertCount` hook + `gastosai:alert-changed` event)
+- Horizontal category bar chart replacing donut chart (Recharts `BarChart layout="vertical"`)
+- `SecurityStartupValidator`: startup warning when JWT secret uses dev default
+- `ai/skills/security-audit.md`: reusable security audit checklist with fix policy and severity tags
+- `.claude/agents/security-auditor.md`: security-auditor agent definition
+- `brand/gastosai-brand-breakdown.svg`: brand system reference sheet
+
+### Changed
+- Dashboard restructured into responsive grid layout (3-col on desktop, stacked on mobile); AI Insights promoted to row 2
+- Brand color shifted from violet to indigo-blue across all pages, buttons, and gradients
+- Okabe-Ito colorblind-safe palette applied to category chart colors
+- Logo replaced with styled text wordmark "GastosAI" (Navbar, Login, Register); Navbar logo links to Dashboard
+- CORS: `allowedOriginPatterns("*")` replaced with env-driven `CORS_ALLOWED_ORIGINS` (default `http://localhost:5173`)
+- Actuator security permit narrowed from `/actuator/**` to `/actuator/info`
+- `LoginRequest` and `RegisterRequest`: `password` field bounded with `@Size(max=72)` (BCrypt limit)
+- `VisionService`: file `Content-Type` validated against image allowlist before AI call
+
+---
+
 ## [0.22.0] - 2026-06-13
 
 ### Added

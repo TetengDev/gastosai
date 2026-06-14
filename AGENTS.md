@@ -101,6 +101,7 @@ For AI SQL-related changes, also follow:
 | `tech-workflow` | `.claude/agents/tech-workflow.md` | Engineering process advisor for branching, PR sizing, sprint discipline, and incident response |
 | `cleanup` | `.claude/agents/cleanup.md` | Scans for stale/irrelevant files and reports deletion candidates; never deletes without confirmation |
 | `agent-auditor` | `.claude/agents/agent-auditor.md` | Audits agent/skill indexes for completeness, overlap, and consolidation; auto-fixes missing registrations |
+| `security-auditor` | `.claude/agents/security-auditor.md` | Scans for security vulnerabilities (deps, auth, CORS, JWT, AI path, input validation); reports findings; applies safe fixes only |
 
 See `ai/skills/agents.md` — Task Routing section — for how to classify any task and choose the right agent sequence.
 
@@ -123,6 +124,7 @@ See `ai/skills/agents.md` — Task Routing section — for how to classify any t
 | `ai/skills/deployment.md` | Koyeb / Vercel / Supabase deployment |
 | `ai/skills/feature-workflow.md` | Branch → develop → verify → squash-merge workflow |
 | `ai/skills/doc-audit.md` | Documentation audit checklist — run to detect stale docs |
+| `ai/skills/security-audit.md` | Security audit checklist — deps, auth, CORS, JWT, AI path, input validation, fix policy |
 | `ai/skills/token-optimization.md` | Token efficiency rules for agent prompts — < 800 tokens per prompt, reference over copy |
 
 ### Prompts and templates
