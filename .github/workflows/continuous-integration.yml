@@ -79,12 +79,9 @@ jobs:
       - uses: actions/checkout@v4
 
       # Report-only (exit-code 0): surfaces vulnerable dependencies without blocking the build.
-      # Promote to exit-code 1 once the baseline is clean.
+      # Promote to --exit-code 1 once the baseline is clean. Uses the official installer to avoid
+      # pinning a marketplace action version.
       - name: Trivy filesystem scan
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          scan-type: fs
-          scanners: vuln
-          severity: HIGH,CRITICAL
-          ignore-unfixed: true
-          exit-code: '0'
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b "$RUNNER_TEMP/bin"
+          "$RUNNER_TEMP/bin/trivy" fs --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 0 .
