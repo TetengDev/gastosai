@@ -71,3 +71,18 @@ jobs:
       - name: Lint
         working-directory: frontend
         run: npm run lint
+
+  security-scan:
+    name: Dependency vulnerability scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Report-only (exit-code 0): surfaces vulnerable dependencies without blocking the build.
+      # Promote to --exit-code 1 once the baseline is clean. Uses the official installer to avoid
+      # pinning a marketplace action version.
+      - name: Trivy filesystem scan
+        continue-on-error: true
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b "$RUNNER_TEMP/bin"
+          "$RUNNER_TEMP/bin/trivy" fs --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --offline-scan --exit-code 0 .
