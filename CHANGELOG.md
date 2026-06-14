@@ -11,6 +11,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.26.0] - 2026-06-15
+
+Production-refactor batch (Phases 0–2). All changes are backwards compatible and additive;
+monetization enforcement ships **disabled** (`gastos.monetization.enforce=false`), so no feature
+is gated yet and there is no UX change.
+
+### Added
+- Safe AI analytics query pipeline (`ai.query`): the LLM emits a structured, validated query intent
+  (metric/date-range/category/sort/limit allowlists) that the server turns into a fully parameterized,
+  user-scoped query (`AnalyticsQueryPlanner` + `SafeAnalyticsExecutor`, statement timeout). Falls back
+  to the existing SqlGuard NL→SQL path when no valid intent is produced, so no analytics is lost.
+- Subscription/feature-entitlement foundation: `subscription_plans`, `plan_features`,
+  `user_subscriptions` (V3 migration + entities + repositories), `FeatureKey`/`PlanKey`/
+  `SubscriptionStatus`, idempotent `EntitlementSeeder` (FREE/PREMIUM).
+- `EntitlementService` (`canAccessFeature`/`requireFeatureAccess`) as the single access authority;
+  `@RequiresFeature` + `FeatureAccessInterceptor` enforce it on `/ai/query`, `/ai/chat`,
+  `/ai/insights/*`, `/expenses/export`. `FeatureLockedException` → HTTP 402.
+- `GET /user/entitlements` (plan, status, granted features) for the frontend.
+- `PaymentProvider` seam + `SubscriptionService.activate/cancel` for future, provider-agnostic billing.
+- `gastos.monetization.enforce` config flag (default false).
+
+### Changed
+- `ChatActionService` uses a typed `ChatTool` enum instead of magic tool-name strings.
+- AI-generated SQL is logged at DEBUG (was INFO) to avoid emitting user identifiers/value literals.
+
+---
+
 ## [0.25.1] - 2026-06-15
 
 ### Fixed
