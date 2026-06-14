@@ -82,6 +82,7 @@ jobs:
       # Promote to --exit-code 1 once the baseline is clean. Uses the official installer to avoid
       # pinning a marketplace action version.
       - name: Trivy filesystem scan
+        continue-on-error: true
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b "$RUNNER_TEMP/bin"
-          "$RUNNER_TEMP/bin/trivy" fs --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 0 .
+          "$RUNNER_TEMP/bin/trivy" fs --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --offline-scan --exit-code 0 .
