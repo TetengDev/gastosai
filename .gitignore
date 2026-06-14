@@ -37,6 +37,7 @@ logs/
 .DS_Store
 Thumbs.db
 Desktop.ini
+*.stackdump
 
 # --- IDEs & editors ---
 .idea/
