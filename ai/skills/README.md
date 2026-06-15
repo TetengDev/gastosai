@@ -28,6 +28,7 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | Reviewing a PR or commit | `commit-pr-review.md` | `backend-review.md` |
 | Building a new feature | `feature-builder.md` | `java-spring-standards.md` |
 | Writing or updating tests | `testing.md` | — |
+| QA — scenarios + verifying a feature | `qa-testing.md` | `project-context.md` |
 | Touching the AI query path | `ai-sql-safety.md` | — |
 | Deploying to production | `deployment.md` | `git-branching-release-strategy.md` |
 | Understanding the domain model | `project-context.md` | — |
@@ -61,6 +62,7 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | `backend-review.md` | Spring Boot layer-by-layer review checklist |
 | `java-spring-standards.md` | Java 25 + Spring Boot 4 conventions |
 | `testing.md` | Test stack, patterns, and what not to do |
+| `qa-testing.md` | QA/QC: scenario/scope definition, test-design techniques, manual-test checklist conventions, severity rubric, DoD |
 | `ai-sql-safety.md` | SqlGuard rules — never bypass |
 | `deployment.md` | Koyeb / Vercel / Supabase deploy walkthrough |
 | `project-context.md` | Domain model, DTO contracts, request flow, env vars, frontend structure |

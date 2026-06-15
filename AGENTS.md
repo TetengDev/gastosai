@@ -102,6 +102,7 @@ For AI SQL-related changes, also follow:
 | `cleanup` | `.claude/agents/cleanup.md` | Scans for stale/irrelevant files and reports deletion candidates; never deletes without confirmation |
 | `agent-auditor` | `.claude/agents/agent-auditor.md` | Audits agent/skill indexes for completeness, overlap, and consolidation; auto-fixes missing registrations |
 | `security-auditor` | `.claude/agents/security-auditor.md` | Scans for security vulnerabilities (deps, auth, CORS, JWT, AI path, input validation); reports findings; applies safe fixes only |
+| `qa-engineer` | `.claude/agents/qa-engineer.md` | Defines test scope/scenarios for a feature and verifies it (API + suite execution + a human manual-test checklist); read-only, reports severity-tagged defects |
 
 See `ai/skills/agents.md` — Task Routing section — for how to classify any task and choose the right agent sequence.
 
@@ -126,6 +127,7 @@ See `ai/skills/agents.md` — Task Routing section — for how to classify any t
 | `ai/skills/doc-audit.md` | Documentation audit checklist — run to detect stale docs |
 | `ai/skills/security-audit.md` | Security audit checklist — deps, auth, CORS, JWT, AI path, input validation, fix policy |
 | `ai/skills/token-optimization.md` | Token efficiency rules for agent prompts — < 800 tokens per prompt, reference over copy |
+| `ai/skills/qa-testing.md` | QA/QC: scenario/scope definition, test-design techniques, manual-test checklist conventions, severity rubric, DoD |
 
 ### Prompts and templates
 
