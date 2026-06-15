@@ -19,17 +19,23 @@ The `commit-msg` hook is a **format linter only** — it validates the `type(sco
 
 ## Release branch workflow
 
-**CI gate:** `.github/workflows/continuous-integration.yml` runs `validate-release-branch` on every PR to `master`. It rejects any source branch that is not `release/*`. PRs from `feat/*`, `fix/*`, `chore/*`, etc. fail CI with: `PRs to master must come from a release/* branch`.
+**CI gate:** `.github/workflows/continuous-integration.yml` runs `validate-release-branch` on every PR to `master`. Only two sources are allowed:
+- **`release/*`** — the path for **any application change** and **any version bump**. Always allowed.
+- **`meta/*`** — a narrow lane for **non-application changes only** (CI/workflows, repo docs, `.claude` agents, `ai/skills`, `.gitignore`). Allowed only if the PR (a) does **not** change the `frontend/package.json` version and (b) touches **no** `backend/src` or `frontend/src`. Either guard tripping fails the gate.
 
-**Two-PR flow (strictly enforced):**
-1. PR: `feat/*` (or any non-release branch) → `release/x.y.z`
+Any other source (`feat/*`, `fix/*`, `chore/*`, `docs/*`, …) is rejected — route app changes through `release/*` and non-app changes through `meta/*`.
+
+**Two-PR flow (for application changes — strictly enforced):**
+1. PR: `feat/*` / `fix/*` (or any working branch) → `release/x.y.z`
 2. PR: `release/x.y.z` → `master`
+
+Non-app changes skip this: a single `meta/*` → `master` PR (no version bump per SemVer — docs/CI/tooling don't change the public API).
 
 **Branch deletion rules (strictly enforced):**
 - `master` and `release/*` — NEVER delete, local or remote. They are permanent records.
-- All other branches (`feat/*`, `fix/*`, `chore/*`, etc.) — delete after PR is merged.
+- All other branches (`feat/*`, `fix/*`, `meta/*`, etc.) — delete after PR is merged.
 
-This project uses a **release branch strategy**: feature branches are developed on `feat/*`, then merged into a `release/x.y.z` branch via PR, which then PRs to `master`. The release branch is tagged, protected, and never deleted — it is the permanent record of that shipped state. Hotfixes branch from the relevant `release/x.y.z` branch and are cherry-picked back to `master`.
+This project uses a **release branch strategy**: feature branches are developed on `feat/*`, then merged into a `release/x.y.z` branch via PR, which then PRs to `master`. The release branch is tagged, protected, and never deleted — it is the permanent record of that shipped state. A **hotfix** is an urgent production fix: it is still an application change, so it bumps PATCH and ships through a `release/x.y.z` cut from `master` (it does not use the `meta/*` lane).
 
 ### Automated (recommended)
 
