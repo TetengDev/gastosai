@@ -32,22 +32,22 @@ jobs:
           fi
 
       - name: Extract changelog notes
-        id: notes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          REPO: ${{ github.repository }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          NOTES=$(awk "/^## \[$VERSION\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md | sed '/^[[:space:]]*---[[:space:]]*$/d' | sed '/^[[:space:]]*$/{ N; /^\n[[:space:]]*$/d }')
-          if [ -z "$NOTES" ]; then
-            NOTES="See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md) for details."
+          # Write notes to a file (never interpolate notes into a shell command — backticks/<> in the
+          # changelog would otherwise trigger command substitution/redirection and break the release).
+          awk "/^## \[$VERSION\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md \
+            | sed '/^[[:space:]]*---[[:space:]]*$/d' > "$RUNNER_TEMP/release-notes.md"
+          if [ ! -s "$RUNNER_TEMP/release-notes.md" ]; then
+            echo "See [CHANGELOG.md](https://github.com/$REPO/blob/master/CHANGELOG.md) for details." > "$RUNNER_TEMP/release-notes.md"
           fi
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          echo "$NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         if: steps.tag_check.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
         run: |
-          gh release create ${{ steps.version.outputs.tag }} \
-            --title "Release ${{ steps.version.outputs.tag }}" \
-            --notes "${{ steps.notes.outputs.body }}"
+          gh release create "$TAG" --title "Release $TAG" --notes-file "$RUNNER_TEMP/release-notes.md"
