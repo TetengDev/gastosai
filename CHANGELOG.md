@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `POST /budgets?force=true` overwrites an existing budget for the same category and month instead of returning `409`, matching the duplicate-overwrite behavior of goals and recurring expenses. Without `force`, a duplicate still returns `409`. (Frontend overwrite prompt to follow.)
+
 ### Fixed
 - Budget safe-to-spend was wrong for seeded/demo data: `AppDataLoader` created budgets without `amountLimitInBaseCurrency`, which `BudgetService.getSummary` uses as the budget amount, so `totalBudgeted`/`safeToSpend`/`percentUsed`/`status` were all incorrect (over-budget categories showed `ON_TRACK` at 0%). Existing databases need a reseed to pick up correct values.
 - `GET /budgets/summary` with an out-of-range calendar month (e.g. `2026-13`) returned `401` instead of `400` — an unhandled `DateTimeException` fell through to Spring Security. It now validates the month via `YearMonth` and returns a proper `400`.
