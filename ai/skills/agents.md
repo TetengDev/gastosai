@@ -22,6 +22,7 @@ Before picking an agent, classify the task. The type determines which skills to 
 | Prioritization / roadmap | "what to build", "next feature", "rank" | — | `feature-prioritizer` (terminal) |
 | Process / branching advice | "how to structure", "PR size", "sprint" | — | `tech-workflow` (terminal) |
 | Chore / docs / config | "update docs", "bump version", "rename" | `README.md` | Direct (no agent) → `pre-pr` if substantial |
+| Feature QA / acceptance | "test this feature", "QA", "define test scenarios", "verify before release" | `qa-testing.md` → `project-context.md` | `qa-engineer` (after `pre-pr`, before UAT) |
 | Release | "release", "cut v", "tag" | `git-branching-release-strategy.md` | Manual steps → `pre-pr` |
 | After adding agent or skill | — | — | `agent-auditor` |
 | Stale file cleanup | "clean up", "remove unused", "audit" | `doc-audit.md` | `cleanup` |
@@ -34,6 +35,7 @@ Gate 1 — Read     : load the pre-flight skills for that task type
 Gate 2 — Plan     : (full-stack only) full-stack-planner must finish before backend-dev/frontend-dev start
 Gate 3 — Compress : run prompt-compressor on each agent prompt before spawning
 Gate 4 — Verify   : pre-pr must pass before any PR is opened
+Gate 4.5 — QA     : qa-engineer designs + runs scenarios and reports no open critical/major defects (functional/acceptance; complements pre-pr's build/lint/version gate)
 Gate 5 — UAT      : user must confirm feature works before merge
 ```
 
@@ -94,6 +96,7 @@ START
 | `tech-workflow` | Engineering process advisor — branching, PR sizing, sprint discipline, incident response | Sonnet |
 | `cleanup` | Scan for stale/irrelevant files and report deletion candidates with confidence levels | Haiku |
 | `agent-auditor` | Audit all agents/skills for registration, overlap, consolidation, and skill gaps; auto-fix indexes | Sonnet |
+| `qa-engineer` | Define test scope/scenarios for a feature and verify it (API + suite execution + human manual-test checklist); read-only, severity-tagged defects | Sonnet |
 
 ---
 
@@ -168,6 +171,7 @@ Each project agent reads the `ai/skills/` files relevant to its task:
 | `backend-dev` | `project-context.md`, `java-spring-standards.md`, `testing.md` |
 | `frontend-dev` | `project-context.md` |
 | `pre-pr` | `shared/pre-pr-checklist.md` |
+| `qa-engineer` | `qa-testing.md`, `project-context.md` |
 | `prompt-compressor` | `token-optimization.md` |
 | `cleanup` | `doc-audit.md` |
 | `agent-auditor` | `doc-audit.md` |

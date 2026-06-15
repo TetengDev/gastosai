@@ -1,0 +1,7 @@
+amount,category,description,date
+250.00,Food,Lunch at Jollibee,2026-06-01
+1200.50,Transportation,Grab to office,2026-06-03
+"₱1,500.00",Utilities,Electric bill,2026-06-05
+89,Food,Coffee,06/07/2026
+3000,Rent,Monthly rent,2026-06-01 09:00:00
+45.75,Groceries,Snacks (no date defaults to today),
