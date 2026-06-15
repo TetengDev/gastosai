@@ -91,10 +91,11 @@ npm run test:coverage
 |---|---|
 | `feat/<name>` | Feature development |
 | `fix/<name>` | Bug fixes |
-| `release/x.y.z` | Release branches — CI requires this to merge to master |
-| `hotfix/<name>` | Emergency fixes; branch from `release/x.y.z`, cherry-pick to master |
+| `release/x.y.z` | Release branches — the only path to master for app changes + version bumps |
+| `meta/<name>` | Non-application changes only (CI/workflows, repo docs, agents, skills); may PR master directly |
+| `hotfix/<name>` | Urgent production fix — still an app change, so bump PATCH and ship via a `release/x.y.z` cut from master |
 
-**PRs to master must come from `release/*` branches** — the CI `validate-release-branch` job enforces this.
+**PRs to master may come only from `release/*` (app changes + version bumps) or `meta/*` (non-app changes — no version bump, no `backend/src`/`frontend/src` edits)** — the CI `validate-release-branch` job enforces both, including a guard that fails a `meta/*` PR touching app source.
 
 Never commit non-trivial changes directly to `master`.
 
