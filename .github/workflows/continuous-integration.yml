@@ -15,14 +15,40 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && (github.base_ref == 'master' || github.base_ref == 'main')
     steps:
-      - name: Check source branch is release/*
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enforce version-cut policy
+        env:
+          HEAD: ${{ github.head_ref }}
+          BASE: ${{ github.base_ref }}
         run: |
-          branch="${{ github.head_ref }}"
-          if [[ "$branch" != release/* ]]; then
-            echo "::error::PRs to master must come from a release/* branch. Got: $branch"
+          set -euo pipefail
+
+          # release/* is always allowed — it is the canonical version-cut path that auto-release.yml tags.
+          if [[ "$HEAD" == release/* ]]; then
+            echo "Branch '$HEAD' is a release branch — allowed."
+            exit 0
+          fi
+
+          # For any other branch, the real invariant is: a PR that changes the version must come from release/*.
+          # (auto-release.yml reads the version from frontend/package.json, so that is the source of truth.)
+          git fetch origin "$BASE" --depth=1
+          base_ver=$(git show "origin/$BASE:frontend/package.json" | jq -r .version)
+          head_ver=$(jq -r .version frontend/package.json)
+          if [[ "$base_ver" != "$head_ver" ]]; then
+            echo "::error::Version changed ($base_ver -> $head_ver). Version bumps must come from a release/* branch."
             exit 1
           fi
-          echo "Branch '$branch' is valid."
+
+          # No version change: allow only no-bump conventional branch types straight to master.
+          if [[ ! "$HEAD" =~ ^(chore|docs|style|ci|test|refactor|build)/ ]]; then
+            echo "::error::PRs to master must come from release/* (for version bumps) or a no-bump branch (chore|docs|style|ci|test|refactor|build)/*. Got: $HEAD"
+            exit 1
+          fi
+
+          echo "Branch '$HEAD' is a no-bump branch with no version change — allowed."
 
   backend:
     name: Backend tests
