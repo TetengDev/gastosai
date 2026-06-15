@@ -182,12 +182,14 @@ if ($urIdx -lt 0) {
     $endIdx = if ($nextIdx -gt 0) { $nextIdx - 1 } else { $clLines.Count - 1 }
     for ($i = $urIdx + 1; $i -le $endIdx; $i++) { $urContent += $clLines[$i] }
 
-    while ($urContent.Count -gt 0) {
-        $last = $urContent[$urContent.Count - 1]
-        if ($last -match '^\s*$' -or $last -match '^---\s*$') {
-            $urContent = if ($urContent.Count -gt 1) { $urContent[0..($urContent.Count - 2)] } else { @() }
-        } else { break }
+    # Trim trailing blank / '---' lines. Use an integer index (never re-read .Count on a value that
+    # may have unwrapped to a scalar) and force array context — required under Set-StrictMode Latest.
+    $urContent = @($urContent)
+    $trimEnd = $urContent.Count
+    while ($trimEnd -gt 0 -and ($urContent[$trimEnd - 1] -match '^\s*$' -or $urContent[$trimEnd - 1] -match '^---\s*$')) {
+        $trimEnd--
     }
+    $urContent = if ($trimEnd -gt 0) { @($urContent[0..($trimEnd - 1)]) } else { @() }
 
     $newLines = @()
     for ($i = 0; $i -le $urIdx; $i++) { $newLines += $clLines[$i] }
@@ -195,7 +197,7 @@ if ($urIdx -lt 0) {
     $newLines += '---'
     $newLines += ''
     $newLines += "## [$newVersion] - $today"
-    if ($urContent.Count -gt 0) { foreach ($l in $urContent) { $newLines += $l } }
+    foreach ($l in @($urContent)) { if ($null -ne $l) { $newLines += $l } }
     $newLines += ''
     $newLines += '---'
     $newLines += ''
