@@ -3,34 +3,16 @@ import { askQuery, askWithAttachment, chatAction, type ChatMode } from "../api/a
 import { updateBudget } from "../api/budgets";
 import { getCategories } from "../api/categories";
 import { createExpense, deleteExpense, importExpensesCsv, parseExpense } from "../api/expenses";
-import type { ChatPreviewData, ParsedExpenseResult } from "../api/types";
+import type { ParsedExpenseResult } from "../api/types";
 import { useAuth } from "../context/AuthContext";
 import { useFeatures } from "../hooks/useFeatures";
 import { formatCurrency, formatDate } from "../lib/formatters";
 import { looksLikeExpenseLog, looksLikeNlQuery } from "../lib/intentDetection";
 import { TypingDots, BotAvatar, ExpandIcon, CollapseIcon } from "./chat/ChatChrome";
 import { actionLabel, savedLabel, buildPreviewFields, buildConfirmMessage, dispatchDataEvents } from "./chat/chatActions";
-import { renderAnswer } from "./chat/chatFormatting";
+import { renderAnswer, renderActionResult } from "./chat/chatFormatting";
+import type { Message } from "./chat/chatTypes";
 
-interface Message {
-  role: "user" | "assistant";
-  content: unknown;
-  timestamp: Date;
-  attachmentUrl?: string;
-  attachmentName?: string;
-  draft?: ParsedExpenseResult;
-  draftSaved?: boolean;
-  draftEdits?: { amount?: number; date?: string; time?: string; description?: string };
-  categoryOverride?: string;
-  actionType?: "success" | "error";
-  actionResult?: unknown;
-  actionPreview?: ChatPreviewData & { originalMessage: string };
-  actionPreviewConfirmed?: boolean;
-  editedParams?: Record<string, unknown>;
-  disambiguateItems?: Array<{ id: number; description: string; amount: number; date: string }>;
-  selectedDisambiguateIds?: number[];
-  draftCancelled?: boolean;
-}
 
 interface ModeTheme {
   headerGradient: string;
@@ -123,17 +105,6 @@ function makeWelcomeMessage(displayName?: string | null): Message {
 }
 
 
-function renderActionResult(msg: Message) {
-  const isDelete = typeof msg.content === "string" && msg.content.toLowerCase().includes("deleted");
-  return (
-    <div className={`mt-2 border-l-2 ${isDelete ? "border-red-500 dark:border-red-400" : "border-green-500 dark:border-green-400"} pl-3`}>
-      <p className={`text-sm font-medium ${isDelete ? "text-red-700 dark:text-red-300" : "text-green-700 dark:text-green-300"}`}>{msg.content as string}</p>
-      {Boolean(msg.actionResult && typeof msg.actionResult === "object" && "id" in (msg.actionResult as object)) && (
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">ID: #{(msg.actionResult as { id: number }).id}</p>
-      )}
-    </div>
-  );
-}
 
 export default function ChatWidget() {
   const features = useFeatures();

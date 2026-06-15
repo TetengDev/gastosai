@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { formatCurrency, formatDate } from "../../lib/formatters";
+import type { Message } from "./chatTypes";
 
 // Pure formatting + NL-query answer rendering for the chat widget. Extracted from ChatWidget;
 // stateless and behavior-preserving.
@@ -149,4 +150,16 @@ export function renderAnswer(answer: unknown, accentText: string): ReactNode {
   }
 
   return <span>{String(answer)}</span>;
+}
+
+export function renderActionResult(msg: Message) {
+  const isDelete = typeof msg.content === "string" && msg.content.toLowerCase().includes("deleted");
+  return (
+    <div className={`mt-2 border-l-2 ${isDelete ? "border-red-500 dark:border-red-400" : "border-green-500 dark:border-green-400"} pl-3`}>
+      <p className={`text-sm font-medium ${isDelete ? "text-red-700 dark:text-red-300" : "text-green-700 dark:text-green-300"}`}>{msg.content as string}</p>
+      {Boolean(msg.actionResult && typeof msg.actionResult === "object" && "id" in (msg.actionResult as object)) && (
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">ID: #{(msg.actionResult as { id: number }).id}</p>
+      )}
+    </div>
+  );
 }
