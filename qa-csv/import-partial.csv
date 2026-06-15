@@ -1,0 +1,7 @@
+amount,category,description,date
+500,Food,Valid row imported,2026-06-02
+0,Food,Zero amount -> skipped,2026-06-02
+-120,Transportation,Negative -> skipped,2026-06-02
+,Utilities,Blank amount -> skipped,2026-06-02
+abc,Food,Non-numeric -> error,2026-06-02
+780.25,Groceries,Another valid imported,2026-06-04
