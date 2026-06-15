@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Budget safe-to-spend was wrong for seeded/demo data: `AppDataLoader` created budgets without `amountLimitInBaseCurrency`, which `BudgetService.getSummary` uses as the budget amount, so `totalBudgeted`/`safeToSpend`/`percentUsed`/`status` were all incorrect (over-budget categories showed `ON_TRACK` at 0%). Existing databases need a reseed to pick up correct values.
 - `GET /budgets/summary` with an out-of-range calendar month (e.g. `2026-13`) returned `401` instead of `400` — an unhandled `DateTimeException` fell through to Spring Security. It now validates the month via `YearMonth` and returns a proper `400`.
+- Budget `month` validation now rejects invalid calendar months (`00`, `13`+); the pattern previously accepted any two digits, allowing unqueryable budgets to be created.
+- Budget `exchangeRate` must now be greater than 0; a `0` or negative rate was silently accepted and produced a base-currency amount of 0.
+- Missing required request parameters (e.g. `?month`) now return `400` instead of `401` (`MissingServletRequestParameterException` was unhandled and fell through to Spring Security).
 
 ---
 
