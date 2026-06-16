@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.31.0] - 2026-06-16
 
 ### Added
-- Bring-your-own AI key: users can save their own OpenAI key in Settings (stored encrypted with AES-256-GCM). When set, that user's AI calls (insights, chat, query, receipt scanning) use their key; when not set, calls fall back to the server's shared key. Endpoints: `GET/PUT /user/ai-settings`, `DELETE /user/ai-settings/{provider}`. New env var `AI_KEY_ENCRYPTION_SECRET` encrypts keys at rest.
+- Bring-your-own AI key: each user saves their own OpenAI key in Settings (stored encrypted with AES-256-GCM, never returned to the client). AI features (insights, chat, NL query, receipt scanning) **require the user's own key** — without one, those surfaces show a "Connect your OpenAI key" prompt and are disabled, while all non-AI features keep working. No fallback to a server key by default, so the operator incurs no AI cost. Endpoints: `GET/PUT /user/ai-settings`, `DELETE /user/ai-settings/{provider}` (booleans + `aiAvailable` only). Env: `AI_KEY_ENCRYPTION_SECRET` (encrypts keys at rest); optional `AI_ALLOW_SHARED_KEY=true` re-enables a shared server key.
 
 ---
 
