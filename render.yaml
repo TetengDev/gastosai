@@ -1,0 +1,48 @@
+# Render Blueprint — gastosai backend (free, no card).
+# render.com -> New -> Blueprint -> pick this repo. Then set the `sync: false`
+# secrets in the dashboard (values in .env.deploy). Frontend is on Vercel, DB on Supabase.
+services:
+  - type: web
+    name: gastosai-api
+    runtime: docker
+    repo: https://github.com/TetengDev/gastosai
+    branch: master
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: singapore
+    healthCheckPath: /actuator/health
+    envVars:
+      # Render routes to this port; the app binds 8080 (no code change).
+      - key: PORT
+        value: "8080"
+      # prod profile exposes /actuator/health and tunes the connection pool.
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: validate
+      - key: GASTOS_SEED_SAMPLE_DATA
+        value: "false"
+      - key: GASTOS_AI_PROVIDER
+        value: openai
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: AI_RATE_LIMIT_PER_MINUTE
+        value: "10"
+      - key: MONETIZATION_ENFORCE
+        value: "false"
+      # Secrets — set these in the Render dashboard (see .env.deploy). Never committed.
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: AI_KEY_ENCRYPTION_SECRET
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
