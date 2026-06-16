@@ -11,7 +11,9 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     region: singapore
-    healthCheckPath: /actuator/health
+    # No healthCheckPath: the free-tier JVM cold boot (~3 min) is slower than Render's
+    # health-check deploy window and was looping the deploy. Render marks the service live
+    # on port detection (8080) instead. /actuator/health is still available for manual checks.
     envVars:
       # Render routes to this port; the app binds 8080 (no code change).
       - key: PORT
