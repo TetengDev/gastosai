@@ -2,6 +2,8 @@
 
 How to deploy gastosai to its production targets: Koyeb (backend), Vercel (frontend), Supabase (database).
 
+> For a copy-paste, free-tier **user-testing** deploy using **Fly.io** for the backend (with OpenAI cost caps), follow `docs/deploy-testing-guide.md`. This skill documents the Koyeb path and deeper production notes.
+
 ---
 
 ## Overview
