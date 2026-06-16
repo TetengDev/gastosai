@@ -29,21 +29,48 @@ OpenAI API or Anthropic Claude API
 
 ## Quick start (local)
 
-Requires: Java 25, Node.js LTS, Docker Desktop.
+Requires: **Java 25**, **Node.js LTS**, **Docker Desktop**. All commands are PowerShell, run from the repo root.
 
 ```powershell
 # 1. Configure the backend (first time only)
-copy backend\.env.example backend\.env   # then fill in your API key
+copy backend\.env.example backend\.env   # then fill in DB + (optional) API key values
 
-# 2. Start everything with the launcher script
-.\scripts\start.ps1
+# 2. One-shot launcher (DB + backend + frontend)
+.\scripts\start.ps1 -Mode all
 ```
 
-Or manually in three terminals — see [backend/README.md](backend/README.md) and [frontend/README.md](frontend/README.md).
+### Manual run (3 terminals)
+
+Prefer running each service yourself? Open three terminals:
+
+```powershell
+# Terminal 1 — database (PostgreSQL 17 on port 5433, data in a named volume)
+docker compose up -d
+
+# Terminal 2 — backend (Spring Boot on :8080)
+cd backend
+.\mvnw.cmd spring-boot:run        # Unix: ./mvnw spring-boot:run
+
+# Terminal 3 — frontend (Vite dev server on :5173)
+cd frontend
+npm install                       # first time only
+npm run dev
+```
 
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8080
 - Swagger UI: http://localhost:8080/swagger-ui.html
+
+> First backend boot runs Flyway migrations and creates the schema. Data **persists** across restarts (it is not wiped). See [backend/README.md](backend/README.md) and [frontend/README.md](frontend/README.md) for details.
+
+### Demo & admin accounts
+
+- **Demo**: `demo@gastosai.dev` / `demo123` — seeded with sample data when `GASTOS_SEED_SAMPLE_DATA=true` (default in `backend/.env.example`).
+- **Admin**: set `GASTOS_ADMIN_EMAIL` / `GASTOS_ADMIN_PASSWORD` in `backend/.env`; admin accounts have all features and are always seeded with sample data for easy testing.
+
+### AI features (bring-your-own-key)
+
+AI (insights, chat, NL query, receipt scan) requires **each user to add their own OpenAI key** in **Settings → AI Provider Key**. Without a key those surfaces are disabled; everything else works. For local dev you can instead set `AI_ALLOW_SHARED_KEY=true` + `OPENAI_API_KEY=...` in `backend/.env` to use one shared key.
 
 ---
 
@@ -107,7 +134,7 @@ Destructive operations (option 4 / `-WipeDb`) require typing `YES` to confirm un
 
 ### Normal restart
 
-Stop the backend and frontend (see below), then start them again in the same order as Quick start. Because the backend uses `hibernate.ddl-auto=create-drop`, **the database schema is dropped and recreated on every backend restart** — all data is wiped and the 15 sample expenses are reseeded automatically (controlled by `GASTOS_SEED_SAMPLE_DATA=true` in `backend/.env`).
+Stop the backend and frontend (see below), then start them again in the same order as Quick start. The schema is managed by **Flyway migrations** (`hibernate.ddl-auto=validate`), so **data persists across restarts** — restarting does not wipe anything. Sample data is seeded only when the table is empty (demo) or for admin accounts; existing data is left untouched.
 
 ### Stopping the services
 
@@ -140,12 +167,12 @@ docker compose down -v
 
 # Start fresh
 docker compose up -d
-# Then restart the backend — it will recreate the schema and reseed sample data
+# Then restart the backend — Flyway recreates the schema and (if enabled) reseeds sample data
 ```
 
-### Skip sample data on restart
+### Skip sample data
 
-Set `GASTOS_SEED_SAMPLE_DATA=false` in `backend/.env` before starting the backend if you want to keep a clean database without the 15 sample expenses.
+Set `GASTOS_SEED_SAMPLE_DATA=false` in `backend/.env` to keep a clean database (no demo seed). Admin accounts are still seeded with sample data regardless, for testing.
 
 ---
 
@@ -161,7 +188,7 @@ gastosai/
 │   └── README.md
 ├── docker-compose.yaml     Local PostgreSQL 17 on port 5433
 ├── .github/
-│   └── workflows/ci.yml    GitHub Actions — runs backend tests on push
+│   └── workflows/          GitHub Actions — CI (tests, gate) + auto-release
 └── README.md               ← you are here
 ```
 
@@ -169,10 +196,10 @@ gastosai/
 
 ## Deployment targets
 
-| Layer    | Service  | Notes                                                  |
-|----------|----------|--------------------------------------------------------|
-| Backend  | Koyeb    | Free 512 MB tier; use `SPRING_PROFILES_ACTIVE=prod`    |
-| Frontend | Vercel   | Auto-deploys on push; set `VITE_API_URL` to Koyeb URL  |
-| Database | Supabase | Free PostgreSQL; pauses after ~1 week idle             |
+| Layer    | Service  | Notes                                                     |
+|----------|----------|-----------------------------------------------------------|
+| Backend  | Render   | Free Docker web service; `SPRING_PROFILES_ACTIVE=prod` (see `render.yaml`) |
+| Frontend | Vercel   | Auto-deploys on push; set `VITE_API_URL` to the backend URL |
+| Database | Supabase | Free PostgreSQL; pauses after ~1 week idle                |
 
-See `gastosai-fullstack-guide.md` for the full deployment walkthrough.
+See `docs/deploy-testing-guide.md` for the step-by-step free-tier deploy walkthrough, and `ai/skills/deployment.md` for deeper notes.
