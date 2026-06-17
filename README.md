@@ -202,4 +202,4 @@ gastosai/
 | Frontend | Vercel   | Auto-deploys on push; set `VITE_API_URL` to the backend URL |
 | Database | Supabase | Free PostgreSQL; pauses after ~1 week idle                |
 
-See `docs/deploy-testing-guide.md` for the step-by-step free-tier deploy walkthrough, and `ai/skills/deployment.md` for deeper notes.
+See `docs/deploy-testing-guide.md` for the step-by-step free-tier deploy walkthrough, and `ai/skills/deployment.md` for deeper notes. Production logging (structured JSON + correlation ids) and how to ship logs to a free aggregator are documented in `docs/observability.md`.
