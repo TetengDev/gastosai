@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Info "?" tooltips on every dashboard section (hero total, AI Insights, Daily Trend, Spending by Category, Budget Overview, Alerts, Savings Goals, Upcoming Bills, Top Expenses, Monthly Trend, Recent Expenses) explaining what each metric means.
 - Tips system: a navbar lightbulb opens a rotating "did you know" tips popover surfacing app capabilities, with per-tip dismissal persisted in localStorage and a "show again" reset.
 
+### Fixed
+- Dashboard info tooltips no longer clip inside cards: `InfoTip` now portals its tooltip to `<body>` (fixed positioning) and adds `aria-describedby` for screen readers.
+
 ---
 
 ## [0.37.1] - 2026-06-17
