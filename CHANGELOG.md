@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Multi-select delete on Budgets, Recurring, Goals, and Categories (matching the Expenses pattern): row/card checkboxes, a selection bar with a bulk "Delete selected" action, and select-all on the table screens. Backed by a shared `useMultiSelect` hook + `SelectionBar` primitive. "Uncategorized" is excluded from category selection (protected default).
 - Info "?" tooltips on every dashboard section (hero total, AI Insights, Daily Trend, Spending by Category, Budget Overview, Alerts, Savings Goals, Upcoming Bills, Top Expenses, Monthly Trend, Recent Expenses) explaining what each metric means.
+- Tips system: a navbar lightbulb opens a rotating "did you know" tips popover surfacing app capabilities, with per-tip dismissal persisted in localStorage and a "show again" reset.
 
 ---
 
