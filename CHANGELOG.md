@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Navbar wordmark rendered as "Gastos AI" (a flex gap split the text from the accent span); now renders "GastosAI" as one word.
 - Browser-tab favicon recolored from the old indigo to the brand green.
 - Chat launcher (FAB) was nearly invisible in dark mode (near-black on near-black); now uses the active tone's accent color (green/slate/pink).
+- Chat panel now follows the global light/dark theme (it was forced always-dark); per-tone accents (green/slate/pink) retained.
 
 ---
 
