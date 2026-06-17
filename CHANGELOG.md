@@ -18,11 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dismissible announcement bar (persisted) pointing to the bring-your-own AI key setting.
 
 ### Changed
+- Full visual redesign applied across every screen — Dashboard (deep-green hero + stat grid, daily-trend & category bars, budget/alerts), Expenses, Categories, Budget, Recurring, Goals, Settings, and the Chat widget — using the new tokens, type scale, and shared primitives.
 - Navbar restyled to the new design: translucent sticky bar, centered pill navigation, brand wordmark, token-based colors that follow light/dark.
 - App shell now uses the token page background and a wider 1240px content width.
+- Chat widget is now an always-dark panel with per-tone accents (Plain green, Pro slate, Gen Z pink).
+- Unified delete UX: one `ConfirmDialog` and shared `Modal` across screens.
 
-### Removed
-- Dead Vite-template `App.css`.
+### Fixed
+- Notification bell and admin "View as" toggle were invisible on the light navbar (leftover white text); retoned to theme tokens.
 
 ---
 
