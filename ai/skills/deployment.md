@@ -1,8 +1,9 @@
 # Skill: Deployment
 
-How to deploy gastosai to its production targets: Koyeb (backend), Vercel (frontend), Supabase (database).
+How to deploy gastosai to its production targets: backend VM (Oracle Cloud Always Free), Vercel (frontend), Supabase (database).
 
-> For a copy-paste, free-tier **user-testing** deploy using **Fly.io** for the backend (with OpenAI cost caps), follow `docs/deploy-testing-guide.md`. This skill documents the Koyeb path and deeper production notes.
+> **Current backend target: Oracle Cloud Always Free (Singapore, ARM)** — always-on, no cold starts. Step-by-step: **`docs/deploy-oracle.md`** (uses `backend/compose.prod.yml` + Caddy for automatic HTTPS).
+> Prior host: **Render** free tier (`render.yaml`) — kept as a no-card fallback, but it sleeps after 15 min (cold starts). The Koyeb notes below are retained for reference only.
 
 ---
 
@@ -10,9 +11,11 @@ How to deploy gastosai to its production targets: Koyeb (backend), Vercel (front
 
 | Layer | Service | Plan |
 |---|---|---|
-| Backend | Koyeb | Free (512 MB RAM) |
+| Backend | Oracle Cloud Always Free (Ampere ARM, Singapore) | Always-free VM (~12 GB RAM, no sleep) |
 | Frontend | Vercel | Free (static SPA) |
 | Database | Supabase | Free (PostgreSQL; pauses after ~1 week idle) |
+
+See `docs/deploy-oracle.md` for the full backend walkthrough. The sections below cover the database, frontend, CORS, and CI — shared across hosts.
 
 ---
 
@@ -25,7 +28,7 @@ How to deploy gastosai to its production targets: Koyeb (backend), Vercel (front
    ```
    SPRING_JPA_HIBERNATE_DDL_AUTO=validate
    ```
-5. Apply schema via Flyway migrations before first deploy (no migrations exist yet — create them when ready)
+5. Schema is managed by **Flyway** (migrations `V1`–`V7` in `backend/src/main/resources/db/migration`); they apply automatically on first boot with `SPRING_JPA_HIBERNATE_DDL_AUTO=validate`
 
 **Supabase pauses** free projects after ~1 week of inactivity. The first request after a pause takes ~30s to wake. Monitor and handle gracefully.
 
@@ -82,10 +85,12 @@ SPRING_JPA_HIBERNATE_DDL_AUTO=validate
 
 ### CORS
 
-Before deploying, update `WebConfig` to restrict CORS to the Vercel URL:
+CORS is **env-driven** — no code change needed. `WebConfig` binds the
+`cors.allowed-origins` property; set the `CORS_ALLOWED_ORIGINS` env var to your
+Vercel origin(s) on the host (comma-separated for multiple):
 
-```java
-config.addAllowedOrigin("https://your-app.vercel.app");
+```
+CORS_ALLOWED_ORIGINS=https://your-app.vercel.app
 ```
 
 ---
