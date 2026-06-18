@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.41.0] - 2026-06-18
+
+### Added
+- Contact and Feedback pages — public (no login) forms to send a message or a suggestion. Submissions are stored and shown to admins in a new in-app "Messages" view (`/admin/submissions`). Backed by a new `submissions` table (Flyway V8); `POST /submissions` is public, `GET /submissions` is admin-only.
+- Site footer with links to About, Contact, Feedback, FAQ, Privacy, and Terms (plus app version), shown on every page.
+- New informational pages: About, FAQ, Privacy Policy, and Terms of Service (with a lightweight public layout).
+- Styled 404 Not Found page for unknown routes.
+
+### Changed
+- Dashboard "Recent Expenses" now lists the 10 most recent entries (was 6).
+
+---
+
 ## [0.40.0] - 2026-06-17
 
 ### Added
