@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.42.0] - 2026-06-19
+
+### Added
+- Managed AI provider mode (behind `AI_ALLOW_SHARED_KEY`): serve AI from one backend-funded key instead of requiring each user to bring their own. BYOK remains the default; managed turns on when the flag + a funded provider key are set, with fail-fast startup validation.
+- Per-user AI usage metering (`ai_usage` table, Flyway V9) + `GET /ai/usage` (plan, used, limit, remaining, vision sub-usage, managed flag, reset date) + a usage indicator in Settings.
+- Per-plan monthly AI quotas (env-configurable): FREE 30 / PREMIUM 300 / TRIAL 50, with receipt-scan sub-caps 5 / 50 / 10; insights are exempt (cached), ADMIN bypasses; over-cap returns HTTP 429. Pricing rationale in `docs/pricing/pricing-memo-2026-06-19.md`.
+- AI redaction layer: card numbers, emails, and phone numbers are masked before any prompt is sent to the provider (chat, NL query, expense parse, receipt scan).
+- `pricing-agent` (`.claude/agents/pricing-agent.md`) for research-backed PHP pricing.
+
+### Changed
+- PREMIUM plan price set to ₱149 (from ₱199); the seeder now reconciles the price on existing databases.
+
+### Security
+- AI provider keys never reach the frontend bundle, API responses, or logs; full prompts are not logged. Per-request LLM timeout, prompt-size cap, and bounded retries added.
+
 ## [0.41.0] - 2026-06-18
 
 ### Added
