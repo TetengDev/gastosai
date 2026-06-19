@@ -68,9 +68,22 @@ npm run dev
 - **Demo**: `demo@gastosai.dev` / `demo123` — seeded with sample data when `GASTOS_SEED_SAMPLE_DATA=true` (default in `backend/.env.example`).
 - **Admin**: set `GASTOS_ADMIN_EMAIL` / `GASTOS_ADMIN_PASSWORD` in `backend/.env`; admin accounts have all features and are always seeded with sample data for easy testing.
 
-### AI features (bring-your-own-key)
+### AI features — managed AI vs bring-your-own-key
 
-AI (insights, chat, NL query, receipt scan) requires **each user to add their own OpenAI key** in **Settings → AI Provider Key**. Without a key those surfaces are disabled; everything else works. For local dev you can instead set `AI_ALLOW_SHARED_KEY=true` + `OPENAI_API_KEY=...` in `backend/.env` to use one shared key.
+AI (insights, chat, NL query, receipt scan) runs in one of two modes, controlled by the backend only — **no provider key is ever shipped to the browser**:
+
+**BYOK (default).** Each user adds their own OpenAI key in **Settings → AI Provider Key** (stored encrypted, used only for their requests). Without a key those surfaces are disabled; everything else works. No quota is applied — the user's own key pays.
+
+**Managed AI (flip on when you fund a shared key).** Set `AI_ALLOW_SHARED_KEY=true` + a funded `OPENAI_API_KEY` (or `CLAUDE_API_KEY`) in the backend env. Then users need no key — all AI calls bill to the shared key, **capped by a per-plan monthly quota** so cost is bounded. If managed is on but the active provider key is missing, the app **fails fast at startup** (no silent failure).
+
+| | FREE | PREMIUM | TRIAL |
+|---|---|---|---|
+| AI requests / month | `AI_MONTHLY_FREE_QUOTA` (30) | `AI_MONTHLY_PREMIUM_QUOTA` (300) | `AI_MONTHLY_TRIAL_QUOTA` (50) |
+| of which receipt scans | `AI_VISION_FREE_QUOTA` (5) | `AI_VISION_PREMIUM_QUOTA` (50) | `AI_VISION_TRIAL_QUOTA` (10) |
+
+One "AI request" = one chat turn or one receipt upload. **Insights don't count** (cached). **ADMIN bypasses** quota. Over the cap → HTTP **429** with a friendly message. Per-user usage is metered in the `ai_usage` table (token counts + best-effort cost), and exposed at `GET /ai/usage`. Exceeding the cap or a failed provider call never leaks keys, and sensitive data (card/email/phone) is **redacted before any prompt** leaves the backend.
+
+Other AI env vars: `AI_FEATURES_ENABLED` (default true), `AI_REQUEST_TIMEOUT_SECONDS` (30), `AI_MAX_PROMPT_CHARS` (8000), `GASTOS_AI_PROVIDER` (`openai`|`claude`), `OPENAI_MODEL`/`CLAUDE_MODEL`. Pricing rationale: `docs/pricing/pricing-memo-2026-06-19.md`. **Never commit a real key** — all defaults are placeholders.
 
 ---
 
