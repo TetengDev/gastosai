@@ -21,6 +21,7 @@ Before picking an agent, classify the task. The type determines which skills to 
 | UI/UX change | "chart", "dashboard", "layout", "visual" | `project-context.md` | `ui-ux-reviewer` → `frontend-dev` → `pre-pr` |
 | Prioritization / roadmap | "what to build", "next feature", "rank" | — | `feature-prioritizer` (terminal) |
 | Process / branching advice | "how to structure", "PR size", "sprint" | — | `tech-workflow` (terminal) |
+| Pricing / monetization | "pricing", "tier", "paywall", "WTP", "unit economics", "PHP price" | — | `pricing-agent` (terminal) |
 | Chore / docs / config | "update docs", "bump version", "rename" | `README.md` | Direct (no agent) → `pre-pr` if substantial |
 | Feature QA / acceptance | "test this feature", "QA", "define test scenarios", "verify before release" | `qa-testing.md` → `project-context.md` | `qa-engineer` (after `pre-pr`, before UAT) |
 | Release | "release", "cut v", "tag" | `git-branching-release-strategy.md` | Manual steps → `pre-pr` |
@@ -97,6 +98,7 @@ START
 | `cleanup` | Scan for stale/irrelevant files and report deletion candidates with confidence levels | Haiku |
 | `agent-auditor` | Audit all agents/skills for registration, overlap, consolidation, and skill gaps; auto-fix indexes | Sonnet |
 | `qa-engineer` | Define test scope/scenarios for a feature and verify it (API + suite execution + human manual-test checklist); read-only, severity-tagged defects | Sonnet |
+| `pricing-agent` | Research competitors + WTP, compute unit economics, recommend PHP tier prices + AI quotas; read-only re: production pricing code | Opus |
 
 ---
 
@@ -137,6 +139,7 @@ Steps 2 and 3 run **in parallel** — spawn both agents in the same message.
 | Adding or changing charts, cards, tables, controls | ui-ux-reviewer |
 | Deciding what to build next | feature-prioritizer |
 | Deciding how to structure work or size a PR | tech-workflow |
+| Designing or changing pricing tiers, limits, or monetization | pricing-agent |
 | Before a release or when docs feel cluttered | cleanup |
 | After adding a new agent or skill | agent-auditor |
 

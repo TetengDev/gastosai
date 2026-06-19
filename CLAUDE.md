@@ -246,6 +246,7 @@ Sub-agent definitions live in `.claude/agents/`. Use them when implementing feat
 | `prompt-compressor` | Compresses verbose agent prompts to minimum tokens before spawning sub-agents |
 | `feature-prioritizer` | Scores feature candidates using ICE + revenue multiplier; returns ranked table with top-pick recommendation |
 | `tech-workflow` | Engineering process advisor — branching, PR sizing, review gates, sprint discipline, incident response |
+| `pricing-agent` | Philippines-focused SaaS pricing strategist — competitor research, WTP, unit economics, PHP tier prices + AI quotas; recommends, does not edit code |
 
 Workflow: `full-stack-planner` → **`prompt-compressor`** (compress each agent prompt) → `backend-dev` + `frontend-dev` (parallel) → `pre-pr`
 
