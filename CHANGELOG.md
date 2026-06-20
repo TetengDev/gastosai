@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.45.0] - 2026-06-21
+
+### Security
+- **Categories are now per-user (multi-tenant isolation).** Previously the category list was global, so any signed-in user could view, rename, re-icon, or delete every user's categories — and deleting one reassigned other users' expenses. Categories are now owned per user and every category operation (REST + chatbot tools) is scoped to the authenticated user; budgets can only attach to your own categories. Fixes pentest finding F-01.
+
+### Changed
+- Each user gets their own predefined category set on sign-up (and magic-link sign-up); existing data is migrated to per-user categories (Flyway V11).
+
 ## [0.44.0] - 2026-06-20
 
 ### Added
