@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.43.0] - 2026-06-20
+
+### Added
+- Chatbot CRUD parity — the assistant now does (almost) everything you can do by navigating the app. 14 new tools: read/list (`list_goals`, `list_budgets` with status, `list_recurring` with upcoming bills, `list_alerts`, `search_expenses`, `get_category_totals`, `get_monthly_report`), alerts CRUD (mark read / dismiss / delete), category settings (set default, set icon), and confirmation-gated bulk ops (delete expenses, recategorize expenses). Rich chat rendering for each (lists, progress bars, status/severity badges).
+
+### Fixed
+- "List my goals / budgets / recurring / alerts" no longer misroutes to expense category totals — intent routing now sends these to the proper read tools instead of the NL→SQL expense path.
+
+### Security
+- Every new chat tool is user-scoped (no cross-user access); bulk delete/recategorize require explicit confirmation; an unscoped bulk delete (no ids or filters) is refused. `SqlGuard` unchanged.
+
 ## [0.42.0] - 2026-06-19
 
 ### Added
