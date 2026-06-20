@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.45.1] - 2026-06-21
+
+### Fixed
+- **Production startup crash on the per-user categories migration (Flyway V11).** V11 cloned each predefined category per user before dropping the old global unique-on-name constraint (`categories_name_key`), so the first duplicate category name collided and the migration aborted — the backend failed to boot. The constraint is now dropped before the clone step. Note: a previously failed V11 leaves a `success=false` row in `flyway_schema_history` that must be cleared (`DELETE FROM flyway_schema_history WHERE version = '11' AND success = false;`) before redeploying.
+
+---
+
 ## [0.45.0] - 2026-06-21
 
 ### Security
