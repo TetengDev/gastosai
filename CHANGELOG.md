@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.44.0] - 2026-06-20
+
+### Added
+- Passwordless **email magic-link login** — enter your email, get a one-time sign-in link, click it to log in. Works alongside the existing email+password login. First-time emails get a passwordless account automatically. Endpoints: `POST /auth/magic-link`, `POST /auth/magic-link/verify`. Tokens are single-use, hashed at rest, and expire in 15 minutes.
+- Dev fallback: when SMTP isn't configured the sign-in link is logged to the backend (so local dev needs no mail server); production uses SMTP via `MAIL_*` env vars.
+
+### Security
+- Magic-link: no user enumeration (uniform response), CRLF/email-header-injection rejected, request rate-limited per email, tokens never logged in production, passwordless accounts can't be password-logged-in.
+
 ## [0.43.0] - 2026-06-20
 
 ### Added
