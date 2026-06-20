@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.46.0] - 2026-06-21
+
+### Security
+- **Hardening batch from the authorized penetration test** (`docs/security/pentest-report-2026-06-20.md`), remediating the medium/low findings:
+  - **CSV formula injection (F-02):** exported expense `Description`/`Category` cells starting with `= + - @`, tab, or carriage-return are now prefixed with `'`, so spreadsheets don't execute them as formulas.
+  - **Absolute AI usage ceiling (F-03):** an absolute monthly per-user AI request cap is now enforced even in bring-your-own-key mode (`AI_ABSOLUTE_MONTHLY_CAP`, default 1000), as a cost/abuse backstop independent of the managed-AI plan quotas.
+  - **Public-endpoint rate limiting (F-05):** unauthenticated endpoints (`/auth/login`, `/auth/register`, `/auth/magic-link`, `/auth/magic-link/verify`, `/submissions`) are throttled per client IP (`PUBLIC_RATE_LIMIT_PER_MINUTE`, default 10 → HTTP 429), plus a global daily cap on magic-link emails (`MAGIC_LINK_DAILY_MAX`, default 200) with no change to the no-enumeration response.
+  - **Shorter JWT lifetime (F-07):** default access-token TTL reduced from 24h to 8h (`JWT_EXPIRATION_MS`, env-overridable).
+  - **Security response headers (F-09):** added HSTS (1-year, includeSubDomains), a restrictive Content-Security-Policy, and `Referrer-Policy: no-referrer`.
+  - **Fail-fast on default secrets (F-14):** in production (the `prod` profile or a remote database) the app now refuses to start if `JWT_SECRET` or `AI_KEY_ENCRYPTION_SECRET` still equals its development default (was a warning).
+  - **No internal error leakage (F-10):** unexpected failures in the AI insights endpoints now return a generic message and log details server-side instead of echoing internal exception text.
+
+---
+
 ## [0.45.1] - 2026-06-21
 
 ### Fixed
