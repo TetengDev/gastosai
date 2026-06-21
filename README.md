@@ -211,7 +211,7 @@ gastosai/
 
 | Layer    | Service  | Notes                                                     |
 |----------|----------|-----------------------------------------------------------|
-| Backend  | Render   | Free Docker web service; `SPRING_PROFILES_ACTIVE=prod` (see `render.yaml`) |
+| Backend  | Oracle Cloud Always Free | Always-on ARM VM; `backend/compose.prod.yml` + Caddy (auto-HTTPS). See `docs/deploy-oracle.md`. (Render `render.yaml` kept as a no-card fallback.) |
 | Frontend | Vercel   | Auto-deploys on push; set `VITE_API_URL` to the backend URL |
 | Database | Supabase | Free PostgreSQL; pauses after ~1 week idle                |
 
