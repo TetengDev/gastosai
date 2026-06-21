@@ -64,6 +64,7 @@ docker-compose.override.yml
 
 # --- Playwright E2E (runtime artifacts, never commit) ---
 frontend/test-results/
+frontend/test-results-demo/
 frontend/playwright-report/
 frontend/e2e/artifacts/
 frontend/.playwright/
