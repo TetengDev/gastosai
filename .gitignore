@@ -4,6 +4,8 @@
 !.env.example
 *.pem
 *.key
+*.key.pub
+*.pub
 *.p12
 *.jks
 *.keystore
