@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.48.0] - 2026-06-21
+
+### Added
+- **Optional shared (Redis) rate-limit store (F-04)** for horizontal scaling. The AI and public-endpoint rate limiters now delegate to a `RateLimiterStore` strategy: in-memory per-JVM by default (unchanged for single-instance), or a cross-instance Redis fixed-window store when `RATELIMIT_REDIS_ENABLED=true` (`REDIS_HOST`/`REDIS_PORT`). `compose.prod.yml` gains an opt-in `redis` service (profile `redis`); dev/local and single-instance prod need no Redis.
+
+### Changed
+- `AiRateLimitInterceptor` and `PublicRateLimitInterceptor` no longer keep their own counters — both use the shared `RateLimiterStore` (behavior identical in the default in-memory mode).
+
+---
+
 ## [0.47.0] - 2026-06-21
 
 ### Added
