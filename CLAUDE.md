@@ -78,8 +78,8 @@ These apply in every session without exception — do not wait to be reminded:
 | Variable | Description |
 |---|---|
 | `GITHUB_TOKEN` | Personal access token for `gh` CLI — loaded into `$env:GH_TOKEN` before gh commands |
-| `SLACK_BOT_TOKEN` | Slack bot token (scopes `files:write` + `chat:write`; bot invited to the channel) — used by `scripts/notify-slack.ps1` to send E2E artifacts |
-| `SLACK_CHANNEL_ID` | Target Slack channel id for `scripts/notify-slack.ps1` |
+| `TELEGRAM_BOT_TOKEN` | Telegram bot token (from @BotFather) — used by `scripts/notify-telegram.ps1` to send E2E artifacts |
+| `TELEGRAM_CHAT_ID` | Target Telegram chat id for `scripts/notify-telegram.ps1` (message the bot then check `getUpdates`, or use @userinfobot) |
 
 **`backend/.env`** (copy from `backend/.env.example`):
 

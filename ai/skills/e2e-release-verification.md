@@ -1,8 +1,8 @@
-# Skill: E2E Release Verification (+ Slack reporting)
+# Skill: E2E Release Verification (+ Telegram reporting)
 
 The full pre-merge verification battery for a user-facing gastosai release: QA, security,
 real-browser end-to-end testing with screenshots + screen recording, and delivery of the
-evidence to Slack. Opt-in / local — **not** wired into the blocking CI.
+evidence to Telegram. Opt-in / local — **not** wired into the blocking CI.
 
 ---
 
@@ -20,7 +20,7 @@ Before merging a user-facing feature/release to master (after `pre-pr`, alongsid
 2. **Security / pentest** — `security-auditor` agent: live exploitation attempts on the new surface (IDOR, param tampering, authn, injection, info-leak). Never weaken SqlGuard.
 3. **Edge-case unit/integration tests** — add the boundary/negative cases the agents surface to the backend suite; keep the suite green.
 4. **E2E (real browser)** — `qa-e2e-reporter` agent (or `npm run e2e`): drives the app, asserts the user-visible flows, and auto-produces a **video** (`.webm`) + **screenshots** per test.
-5. **Capture + Slack** — bundle screenshots + a representative video + the report and send via `scripts/notify-slack.ps1`.
+5. **Capture + Telegram** — bundle screenshots + a representative video + the report and send via `scripts/notify-telegram.ps1`.
 
 ## Playwright harness
 - Config: `frontend/playwright.config.ts` (`testDir: e2e`, `video: "on"`, `screenshot: "on"`, baseURL `http://localhost:5173`, override via `E2E_BASE_URL`).
@@ -28,12 +28,11 @@ Before merging a user-facing feature/release to master (after `pre-pr`, alongsid
 - Scripts: `npm run e2e` (run), `npm run e2e:report` (open HTML report).
 - Artifacts are runtime-only and **gitignored** — never commit videos/screenshots.
 
-## Slack delivery
-- Script: `scripts/notify-slack.ps1 -Title <t> -SummaryText <md> -Files <paths...>`.
-- Env (repo-root `.env`, gitignored): `SLACK_BOT_TOKEN`, `SLACK_CHANNEL_ID`.
-- Slack app needs scopes `files:write` + `chat:write` and must be invited to the channel.
-- Uses the current upload API: `files.getUploadURLExternal` → POST bytes → `files.completeUploadExternal`
-  (one message, all attachments, summary as the initial comment). Exits 2 (non-fatal) if creds are absent.
+## Telegram delivery
+- Script: `scripts/notify-telegram.ps1 -Title <t> -SummaryText <md> -Files <paths...>`.
+- Env (repo-root `.env`, gitignored): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
+- Create the bot via @BotFather; get the chat id by messaging the bot then calling `getUpdates`, or via @userinfobot.
+- Uses the Bot API: a `sendMessage` summary, then per-file `sendPhoto` (png/jpg) / `sendVideo` (webm/mp4, with `sendDocument` fallback) / `sendDocument`. Multipart via `curl.exe` (works on Windows PowerShell 5.1). Exits 2 (non-fatal) if creds are absent.
 
 ## CI note
 Keep Playwright out of the blocking workflow (browser download is heavy). This battery is a
