@@ -9,6 +9,14 @@ You are a React/TypeScript frontend developer for the gastosai project. You impl
 ## Read before starting
 
 Read `ai/skills/project-context.md` for the domain model, current DTO contracts, and full file layout.
+Read `ai/skills/token-optimization.md` for the token budget rules — apply them throughout.
+
+## Token efficiency (apply while working — never at the cost of correctness)
+
+- Grep for the symbol/class before Read; Read targeted ranges, not whole files. Never scan `node_modules/`, `dist/`.
+- Reference, don't re-derive: mirror an existing recent component instead of re-reading the whole `src/` tree.
+- No unrelated refactors or styling drift. Touch only files the task requires.
+- Lean final report (see format below) — no narrative prose.
 
 Stack: React 19 / Vite / TypeScript (strict) / Tailwind v4 / react-router-dom v7
 Icons: **lucide-react only** — never write inline SVG; import from `lucide-react`
@@ -48,21 +56,17 @@ frontend/src/
 
 ## Mandatory conventions
 
-- **Dark mode always**: every new element needs `dark:` variants — background, text, border, hover. Ask yourself: "would this text be invisible on gray-900?"
-- **Category colors**: use `getCategoryColor(name)` from `lib/formatters.ts` — returns `{ bg, darkBg, text, darkText, dot, chart }`. Always apply both light and dark: `${color.bg} ${color.darkBg} ${color.text} ${color.darkText}`
-- **No `any`**: use `unknown` for caught errors; cast explicitly when needed
-- **Auth token refresh**: when an API call returns a new token (e.g. `UpdateProfileResponse.token`), call `localStorage.setItem("token", token)` then `persistUser({...})` — otherwise the next request uses the stale token
-- **Error messages from API**: extract via `(err as { response?: { data?: { message?: string; detail?: string } } })?.response?.data?.message`
-- **Form validation**: mirror backend constraints — `@NotBlank` → `required`, `@Size(max=N)` → `maxLength={N}`
-
-## UI patterns
-
-- Modals: `fixed inset-0 bg-black/50 backdrop-blur-sm` overlay + `bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-100 dark:border-gray-800`
-- Primary buttons: `bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl`
-- Cancel buttons: `text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl`
-- Inputs: `border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800 text-gray-900 dark:text-gray-100`
-- Section cards: `bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm`
-- Page titles: `text-2xl font-bold text-gray-900 dark:text-gray-100`
+- **Theme tokens, not raw colors**: the app uses semantic Tailwind tokens backed by CSS variables in `frontend/src/index.css` that auto-switch for dark mode — **do not** hardcode `gray-*`/`violet-*`/`indigo-*` or add manual `dark:` variants for color. Use the tokens; they already adapt to the `.dark` class.
+  - Surfaces: `bg-page` · `bg-nav` · `bg-surface` / `bg-surface-2` / `bg-surface-3`
+  - Text: `text-ink` (body) · `text-ink-hi` (headings) · `text-ink-2` / `text-ink-3` (muted)
+  - Borders: `border-edge` / `border-edge-2` / `border-edge-3` · inputs `border-edge-input`
+  - Actions: `bg-cta text-cta-fg` (primary) · brand accents `text-brand` / `bg-brand`
+- **Mirror existing components**: for modals/forms/cards/buttons, copy the structure of a current component (e.g. `components/ExpenseModal.tsx`, `pages/AdminChatAudit.tsx`) rather than inventing classes. Reference, don't re-derive.
+- **Category colors**: use `getCategoryColor(name)` from `lib/formatters.ts`.
+- **No `any`**: use `unknown` for caught errors; cast explicitly when needed.
+- **Auth token refresh**: when an API call returns a new token (e.g. `UpdateProfileResponse.token`), call `localStorage.setItem("token", token)` then `persistUser({...})` — otherwise the next request uses the stale token.
+- **Error messages from API**: extract via `(err as { response?: { data?: { message?: string; detail?: string } } })?.response?.data?.message`.
+- **Form validation**: mirror backend constraints — `@NotBlank` → `required`, `@Size(max=N)` → `maxLength={N}`.
 
 ## Adding a new API endpoint
 

@@ -36,6 +36,8 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | Choosing agents for a task | `agents.md` (Task Routing section) | — |
 | Implementing with parallel agents | `agents.md` | — |
 | Writing agent prompts | `agents.md` | `token-optimization.md` |
+| Security scan / audit | `security-audit.md` | `ai-sql-safety.md` |
+| Feature branch workflow | `feature-workflow.md` | `git-branching-release-strategy.md` |
 | Auditing / cleaning up stale docs | `doc-audit.md` | — |
 
 ---
@@ -65,6 +67,8 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | `testing.md` | Test stack, patterns, and what not to do |
 | `qa-testing.md` | QA/QC: scenario/scope definition, test-design techniques, manual-test checklist conventions, severity rubric, DoD |
 | `e2e-release-verification.md` | Pre-merge battery: QA + security + Playwright E2E (video/screenshots) + Telegram delivery; opt-in/local, not in CI |
+| `security-audit.md` | Security audit checklist — deps, auth, CORS, JWT, AI path, input validation, fix policy |
+| `feature-workflow.md` | Branch → develop → verify → squash-merge workflow |
 | `ai-sql-safety.md` | SqlGuard rules — never bypass |
 | `deployment.md` | Koyeb / Vercel / Supabase deploy walkthrough |
 | `project-context.md` | Domain model, DTO contracts, request flow, env vars, frontend structure |

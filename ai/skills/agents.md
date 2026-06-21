@@ -98,6 +98,7 @@ START
 | `tech-workflow` | Engineering process advisor — branching, PR sizing, sprint discipline, incident response | Sonnet |
 | `cleanup` | Scan for stale/irrelevant files and report deletion candidates with confidence levels | Haiku |
 | `agent-auditor` | Audit all agents/skills for registration, overlap, consolidation, and skill gaps; auto-fix indexes | Sonnet |
+| `security-auditor` | Scan for security vulnerabilities (deps, auth, CORS, JWT, AI path, input validation); reports findings; applies safe fixes only | Sonnet |
 | `qa-engineer` | Define test scope/scenarios for a feature and verify it (API + suite execution + human manual-test checklist); read-only, severity-tagged defects | Sonnet |
 | `qa-e2e-reporter` | Run the Playwright E2E suite against the running app, collect screenshots + video, send artifacts to Telegram; run/report only | Sonnet |
 | `pricing-agent` | Research competitors + WTP, compute unit economics, recommend PHP tier prices + AI quotas; read-only re: production pricing code | Opus |

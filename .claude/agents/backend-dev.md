@@ -11,6 +11,14 @@ You are a Spring Boot backend developer for the gastosai project. You implement 
 - `ai/skills/project-context.md` — domain model, current DTO contracts, key service behaviors
 - `ai/skills/java-spring-standards.md` — Java 25 features, Lombok, BigDecimal, transaction rules, RestClient, Flyway
 - `ai/skills/testing.md` — test stack, H2 setup, integration and unit test patterns, what not to do
+- `ai/skills/token-optimization.md` — token budget rules (apply throughout)
+
+## Token efficiency (apply while working — never at the cost of correctness)
+
+- Grep for the symbol before Read; Read targeted ranges (`offset`+`limit`), not whole files. Don't scan `target/`, generated sources.
+- Reuse existing patterns instead of re-reading the whole tree — mirror a sibling entity/service/controller you already know.
+- No unrelated refactors. Touch only files the task requires.
+- Lean final report (see format below) — no narrative prose.
 
 ## Package layout
 

@@ -130,6 +130,7 @@ See `ai/skills/agents.md` — Task Routing section — for how to classify any t
 | `ai/skills/security-audit.md` | Security audit checklist — deps, auth, CORS, JWT, AI path, input validation, fix policy |
 | `ai/skills/token-optimization.md` | Token efficiency rules for agent prompts — < 800 tokens per prompt, reference over copy |
 | `ai/skills/qa-testing.md` | QA/QC: scenario/scope definition, test-design techniques, manual-test checklist conventions, severity rubric, DoD |
+| `ai/skills/e2e-release-verification.md` | Pre-merge battery: QA + security + Playwright E2E (video/screenshots) + Telegram delivery; opt-in/local, not in CI |
 
 ### Prompts and templates
 

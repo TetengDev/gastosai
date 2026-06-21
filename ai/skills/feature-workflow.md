@@ -62,7 +62,7 @@ Two-PR flow:
 1. PR: `feat/<name>` → `release/x.y.z`
 2. PR: `release/x.y.z` → `master`
 
-`release/x.y.z` is created via `.\scripts\bump-version.ps1 -CutRelease` (bumps versions, creates branch, tags, pushes). If the release branch already exists, just open the PR from `feat/<name>` into it.
+`release/x.y.z` is created via `.\scripts\bump-version.ps1 -CutRelease` (bumps versions, creates branch, tags, pushes). If the release branch already exists, just open the PR from `feat/<name>` into it. See `git-branching-release-strategy.md` for the full SemVer / tagging / hotfix policy.
 
 ```powershell
 $env:GH_TOKEN = (Get-Content ".env" | Select-String "GITHUB_TOKEN=(.+)" | ForEach-Object { $_.Matches[0].Groups[1].Value })
