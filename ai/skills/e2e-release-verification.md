@@ -32,7 +32,8 @@ Before merging a user-facing feature/release to master (after `pre-pr`, alongsid
 - Script: `scripts/notify-telegram.ps1 -Title <t> -SummaryText <md> -Files <paths...>`.
 - Env (repo-root `.env`, gitignored): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
 - Create the bot via @BotFather; get the chat id by messaging the bot then calling `getUpdates`, or via @userinfobot.
-- Uses the Bot API: a `sendMessage` summary, then per-file `sendPhoto` (png/jpg) / `sendVideo` (webm/mp4, with `sendDocument` fallback) / `sendDocument`. Multipart via `curl.exe` (works on Windows PowerShell 5.1). Exits 2 (non-fatal) if creds are absent.
+- Uses the Bot API: a `sendMessage` summary, then per-file `sendPhoto` (png/jpg) / `sendVideo` (mp4) / `sendDocument`. Multipart via `curl.exe` (works on Windows PowerShell 5.1). Exits 2 (non-fatal) if creds are absent.
+- **WebM → MP4:** Telegram does not preview Playwright's `.webm` recordings, so the script auto-transcodes `.webm`/`.mkv` to H.264 MP4 when `ffmpeg` is on PATH (install: `winget install Gyan.FFmpeg`). Without ffmpeg it sends the file as-is with a warning.
 
 ## CI note
 Keep Playwright out of the blocking workflow (browser download is heavy). This battery is a
