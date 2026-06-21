@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Chat conversation history (Phase 2b, slice 1).** The assistant now persists each chat as a conversation: messages are saved server-side, and a **History** drawer in the chat widget lists past conversations to reopen, rename-by-first-message, or delete, plus a **New conversation** action. New `GET/DELETE /chat/conversations` endpoints (`GET /chat/conversations/{id}` returns a conversation's messages), all user-scoped. Backed by new `conversations` + `chat_messages` tables (Flyway V12/V13). `POST /ai/chat` accepts an optional `conversationId` and returns the conversation id so the widget keeps the thread; persistence failures never break a chat reply.
 
+### Security
+- Error responses no longer include stack traces (`server.error.include-stacktrace=never`) — closes an app-wide info-leak on unmatched/unhandled routes surfaced by the Phase 2b-1 security review.
+
 ### Notes
 - Reopened conversations render as plain text bubbles (rich preview/action cards are not reconstructed). Follow-up context resolution ("that one") and a chat audit log are the next Phase 2b slices.
 
