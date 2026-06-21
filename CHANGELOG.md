@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.47.0] - 2026-06-21
+
+### Added
+- **Paginated expenses endpoint** `GET /expenses/page?page=&size=&from=&to=` returning a stable `PageResponse` envelope (`content`, `page`, `size`, `totalElements`, `totalPages`, `last`). Page size defaults to 50 and is capped at 100. The existing `GET /expenses` (full list) is unchanged.
+- The Expenses table now loads incrementally via the paged endpoint with a **Load more** control, bounding the initial payload for users with many expenses (addresses the unbounded-list DoS note, F-06 follow-up).
+
+---
+
 ## [0.46.1] - 2026-06-21
 
 ### Security
