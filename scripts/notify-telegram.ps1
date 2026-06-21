@@ -34,7 +34,7 @@ param(
     [string]$SummaryText = "",
     [Parameter(Mandatory)] [string[]]$Files,
     [string]$Chat,
-    # Files larger than this are NOT uploaded — they stay on disk and a notice
+    # Files larger than this are NOT uploaded; they stay on disk and a notice
     # (name + size + path) is posted instead. Telegram's bot upload ceiling is ~50 MB.
     [int]$MaxMB = 45
 )
@@ -64,8 +64,8 @@ if (-not $token -or -not $Chat) {
 $api = "https://api.telegram.org/bot$token"
 
 function Invoke-Telegram([string]$method, [string[]]$fields) {
-    $args = @('-s', '-S', '-F', "chat_id=$Chat") + ($fields | ForEach-Object { @('-F', $_) }) + "$api/$method"
-    $raw = & curl.exe @args
+    $curlArgs = @('-s', '-S', '-F', "chat_id=$Chat") + ($fields | ForEach-Object { @('-F', $_) }) + "$api/$method"
+    $raw = & curl.exe @curlArgs
     return $raw | ConvertFrom-Json
 }
 
@@ -98,7 +98,7 @@ foreach ($f in $Files) {
             & $ffmpeg -y -i $f -c:v libx264 -crf 23 -pix_fmt yuv420p -movflags +faststart -an $mp4 2>$null
             if (Test-Path $mp4) { $send = $mp4; $ext = '.mp4'; $name = Split-Path $mp4 -Leaf; Write-Host "[conv] -> $name" -ForegroundColor Cyan }
         } else {
-            Write-Host "[warn] ffmpeg not found — sending $name as-is (may not preview in Telegram)" -ForegroundColor Yellow
+            Write-Host "[warn] ffmpeg not found - sending $name as-is (may not preview in Telegram)" -ForegroundColor Yellow
         }
     }
 
@@ -106,22 +106,22 @@ foreach ($f in $Files) {
     $sizeMB = [math]::Round((Get-Item $send).Length / 1MB, 2)
     if ($sizeMB -gt $MaxMB) {
         $abs = (Resolve-Path $send).Path
-        $note = "[file too large to send: $sizeMB MB] $name`nSaved locally: $abs"
+        $note = "File too large to send: $sizeMB MB ($name). Saved locally: $abs"
         Invoke-Telegram 'sendMessage' @("text=$note") | Out-Null
         $noted++
-        Write-Host "[note] $name is $sizeMB MB (> $MaxMB) — left on disk, path sent" -ForegroundColor Yellow
+        Write-Host "[note] $name is $sizeMB MB (over $MaxMB) - left on disk, path sent" -ForegroundColor Yellow
         continue
     }
 
     switch -Regex ($ext) {
         '\.(png|jpg|jpeg|gif)$' { $method = 'sendPhoto';    $field = 'photo' }
         '\.(webm|mp4|mov)$'     { $method = 'sendVideo';    $field = 'video' }
-        default                  { $method = 'sendDocument'; $field = 'document' }
+        default                 { $method = 'sendDocument'; $field = 'document' }
     }
 
     $r = Invoke-Telegram $method @("$field=@$send")
     if (-not $r.ok -and $method -ne 'sendDocument') {
-        # Telegram can reject some video containers — fall back to a plain document.
+        # Telegram can reject some video containers - fall back to a plain document.
         $r = Invoke-Telegram 'sendDocument' @("document=@$send")
     }
     if ($r.ok) { $sent++; Write-Host "[ok] sent $name" -ForegroundColor Green }
@@ -129,4 +129,5 @@ foreach ($f in $Files) {
 }
 
 if ($sent -eq 0 -and $noted -eq 0) { throw "No files were sent." }
-Write-Host "Sent $sent file(s)$(if ($noted) { " + $noted noted (too large)" }) to Telegram chat $Chat." -ForegroundColor Green
+$notedSuffix = if ($noted) { " + $noted noted (too large)" } else { "" }
+Write-Host "Sent $sent file(s)$notedSuffix to Telegram chat $Chat." -ForegroundColor Green
