@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.50.0] - 2026-06-21
+
+### Added
+- **Chat follow-up context resolution (Phase 2b, slice 2).** Within a conversation the assistant now resolves follow-ups like "delete it" / "make it 500" / "that one". Hybrid approach: the last expense a turn creates/updates is remembered on the conversation (`last_entity_type`/`last_entity_id`, Flyway V14), and each new message is prefixed with a short recent transcript + last-entity hint before intent classification — so the model can resolve the referent. Deterministic capture is unit/integration-tested; the LLM resolution quality is verified via the chat E2E + manual use.
+
+### Security
+- Error responses no longer include stack traces (`server.error.include-stacktrace=never`) — closes an app-wide info-leak on unmatched/unhandled routes surfaced by the Phase 2b security review.
+
+### Tests
+- Added a Playwright E2E (`e2e/chat-conversation.spec.ts`) covering the chat History drawer (seed → list → reopen → new → delete).
+
+---
+
 ## [0.49.0] - 2026-06-21
 
 ### Added
