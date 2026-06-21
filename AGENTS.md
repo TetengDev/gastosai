@@ -103,6 +103,7 @@ For AI SQL-related changes, also follow:
 | `agent-auditor` | `.claude/agents/agent-auditor.md` | Audits agent/skill indexes for completeness, overlap, and consolidation; auto-fixes missing registrations |
 | `security-auditor` | `.claude/agents/security-auditor.md` | Scans for security vulnerabilities (deps, auth, CORS, JWT, AI path, input validation); reports findings; applies safe fixes only |
 | `qa-engineer` | `.claude/agents/qa-engineer.md` | Defines test scope/scenarios for a feature and verifies it (API + suite execution + a human manual-test checklist); read-only, reports severity-tagged defects |
+| `qa-e2e-reporter` | `.claude/agents/qa-e2e-reporter.md` | Runs the Playwright E2E suite against the running app, collects screenshots + video, and sends the artifacts to Telegram (`scripts/notify-telegram.ps1`); run/report only |
 | `pricing-agent` | `.claude/agents/pricing-agent.md` | Philippines-focused SaaS pricing strategist — researches competitors + WTP, computes unit economics, recommends PHP tier prices + AI quotas; read-only re: production code |
 
 See `ai/skills/agents.md` — Task Routing section — for how to classify any task and choose the right agent sequence.
