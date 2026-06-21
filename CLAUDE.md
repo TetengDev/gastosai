@@ -260,8 +260,8 @@ Token-efficiency rules: `ai/skills/token-optimization.md`
 
 | Layer | Service | Notes |
 |---|---|---|
-| Backend | Koyeb | 512 MB free tier; `-Xmx320m -XX:+UseSerialGC` |
-| Frontend | Vercel | Set `VITE_API_URL` to Koyeb HTTPS URL |
+| Backend | Oracle Cloud Always Free (Ampere ARM, Singapore) | Always-on VM via `backend/compose.prod.yml` + Caddy (auto-HTTPS). See `docs/deploy-oracle.md`. |
+| Frontend | Vercel | Set `VITE_API_URL` to the backend HTTPS URL |
 | Database | Supabase | Free PostgreSQL; pauses after ~1 week idle |
 
-See `ai/skills/deployment.md` for the full deployment walkthrough.
+Prior host: Render (`render.yaml`, kept as a no-card fallback — sleeps after 15 min). See `ai/skills/deployment.md` + `docs/deploy-oracle.md` for the full walkthrough.
