@@ -53,6 +53,21 @@ If the schema changes (new columns, renamed columns), update the system prompt i
 
 ---
 
+## Tenant-isolation coupling (F-06) — read before relaxing SqlGuard
+
+The NL→SQL **fallback** path scopes results to the requesting user by string-inserting
+`AND user_id = <id>` / `WHERE user_id = <id>` into the validated SQL
+(`AiQueryService.appendUserFilter`). That surgery is sound **only** because `SqlGuard` guarantees a
+single flat `SELECT` with no subqueries/derived tables/`UNION`. Relax the single-SELECT or
+subquery rule and the filter can attach to the wrong query scope → **cross-user data leak**.
+
+Rule: any change to `SqlGuard`'s SELECT/subquery/`UNION` handling REQUIRES a paired review of
+`appendUserFilter` **and** an extension of `AiQueryFallbackTenantIsolationTest` proving rows still
+never cross tenants. The structured planner path (`SafeAnalyticsExecutor`, parameterized) is the
+preferred route and is covered by `AnalyticsQueryIsolationTest`.
+
+---
+
 ## Extending SqlGuard safely
 
 If you need to extend what is allowed (e.g., allow CTEs for complex aggregations):
@@ -61,7 +76,8 @@ If you need to extend what is allowed (e.g., allow CTEs for complex aggregations
 2. Update the rule with the minimal change required
 3. Write a test proving the previously-rejected SQL now passes
 4. Write tests proving that mutating equivalents are still rejected
-5. Get a second review on the change
+5. Re-run the cross-user isolation tests (see the coupling note above) and extend them
+6. Get a second review on the change
 
 ---
 
