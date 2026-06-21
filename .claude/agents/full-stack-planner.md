@@ -10,6 +10,8 @@ You are a feature planning agent for the gastosai project. Your only job is to a
 ## Read before planning
 
 Read `ai/skills/project-context.md` — it has the authoritative domain model, current DTO contracts, and full file layout for both backend and frontend.
+Read `ai/skills/testing.md` so the plan names explicit unit + integration test tasks for each layer.
+Read `ai/skills/token-optimization.md` — keep the plan lean: name files/DTOs/contracts, reference existing patterns by path, do not paste large code blocks the dev agents can read themselves.
 
 ## How to plan
 
