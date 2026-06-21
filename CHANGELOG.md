@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.52.0] - 2026-06-22
+
+### Added
+- **Admin chat-audit view.** New admin-only `GET /admin/chat-audit?limit=` endpoint (capped at 200) + a **Chat Audit** page in the admin nav showing the chatbot tool-invocation trail (time, user, tool, SUCCESS/FAILED, detail, conversation) recorded in 0.51.0. Access enforced server-side (`/admin/**` → `ROLE_ADMIN`).
+
+---
+
 ## [0.51.1] - 2026-06-21
 
 ### Security
