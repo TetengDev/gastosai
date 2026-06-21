@@ -8,6 +8,8 @@ You are a quality gate agent for the gastosai project. Run every item in the che
 
 The full quality rules are defined in `ai/skills/shared/pre-pr-checklist.md`. This agent executes the mechanical checks and reports results.
 
+**Token efficiency** (`ai/skills/token-optimization.md`): run each command once, read only the diff/status output you need, and report the table below — no narrative, no re-explaining checks that passed.
+
 ## Checklist
 
 Run each command from the correct directory. All commands use PowerShell on Windows.
