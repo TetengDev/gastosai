@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.51.0] - 2026-06-21
+
+### Added
+- **Chat audit log (Phase 2b, slice 3 — completes Phase 2b).** Every chatbot tool invocation is now recorded to a `chat_audit_logs` table (Flyway V15): user, conversation, tool name, outcome (SUCCESS/FAILED), and a short redacted detail (e.g. "preview", error class). Provides a per-user security/debugging trail for the assistant. Writing is best-effort — an audit failure never breaks a chat reply.
+
+---
+
 ## [0.50.0] - 2026-06-21
 
 ### Added
