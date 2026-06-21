@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.46.1] - 2026-06-21
+
+### Security
+- **NL→SQL fallback tenant-isolation hardening (F-06)** from the authorized penetration test:
+  - The guarded NL→SQL fallback query now runs with a 5-second statement timeout (`GuardedFallbackExecutor`), matching the structured analytics path so neither AI database path can run unbounded.
+  - Added a cross-user-leak regression test (`AiQueryFallbackTenantIsolationTest`) proving the fallback path returns only the requesting user's rows even when the model emits SQL that selects across all users (flat and `GROUP BY` cases).
+  - Documented the `SqlGuard` ↔ `appendUserFilter` coupling in code and in `ai/skills/ai-sql-safety.md`: relaxing SqlGuard's single-SELECT/subquery rules requires a paired review and an extension of the isolation test.
+
+---
+
 ## [0.46.0] - 2026-06-21
 
 ### Security
