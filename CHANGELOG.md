@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Type-mismatch request errors (e.g. a non-numeric `page`/`size`) now return a generic 400 ("Invalid value for parameter 'x'.") instead of echoing the raw rejected input — closes the low-severity reflected-input note from the security review.
 
+### Changed
+- Dashboard now loads its "recent expenses" card via the paginated endpoint (`GET /expenses/page?size=15`) instead of fetching the full expense list, removing the last unbounded `GET /expenses` call from normal app use.
+
 ---
 
 ## [0.51.0] - 2026-06-21
