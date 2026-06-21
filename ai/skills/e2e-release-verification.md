@@ -26,13 +26,16 @@ Before merging a user-facing feature/release to master (after `pre-pr`, alongsid
 - Config: `frontend/playwright.config.ts` (`testDir: e2e`, `video: "on"`, `screenshot: "on"`, baseURL `http://localhost:5173`, override via `E2E_BASE_URL`).
 - Specs: `frontend/e2e/*.spec.ts`. Explicit screenshots saved to `frontend/e2e/artifacts/`; videos to `frontend/test-results/`.
 - Scripts: `npm run e2e` (run), `npm run e2e:report` (open HTML report).
+- **Demo recording** (`npm run e2e:demo`, config `playwright.demo.config.ts`, specs `*.demo.ts`): slow, captioned walkthrough for non-technical stakeholders — `slowMo`, on-screen captions, deliberate pauses, larger viewport, longer timeout. Output in `test-results-demo/`. Use this (not the fast verification suite) when you need a presentable client video.
 - Artifacts are runtime-only and **gitignored** — never commit videos/screenshots.
 
 ## Telegram delivery
 - Script: `scripts/notify-telegram.ps1 -Title <t> -SummaryText <md> -Files <paths...>`.
 - Env (repo-root `.env`, gitignored): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
 - Create the bot via @BotFather; get the chat id by messaging the bot then calling `getUpdates`, or via @userinfobot.
-- Uses the Bot API: a `sendMessage` summary, then per-file `sendPhoto` (png/jpg) / `sendVideo` (webm/mp4, with `sendDocument` fallback) / `sendDocument`. Multipart via `curl.exe` (works on Windows PowerShell 5.1). Exits 2 (non-fatal) if creds are absent.
+- Uses the Bot API: a `sendMessage` summary, then per-file `sendPhoto` (png/jpg) / `sendVideo` (mp4) / `sendDocument`. Multipart via `curl.exe` (works on Windows PowerShell 5.1). Exits 2 (non-fatal) if creds are absent.
+- **WebM → MP4:** Telegram does not preview Playwright's `.webm` recordings, so the script auto-transcodes `.webm`/`.mkv` to H.264 MP4 (sibling of the source) when `ffmpeg` is on PATH (install: `winget install Gyan.FFmpeg`). Without ffmpeg it sends the file as-is with a warning.
+- **Large files:** files over `-MaxMB` (default 45; Telegram's bot ceiling is ~50 MB) are NOT uploaded — they stay on disk and the script posts a notice with name + size + local path instead. Keep screenshots reasonably sized.
 
 ## CI note
 Keep Playwright out of the blocking workflow (browser download is heavy). This battery is a
