@@ -24,6 +24,7 @@ Before picking an agent, classify the task. The type determines which skills to 
 | Pricing / monetization | "pricing", "tier", "paywall", "WTP", "unit economics", "PHP price" | — | `pricing-agent` (terminal) |
 | Chore / docs / config | "update docs", "bump version", "rename" | `README.md` | Direct (no agent) → `pre-pr` if substantial |
 | Feature QA / acceptance | "test this feature", "QA", "define test scenarios", "verify before release" | `qa-testing.md` → `project-context.md` | `qa-engineer` (after `pre-pr`, before UAT) |
+| E2E + capture + Telegram report | "end-to-end", "screenshot/recording", "send to Telegram", "verify before merge" | `e2e-release-verification.md` → `qa-testing.md` | `qa-e2e-reporter` (after `qa-engineer`/`security-auditor`) |
 | Release | "release", "cut v", "tag" | `git-branching-release-strategy.md` | Manual steps → `pre-pr` |
 | After adding agent or skill | — | — | `agent-auditor` |
 | Stale file cleanup | "clean up", "remove unused", "audit" | `doc-audit.md` | `cleanup` |
@@ -98,6 +99,7 @@ START
 | `cleanup` | Scan for stale/irrelevant files and report deletion candidates with confidence levels | Haiku |
 | `agent-auditor` | Audit all agents/skills for registration, overlap, consolidation, and skill gaps; auto-fix indexes | Sonnet |
 | `qa-engineer` | Define test scope/scenarios for a feature and verify it (API + suite execution + human manual-test checklist); read-only, severity-tagged defects | Sonnet |
+| `qa-e2e-reporter` | Run the Playwright E2E suite against the running app, collect screenshots + video, send artifacts to Telegram; run/report only | Sonnet |
 | `pricing-agent` | Research competitors + WTP, compute unit economics, recommend PHP tier prices + AI quotas; read-only re: production pricing code | Opus |
 
 ---
@@ -175,6 +177,7 @@ Each project agent reads the `ai/skills/` files relevant to its task:
 | `frontend-dev` | `project-context.md` |
 | `pre-pr` | `shared/pre-pr-checklist.md` |
 | `qa-engineer` | `qa-testing.md`, `project-context.md` |
+| `qa-e2e-reporter` | `e2e-release-verification.md` |
 | `prompt-compressor` | `token-optimization.md` |
 | `cleanup` | `doc-audit.md` |
 | `agent-auditor` | `doc-audit.md` |
