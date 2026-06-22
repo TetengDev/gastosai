@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.55.0] - 2026-06-22
 
 ### Added
+- **Recurring budgets.** A budget can be marked "Repeat every month" (checkbox in the add/edit modal); it is then **carried forward automatically** to later months — when you open a month with no budget for that category, the most recent recurring limit is materialized for it (currency/rate preserved). Turning recurring off on a later month stops the carry-forward. Recurring budgets show a **↻ Monthly** badge. (`Budget.recurring`, Flyway V18; `BudgetRequest`/`BudgetResponse` gain `recurring`.)
 - **Rule-based budgeting (50-30-20 and presets).** Users can follow a budgeting technique that splits monthly income across **Needs / Wants / Savings** buckets. Presets: 50/30/20, 70/20/10, and a **Custom** split (validated to sum to 100). Categories are tagged to a bucket, and a summary shows the per-bucket **target (income × %) vs actual spend** for the month, with the leftover from unassigned categories surfaced separately.
   - New `budget_rules` table + `categories.bucket` column (Flyway **V16**); `BudgetRule`/`Bucket`/`BudgetRuleType` entities.
   - Endpoints: `GET/PUT /budget-rules`, `PUT /budget-rules/buckets` (bulk category→bucket assignment), `GET /budget-rules/summary?month=`.
