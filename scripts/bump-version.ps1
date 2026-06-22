@@ -43,7 +43,7 @@ $clPath      = Join-Path $ROOT 'CHANGELOG.md'
 $utf8NoBom   = New-Object System.Text.UTF8Encoding $false
 
 # -- Read pom.xml version (skip <parent> block) --------------------------------
-$pomLines       = [string[]](Get-Content $pomPath)
+$pomLines       = [string[]](Get-Content $pomPath -Encoding utf8)
 $pomVersion     = $null
 $pomVersionLine = -1
 $inParent       = $false
@@ -64,7 +64,7 @@ if (-not $pomVersion) {
 }
 
 # -- Read package.json version -------------------------------------------------
-$pkgRaw     = Get-Content $pkgPath -Raw
+$pkgRaw     = Get-Content $pkgPath -Raw -Encoding utf8
 $pkgVersion = (ConvertFrom-Json $pkgRaw).version
 
 if ($pomVersion -ne $pkgVersion) {
@@ -166,7 +166,7 @@ Write-Host "  Updated frontend/package.json: $currentVersion -> $newVersion"
 
 # -- Update CHANGELOG.md -------------------------------------------------------
 $today    = Get-Date -Format 'yyyy-MM-dd'
-$clLines  = [string[]](Get-Content $clPath)
+$clLines  = [string[]](Get-Content $clPath -Encoding utf8)
 $urIdx    = -1
 $nextIdx  = -1
 
