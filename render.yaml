@@ -48,3 +48,20 @@ services:
         sync: false
       - key: CORS_ALLOWED_ORIGINS
         sync: false
+      # Frontend origin used to build the magic-link URL in emails.
+      - key: FRONTEND_BASE_URL
+        sync: false
+      # SMTP so magic-link + contact-notification emails actually send (e.g. Gmail + App Password).
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      # Where contact/feedback submissions are emailed.
+      - key: CONTACT_NOTIFICATION_EMAIL
+        sync: false
