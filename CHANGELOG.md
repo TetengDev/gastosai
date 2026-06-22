@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - New `budget_rules` table + `categories.bucket` column (Flyway **V16**); `BudgetRule`/`Bucket`/`BudgetRuleType` entities.
   - Endpoints: `GET/PUT /budget-rules`, `PUT /budget-rules/buckets` (bulk category→bucket assignment), `GET /budget-rules/summary?month=`.
   - Budget page gains a **Budgeting Rule** card: preset picker, income input, per-bucket progress (target vs spent), and category bucket assignment.
+  - **Opt-in:** the feature is off by default — the Budget page shows a dismissible "try it" invite until the user enables it (`PUT /budget-rules/enabled`, Flyway V17 `enabled` flag), and a **Hide** control turns it back off.
   - `CategoryResponse` now includes the optional `bucket` (additive).
 
 ---
