@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.55.4] - 2026-06-22
+
+### Fixed
+- **Magic-link emails silently dropped when no mail host was configured.** `spring.mail.host` defaults to an empty string, so Spring still created a `JavaMailSender` and the app tried to send over an unconfigured host (no email, no fallback). Email-sender selection now uses real SMTP only when a non-blank host is set; otherwise it logs the link (dev/unconfigured deployments see it in the server log). Setting `MAIL_HOST` + `MAIL_USERNAME`/`MAIL_PASSWORD` now reliably switches to real delivery.
+
+---
+
 ## [0.55.3] - 2026-06-22
 
 ### Fixed
