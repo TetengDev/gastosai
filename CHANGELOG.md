@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.57.0] - 2026-06-23
+
+### Changed
+- **Auth flows split by intent.** The login page is now email + password only — the "email me a sign-in link" option moved to **signup only** (alongside password sign-up), where it makes more sense for first-time users. Existing magic-link login still works via the link itself; it's just no longer surfaced on the login screen.
+
+### Added
+- **"Continue with Google" (scaffold).** New `POST /auth/google` verifies a Google ID token and signs the user in (creating the account on first use), plus a `GoogleSignInButton` on the **signup** page. Disabled by default — the button stays hidden and the endpoint returns 503 until both `GOOGLE_CLIENT_ID` (backend) and `VITE_GOOGLE_CLIENT_ID` (frontend) are set to the same OAuth client id. Token verification currently uses Google's tokeninfo endpoint; swap in google-api-client for offline signature checks when hardening.
+
+---
+
 ## [0.56.0] - 2026-06-23
 
 ### Added

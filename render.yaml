@@ -65,3 +65,7 @@ services:
       # Where contact/feedback submissions are emailed.
       - key: CONTACT_NOTIFICATION_EMAIL
         sync: false
+      # Google sign-in (optional). Set to the OAuth client id to enable "Continue with Google";
+      # the frontend must set VITE_GOOGLE_CLIENT_ID to the same value. Leave unset to keep it off.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
