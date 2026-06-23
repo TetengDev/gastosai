@@ -2,6 +2,9 @@
 .env
 .env.*
 !.env.example
+
+# --- Security findings: keep local, never commit to a public repo ---
+/docs/security/
 *.pem
 *.key
 *.key.pub
