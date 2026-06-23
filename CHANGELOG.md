@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.56.0] - 2026-06-23
+
+### Added
+- **Sign in / Create account switcher** on the auth pages. The login and register screens looked nearly identical, so it was hard to tell which one you were on. A prominent segmented toggle now sits at the top of the auth card, highlights the current mode, and switches between them in one tap. Subtitles were also made distinct ("Welcome back…" vs "New here…").
+
+---
+
 ## [0.55.4] - 2026-06-22
 
 ### Fixed
