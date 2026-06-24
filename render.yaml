@@ -51,7 +51,12 @@ services:
       # Frontend origin used to build the magic-link URL in emails.
       - key: FRONTEND_BASE_URL
         sync: false
-      # SMTP so magic-link + contact-notification emails actually send (e.g. Gmail + App Password).
+      # Email: Resend HTTP API (recommended on Render — its free tier BLOCKS outbound SMTP ports,
+      # so Gmail/SMTP times out). Set RESEND_API_KEY and MAIL_FROM (e.g. onboarding@resend.dev for
+      # testing, or your verified domain). When RESEND_API_KEY is set it takes priority over SMTP.
+      - key: RESEND_API_KEY
+        sync: false
+      # SMTP fallback (won't work on Render free — kept for paid tiers / other hosts).
       - key: MAIL_HOST
         sync: false
       - key: MAIL_PORT

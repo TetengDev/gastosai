@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.57.1] - 2026-06-24
+
+### Fixed
+- **Email delivery on Render (and any host that blocks SMTP).** Render's free tier blocks outbound SMTP ports (25/465/587), so Gmail/JavaMail just timed out (`ConnectException: Operation timed out` to `smtp.gmail.com:587`) and hung the magic-link request ~2 min. Added a **Resend HTTP transport** (port 443) that is used automatically when `RESEND_API_KEY` is set, taking priority over SMTP. Also added SMTP connect/read/write timeouts (10s) so the SMTP fallback fails fast instead of hanging. Transport priority is now Resend → SMTP (non-blank host) → logging fallback.
+
+---
+
 ## [0.57.0] - 2026-06-23
 
 ### Changed
