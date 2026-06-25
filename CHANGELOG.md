@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.58.0] - 2026-06-25
+
+### Added
+- **Logged-out users can reach Contact & Feedback.** The `/contact` and `/feedback` pages and the `POST /submissions` endpoint were already public, but the login and register screens had no link to them, so signed-out visitors couldn't find them. Both auth pages now render the shared footer (About / Contact / Feedback / FAQ / Privacy / Terms), making anonymous concerns, suggestions, and feedback reachable.
+
+---
+
 ## [0.57.1] - 2026-06-24
 
 ### Fixed
