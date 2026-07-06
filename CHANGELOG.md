@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.58.1] - 2026-07-06
+
+### Security
+- **Security hardening from the full-application audit** (`docs/security/audit-2026-07-06.md`, 0 HIGH / 1 MED / 6 LOW). Behavior-preserving fixes:
+  - **CORS header allowlist** (CWE-942): `WebConfig` no longer reflects `allowedHeaders("*")`; it now allows only `Authorization, Content-Type, Accept, X-View-As-Plan, X-View-As-Ai, X-Request-Id`.
+  - **Clickjacking defense** (CWE-1021): explicit `X-Frame-Options: DENY` plus `frame-ancestors 'none'` added to the Content-Security-Policy.
+  - **Login user-enumeration** (CWE-208): the login path now runs a bcrypt comparison against a throwaway hash when the email is unknown, so response timing no longer reveals whether an account exists.
+  - **Swagger/OpenAPI disabled in production** (CWE-200): `springdoc.api-docs`/`swagger-ui` are turned off under the `prod` profile so the endpoint map isn't exposed to the public. Still available in dev.
+- CSP `script-src 'unsafe-inline'` tightening is deferred (needs nonce support + frontend verification) and documented as accepted residual risk in the audit report.
+
+---
+
 ## [0.58.0] - 2026-06-25
 
 ### Added
