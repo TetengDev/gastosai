@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.58.2] - 2026-07-06
+
+### Security
+- **Hardened CSV import against abuse** (CWE-770 resource exhaustion, CWE-20 input validation). The upload path had no per-request row or field limits, so a crafted CSV within the 10 MB multipart cap could carry hundreds of thousands of rows or multi-megabyte fields (unbounded memory, DB/category storage amplification). Now:
+  - **Row cap** — imports over `gastos.import.max-rows` (default 10,000) are rejected whole, nothing persisted, with a clear non-leaky message; parsing stops at the cap so memory stays bounded.
+  - **Field-length caps** — `description` clamped to `gastos.import.max-description-length` (500) and `category` to `gastos.import.max-category-length` (100) before persistence, preventing oversized `text` writes and category-table explosion. All three are env-configurable (`IMPORT_MAX_ROWS`, `IMPORT_MAX_DESCRIPTION_LENGTH`, `IMPORT_MAX_CATEGORY_LENGTH`).
+  - No SQL/command-injection surface (Apache Commons CSV parse + parameterized JPA saves); CSV **formula injection** on export was already neutralized by `csvSafe` (leading `= + - @ tab CR` → `'`), now covered by a round-trip regression test.
+
+---
+
 ## [0.58.1] - 2026-07-06
 
 ### Security
