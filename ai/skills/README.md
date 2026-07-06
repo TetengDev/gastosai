@@ -26,6 +26,7 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | Branching / versioning / releasing | `shared/git-branching-release-strategy.md` | `git-branching-release-strategy.md` |
 | Before opening a PR | `shared/pre-pr-checklist.md` | `git-best-practices.md` |
 | Reviewing a PR or commit | `commit-pr-review.md` | `backend-review.md` |
+| Automated review right after opening a PR | `pr-review-flow.md` | `commit-pr-review.md` |
 | Building a new feature | `feature-builder.md` | `java-spring-standards.md` |
 | Writing or updating tests | `testing.md` | — |
 | QA — scenarios + verifying a feature | `qa-testing.md` | `project-context.md` |
@@ -67,6 +68,7 @@ When rules conflict, the higher-precedence source wins. Project-specific skills 
 | `testing.md` | Test stack, patterns, and what not to do |
 | `qa-testing.md` | QA/QC: scenario/scope definition, test-design techniques, manual-test checklist conventions, severity rubric, DoD |
 | `e2e-release-verification.md` | Pre-merge battery: QA + security + Playwright E2E (video/screenshots) + Telegram delivery; opt-in/local, not in CI |
+| `pr-review-flow.md` | Two-agent post-PR review (pr-reviewer → pr-review-auditor → Telegram verdict); main-thread orchestrated, not in CI |
 | `security-audit.md` | Security audit checklist — deps, auth, CORS, JWT, AI path, input validation, fix policy |
 | `feature-workflow.md` | Branch → develop → verify → squash-merge workflow |
 | `ai-sql-safety.md` | SqlGuard rules — never bypass |
