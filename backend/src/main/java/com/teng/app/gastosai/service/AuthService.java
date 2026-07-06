@@ -37,12 +37,18 @@ public class AuthService {
 		return sessionFor(saved, true);
 	}
 
-	// Bcrypt hash of a throwaway value, computed once with the configured encoder. Matched
-	// against when the email is unknown so a login attempt takes the same time whether or
-	// not the account exists — closes the timing side-channel that would otherwise allow
-	// user enumeration (CWE-208).
-	private final String dummyHash = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
-			.encode("gastos-nonexistent-account-placeholder");
+	// Hash of a throwaway value, computed once with the injected encoder. Matched against
+	// when the email is unknown so a login attempt takes the same time whether or not the
+	// account exists — closes the timing side-channel that would otherwise allow user
+	// enumeration (CWE-208). Built via the configured passwordEncoder (not a fresh
+	// BCryptPasswordEncoder) so it stays valid if the encoder is ever swapped for a
+	// DelegatingPasswordEncoder.
+	private String dummyHash;
+
+	@jakarta.annotation.PostConstruct
+	void initDummyHash() {
+		this.dummyHash = passwordEncoder.encode("gastos-nonexistent-account-placeholder");
+	}
 
 	@Transactional(readOnly = true)
 	public AuthResponse login(LoginRequest request) {

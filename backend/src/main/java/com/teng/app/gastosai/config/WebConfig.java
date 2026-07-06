@@ -34,6 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
 				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
 				.allowedHeaders("Authorization", "Content-Type", "Accept",
 						"X-View-As-Plan", "X-View-As-Ai", "X-Request-Id")
+				.exposedHeaders("X-Request-Id")
 				.maxAge(3600);
 	}
 
