@@ -28,9 +28,10 @@ number is missing, ask for it — do not guess.
 
 ## Steps
 
-1. **Read the diff.** Use the token-loading gh wrapper (never inline `.env` + network):
-   - `pwsh scripts/gh.ps1 pr view <n> --json title,body,headRefName,baseRefName,files`
-   - `pwsh scripts/gh.ps1 pr diff <n>`
+1. **Read the diff.** Load `GH_TOKEN` first (see `environment.md`; on Windows the
+   local `scripts/gh.ps1` wrapper does this for you if present), then:
+   - `gh pr view <n> --json title,body,headRefName,baseRefName,files`
+   - `gh pr diff <n>`
    If gh is unavailable, fall back to `git diff <base>...<head>`.
 2. **Read the changed files** for full context around each hunk — a diff alone
    hides callers, tests, and surrounding invariants.

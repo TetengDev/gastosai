@@ -183,8 +183,8 @@ Each project agent reads the `ai/skills/` files relevant to its task:
 | `pre-pr` | `shared/pre-pr-checklist.md` |
 | `qa-engineer` | `qa-testing.md`, `project-context.md` |
 | `qa-e2e-reporter` | `e2e-release-verification.md` |
-| `pr-reviewer` | `pr-review-flow.md`, `commit-pr-review.md`, `git-branching-release-strategy.md` |
-| `pr-review-auditor` | `pr-review-flow.md`, `commit-pr-review.md`, `git-branching-release-strategy.md` |
+| `pr-reviewer` | `pr-review-flow.md`, `commit-pr-review.md`, `git-branching-release-strategy.md`, `ai-sql-safety.md` |
+| `pr-review-auditor` | `pr-review-flow.md`, `commit-pr-review.md`, `git-branching-release-strategy.md`, `ai-sql-safety.md` |
 | `prompt-compressor` | `token-optimization.md` |
 | `cleanup` | `doc-audit.md` |
 | `agent-auditor` | `doc-audit.md` |

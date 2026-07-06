@@ -25,9 +25,11 @@ other agents.
 
 ## Steps
 
-1. **Re-read the diff** for the same PR (`pwsh scripts/gh.ps1 pr diff <n>` and
-   `pr view <n> --json title,body,headRefName,baseRefName,url`) so you judge
-   findings against the actual change, not the reviewer's summary of it.
+1. **Re-read the diff** for the same PR (`gh pr diff <n>` and
+   `gh pr view <n> --json title,body,headRefName,baseRefName,url`) so you judge
+   findings against the actual change, not the reviewer's summary of it. Load
+   `GH_TOKEN` first (see `environment.md`); on Windows the local `scripts/gh.ps1`
+   wrapper does this for you if present.
 2. **Audit each pr-reviewer finding**:
    - **Valid?** Real defect, or false positive / misread of the code?
    - **Severity right?** Under- or over-rated vs impact (a data-leak marked MINOR
@@ -37,14 +39,19 @@ other agents.
    they are most likely to skip: security (auth/injection/secret exposure, never
    weakening `SqlGuard`), tenant isolation, missing tests, and release hygiene
    (version bump / CHANGELOG / branch target for the two-PR flow).
-4. **Decide a verdict**:
-   - **APPROVE** — no blockers/majors; safe to hand to the user to merge.
-   - **CHANGES-NEEDED** — majors or valid minors to address first.
-   - **BLOCK** — a blocker (security hole, data loss, broken build-shape, SqlGuard
-     weakening).
-5. **Notify Telegram.** Build a plain-text summary (sanitize for Markdown — no
-   `_` or `*`; spell out things like "meta branch" not "meta/*") and send:
-   `pwsh scripts/notify-telegram.ps1 -Title "<PR #n review>" -SummaryText "<verdict + counts + top items + PR url>" -Files <optional report path>`
+4. **Decide a verdict** (evaluate top-down; first match wins, so the levels are
+   mutually exclusive):
+   - **BLOCK** — any blocker: security hole, data loss, broken build-shape,
+     SqlGuard weakening.
+   - **CHANGES-NEEDED** — no blocker, but at least one MAJOR, or a MINOR that is
+     material (would ship a real defect or convention violation).
+   - **APPROVE** — only immaterial MINORs / NITs, or nothing; safe to hand to the
+     user to merge.
+5. **Notify Telegram.** Write a short plain-text report to a temp file first
+   (`$env:TEMP\pr-<n>-audit.md`) because `notify-telegram.ps1` requires `-Files`.
+   Sanitize the summary for Markdown — no `_` or `*`; spell out things like "meta
+   branch" not "meta/*" — then send:
+   `pwsh scripts/notify-telegram.ps1 -Title "PR #<n> review" -SummaryText "<verdict + counts + top items + PR url>" -Files $env:TEMP\pr-<n>-audit.md`
    Always include the full PR URL. If the script exits 2 (no creds), report that
    Telegram is not configured and leave the summary in your output — not a hard failure.
 

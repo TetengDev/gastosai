@@ -18,7 +18,9 @@ and `meta/*` → `master`).
 ## The flow
 
 ```
-scripts/gh.ps1 pr create ...            (main thread opens PR, captures the URL + number)
+gh pr create ...                        (main thread opens PR, captures the URL + number;
+                                         load GH_TOKEN per environment.md — scripts/gh.ps1
+                                         is a local Windows wrapper that does this if present)
         |
         v
 1. spawn  pr-reviewer  (Agent tool, subagent_type: pr-reviewer)
