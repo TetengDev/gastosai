@@ -25,6 +25,7 @@ OpenAI API or Anthropic Claude API
 | [backend/README.md](backend/README.md) | Running, testing, environment variables, API reference |
 | [frontend/README.md](frontend/README.md) | Running, building, pages, environment variables |
 | [docs/capabilities.md](docs/capabilities.md) | Product scope, subscription tiers, AI quotas, limitations, roadmap |
+| [docs/go-live-strategy.md](docs/go-live-strategy.md) | What must ship before charging money — payment blockers, provider pick, sequenced go-live path |
 
 ---
 
