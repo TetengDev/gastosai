@@ -23,6 +23,7 @@ Before picking an agent, classify the task. The type determines which skills to 
 | Process / branching advice | "how to structure", "PR size", "sprint" | — | `tech-workflow` (terminal) |
 | Pricing / monetization | "pricing", "tier", "paywall", "WTP", "unit economics", "PHP price" | — | `pricing-agent` (terminal) |
 | Chore / docs / config | "update docs", "bump version", "rename" | `README.md` | Direct (no agent) → `pre-pr` if substantial |
+| Post-PR review | "review the PR", "check my PR", "after opening a PR" | `pr-review-flow.md` → `commit-pr-review.md` | `pr-reviewer` → `pr-review-auditor` (main-thread orchestrated) |
 | Feature QA / acceptance | "test this feature", "QA", "define test scenarios", "verify before release" | `qa-testing.md` → `project-context.md` | `qa-engineer` (after `pre-pr`, before UAT) |
 | E2E + capture + Telegram report | "end-to-end", "screenshot/recording", "send to Telegram", "verify before merge" | `e2e-release-verification.md` → `qa-testing.md` | `qa-e2e-reporter` (after `qa-engineer`/`security-auditor`) |
 | Release | "release", "cut v", "tag" | `git-branching-release-strategy.md` | Manual steps → `pre-pr` |
@@ -102,6 +103,8 @@ START
 | `qa-engineer` | Define test scope/scenarios for a feature and verify it (API + suite execution + human manual-test checklist); read-only, severity-tagged defects | Sonnet |
 | `qa-e2e-reporter` | Run the Playwright E2E suite against the running app, collect screenshots + video, send artifacts to Telegram; run/report only | Sonnet |
 | `pricing-agent` | Research competitors + WTP, compute unit economics, recommend PHP tier prices + AI quotas; read-only re: production pricing code | Opus |
+| `pr-reviewer` | Review an open PR (diff + changed files) for correctness, security, conventions, tests, release hygiene; read-only, severity-tagged findings | Sonnet |
+| `pr-review-auditor` | Audit the pr-reviewer output, issue a merge verdict (APPROVE/CHANGES-NEEDED/BLOCK), notify Telegram with PR link; read-only | Sonnet |
 
 ---
 
@@ -145,6 +148,7 @@ Steps 2 and 3 run **in parallel** — spawn both agents in the same message.
 | Designing or changing pricing tiers, limits, or monetization | pricing-agent |
 | Before a release or when docs feel cluttered | cleanup |
 | After adding a new agent or skill | agent-auditor |
+| Right after opening a PR | pr-reviewer → pr-review-auditor (see `pr-review-flow.md`) |
 
 ---
 
@@ -179,6 +183,8 @@ Each project agent reads the `ai/skills/` files relevant to its task:
 | `pre-pr` | `shared/pre-pr-checklist.md` |
 | `qa-engineer` | `qa-testing.md`, `project-context.md` |
 | `qa-e2e-reporter` | `e2e-release-verification.md` |
+| `pr-reviewer` | `pr-review-flow.md`, `commit-pr-review.md`, `git-branching-release-strategy.md` |
+| `pr-review-auditor` | `pr-review-flow.md`, `commit-pr-review.md`, `git-branching-release-strategy.md` |
 | `prompt-compressor` | `token-optimization.md` |
 | `cleanup` | `doc-audit.md` |
 | `agent-auditor` | `doc-audit.md` |

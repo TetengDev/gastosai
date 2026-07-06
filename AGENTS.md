@@ -105,8 +105,10 @@ For AI SQL-related changes, also follow:
 | `qa-engineer` | `.claude/agents/qa-engineer.md` | Defines test scope/scenarios for a feature and verifies it (API + suite execution + a human manual-test checklist); read-only, reports severity-tagged defects |
 | `qa-e2e-reporter` | `.claude/agents/qa-e2e-reporter.md` | Runs the Playwright E2E suite against the running app, collects screenshots + video, and sends the artifacts to Telegram (`scripts/notify-telegram.ps1`); run/report only |
 | `pricing-agent` | `.claude/agents/pricing-agent.md` | Philippines-focused SaaS pricing strategist — researches competitors + WTP, computes unit economics, recommends PHP tier prices + AI quotas; read-only re: production code |
+| `pr-reviewer` | `.claude/agents/pr-reviewer.md` | Reviews an open PR (diff + changed files) for correctness, security, conventions, tests, and release hygiene; read-only, severity-tagged findings |
+| `pr-review-auditor` | `.claude/agents/pr-review-auditor.md` | Audits the pr-reviewer output (validity/severity/misses), issues a merge verdict, and notifies Telegram with the PR link; read-only |
 
-See `ai/skills/agents.md` — Task Routing section — for how to classify any task and choose the right agent sequence.
+See `ai/skills/agents.md` — Task Routing section — for how to classify any task and choose the right agent sequence. After opening a PR, run the two-agent review flow in `ai/skills/pr-review-flow.md`.
 
 ### Skills (reference documents in `ai/skills/`)
 
@@ -131,6 +133,7 @@ See `ai/skills/agents.md` — Task Routing section — for how to classify any t
 | `ai/skills/token-optimization.md` | Token efficiency rules for agent prompts — < 800 tokens per prompt, reference over copy |
 | `ai/skills/qa-testing.md` | QA/QC: scenario/scope definition, test-design techniques, manual-test checklist conventions, severity rubric, DoD |
 | `ai/skills/e2e-release-verification.md` | Pre-merge battery: QA + security + Playwright E2E (video/screenshots) + Telegram delivery; opt-in/local, not in CI |
+| `ai/skills/pr-review-flow.md` | Two-agent post-PR review flow (pr-reviewer → pr-review-auditor → Telegram verdict); main-thread orchestrated |
 
 ### Prompts and templates
 
