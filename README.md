@@ -218,3 +218,9 @@ gastosai/
 | Database | Supabase | Free PostgreSQL; pauses after ~1 week idle                |
 
 See `docs/deploy-testing-guide.md` for the step-by-step free-tier deploy walkthrough, and `ai/skills/deployment.md` for deeper notes. Production logging (structured JSON + correlation ids) and how to ship logs to a free aggregator are documented in `docs/observability.md`.
+
+---
+
+## License
+
+**Proprietary — all rights reserved.** Copyright © 2026 Lester Bryan Ilao (TetengDev). The source is public for transparency and review only; it is **not** open source. No permission is granted to use, run, copy, modify, or distribute it without written consent. See [`LICENSE`](LICENSE) for the full terms.
