@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.59.0] - 2026-07-10
+
+### Added
+- **PayMongo upgrade to PREMIUM.** Users can now pay to upgrade via PayMongo hosted **Checkout Sessions** (cards, GCash, Maya) — monthly **₱149** or annual **₱1,290**.
+  - Backend: `PaymentProvider` implemented (`PayMongoProvider`), new `POST /subscription/checkout` (creates a hosted checkout, returns the redirect URL), `GET /subscription` (current plan/status/expiry), public `GET /subscription/pricing`, and a signature-verified public webhook `POST /webhooks/paymongo` that activates the subscription on `checkout_session.payment.paid`. Webhook signatures are verified with HMAC-SHA256 (`Paymongo-Signature`), and activation is idempotent against replays. New `payment_checkout` table (Flyway V19) maps a PayMongo session to the user/plan so the webhook never trusts client-supplied metadata.
+  - Frontend: a `/pricing` page (monthly/annual toggle, prices from the API), a Billing section in Settings (plan/status/expiry), a `/billing/return` page that refreshes entitlements after payment, and the previously inert "Upgrade" prompt now routes to pricing.
+  - One-off per period (renewal = re-prompt at expiry; no silent auto-charge). Expiry is enforced at read time — no scheduler. `MONETIZATION_ENFORCE` stays `false`, so the upgrade records PREMIUM but features remain open until enforcement is flipped on.
+  - Requires `PAYMONGO_SECRET_KEY` + `PAYMONGO_WEBHOOK_SECRET`; live end-to-end needs the backend on a public URL with the webhook registered in PayMongo.
+
+---
+
 ## [0.58.2] - 2026-07-06
 
 ### Security
