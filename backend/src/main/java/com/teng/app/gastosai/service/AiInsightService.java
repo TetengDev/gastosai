@@ -58,6 +58,7 @@ public class AiInsightService {
                 top.total().setScale(2, RoundingMode.HALF_UP), percent);
     }
 
+    // readOnly applies to this transaction only; the usage INSERT runs in record()'s REQUIRES_NEW.
     @Cacheable(cacheNames = "insightMonthSummary", key = "#user.id + '-' + #month")
     @Transactional(readOnly = true)
     public MonthSummaryInsightResponse getMonthSummary(User user, String month) throws Exception {

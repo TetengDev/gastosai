@@ -1,6 +1,6 @@
 package com.teng.app.gastosai.controller;
 
-import com.teng.app.gastosai.ai.ExpenseParser;
+import com.teng.app.gastosai.service.ExpenseParseService;
 import com.teng.app.gastosai.dto.CategoryReportItem;
 import com.teng.app.gastosai.dto.DailyReportItem;
 import com.teng.app.gastosai.dto.ExpenseRequest;
@@ -47,7 +47,7 @@ public class ExpenseController {
 
 	private final ExpenseService expenseService;
 	private final CsvImportService csvImportService;
-	private final ExpenseParser expenseParser;
+	private final ExpenseParseService expenseParseService;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -133,7 +133,7 @@ public class ExpenseController {
 	@PostMapping("/parse")
 	public ParsedExpenseResult parse(@Valid @RequestBody ParseExpenseRequest request,
 			@AuthenticationPrincipal User user) {
-		return expenseParser.parse(request.text()).value();
+		return expenseParseService.parse(request.text(), user);
 	}
 
 	@GetMapping("/report/monthly")

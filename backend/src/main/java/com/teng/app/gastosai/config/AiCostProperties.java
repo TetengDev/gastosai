@@ -4,11 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.math.BigDecimal;
+
 @ConfigurationProperties(prefix = "gastos.ai.cost")
 @Getter
 @Setter
 public class AiCostProperties {
 
-    private double inputPerMtokUsd = 0.15;
-    private double outputPerMtokUsd = 0.60;
+    private BigDecimal inputPerMtokUsd = new BigDecimal("0.15");
+    private BigDecimal outputPerMtokUsd = new BigDecimal("0.60");
 }

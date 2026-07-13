@@ -94,8 +94,8 @@ class AiUsageServiceTest {
     @Test
     void customCostRatesApplied() {
         AiCostProperties custom = new AiCostProperties();
-        custom.setInputPerMtokUsd(0.30);
-        custom.setOutputPerMtokUsd(1.20);
+        custom.setInputPerMtokUsd(new java.math.BigDecimal("0.30"));
+        custom.setOutputPerMtokUsd(new java.math.BigDecimal("1.20"));
         AiUsageService svc = new AiUsageService(aiUsageRepository, custom);
 
         when(aiUsageRepository.save(org.mockito.ArgumentMatchers.any())).thenAnswer(i -> i.getArgument(0));

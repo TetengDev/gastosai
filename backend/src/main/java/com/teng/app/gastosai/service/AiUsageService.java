@@ -71,7 +71,7 @@ public class AiUsageService {
                         ((Number) row[2]).longValue(),
                         row[3] != null ? ((Number) row[3]).longValue() : null,
                         row[4] != null ? ((Number) row[4]).longValue() : null,
-                        row[5] != null ? ((BigDecimal) row[5]).setScale(6, RoundingMode.HALF_UP) : null
+                        row[5] != null ? new BigDecimal(row[5].toString()).setScale(6, RoundingMode.HALF_UP) : null
                 ))
                 .toList();
     }
@@ -80,8 +80,8 @@ public class AiUsageService {
         if (inputTokens == null || outputTokens == null) {
             return null;
         }
-        BigDecimal inputRate = BigDecimal.valueOf(costProperties.getInputPerMtokUsd()).divide(MILLION, 10, RoundingMode.HALF_UP);
-        BigDecimal outputRate = BigDecimal.valueOf(costProperties.getOutputPerMtokUsd()).divide(MILLION, 10, RoundingMode.HALF_UP);
+        BigDecimal inputRate = costProperties.getInputPerMtokUsd().divide(MILLION, 10, RoundingMode.HALF_UP);
+        BigDecimal outputRate = costProperties.getOutputPerMtokUsd().divide(MILLION, 10, RoundingMode.HALF_UP);
         BigDecimal inputCost = inputRate.multiply(new BigDecimal(inputTokens));
         BigDecimal outputCost = outputRate.multiply(new BigDecimal(outputTokens));
         return inputCost.add(outputCost).setScale(6, RoundingMode.HALF_UP);
