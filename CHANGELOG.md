@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.59.1] - 2026-07-13
+
+### Fixed
+- **Webhook double-delivery hardening.** `user_subscriptions` now has a `UNIQUE (user_id, provider_ref)` constraint (Flyway V20), so two concurrent deliveries of the same PayMongo `checkout_session.payment.paid` event can no longer double-insert a subscription: the losing transaction rolls back as a 5xx and PayMongo's retry lands on the idempotent already-PAID path. Seeded/manual subscriptions (NULL `provider_ref`) are unaffected.
+
+---
+
 ## [0.59.0] - 2026-07-10
 
 ### Added
