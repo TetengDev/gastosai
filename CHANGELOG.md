@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.60.1] - 2026-07-13
+
+### Fixed
+- **Announcement bar copy updated for free launch.** The banner claimed users must "bring your own AI key" — stale now that managed AI is on by default. New copy: AI is built in, own key optional in Settings. Dismissal key bumped so everyone sees the corrected message once.
+- **Env-consolidation review fixes that missed the 0.60.0 merge window:** `.env.example`/docs now name the real `MONETIZATION_ENFORCE` variable (the documented `GASTOS_MONETIZATION_ENFORCE` was never read by the app); docker compose falls back to the legacy `backend/.env` instead of hard-failing; Vitest pins `VITE_BILLING_ENABLED` so a developer's root `.env` can't flip billing-flag test expectations.
+
+---
+
 ## [0.60.0] - 2026-07-13
 
 ### Added

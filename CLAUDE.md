@@ -83,7 +83,7 @@ These apply in every session without exception — do not wait to be reminded:
 |---|---|
 | Database | `DB_URL` (`jdbc:postgresql://localhost:5433/gastos`), `DB_USERNAME` (`postgres`), `DB_PASSWORD` (`dev`) |
 | AI provider | `GASTOS_AI_PROVIDER` (`openai` default or `claude`), `OPENAI_API_KEY`, `OPENAI_MODEL` (e.g. `gpt-4o-mini`), `CLAUDE_API_KEY`, `CLAUDE_MODEL`; `AI_ALLOW_SHARED_KEY` (`true` = your key serves all users with per-plan quotas; `false` default = BYOK) |
-| App behavior | `GASTOS_SEED_SAMPLE_DATA` (`true` seeds 15 sample expenses + per-tier test users on empty DB), `GASTOS_MONETIZATION_ENFORCE`, `PAYMONGO_SECRET_KEY`, `PAYMONGO_WEBHOOK_SECRET`, `GASTOS_ADMIN_EMAIL`/`GASTOS_ADMIN_PASSWORD` |
+| App behavior | `GASTOS_SEED_SAMPLE_DATA` (`true` seeds 15 sample expenses + per-tier test users on empty DB), `MONETIZATION_ENFORCE`, `PAYMONGO_SECRET_KEY`, `PAYMONGO_WEBHOOK_SECRET`, `GASTOS_ADMIN_EMAIL`/`GASTOS_ADMIN_PASSWORD` |
 | Frontend | `VITE_API_URL` (`http://localhost:8080`); `VITE_BILLING_ENABLED=false` hides all payment/upgrade UI (free-launch mode), unset = visible |
 | Tooling | `GITHUB_TOKEN` (gh CLI — loaded into `$env:GH_TOKEN`), `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` (`scripts/notify-telegram.ps1`) |
 
