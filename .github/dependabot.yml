@@ -34,6 +34,12 @@ updates:
     labels:
       - "dependencies"
       - "frontend"
+    # typescript-eslint pins a peer range of typescript <6.1.0; a grouped bump to
+    # typescript 7.x makes `npm ci` fail with ERESOLVE (broke PR #236). Take TS
+    # majors manually once typescript-eslint supports them.
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     groups:
       frontend-version-updates:
         applies-to: version-updates
