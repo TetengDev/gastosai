@@ -34,8 +34,8 @@ OpenAI API or Anthropic Claude API
 Requires: **Java 25**, **Node.js LTS**, **Docker Desktop**. All commands are PowerShell, run from the repo root.
 
 ```powershell
-# 1. Configure the backend (first time only)
-copy backend\.env.example backend\.env   # then fill in DB + (optional) API key values
+# 1. Configure the stack (first time only) — one .env at the repo root feeds backend + frontend + tooling
+copy .env.example .env   # then fill in DB + (optional) API key values
 
 # 2. One-shot launcher (DB + backend + frontend)
 .\scripts\start.ps1 -Mode all
@@ -67,8 +67,8 @@ npm run dev
 
 ### Demo & admin accounts
 
-- **Demo**: `demo@gastosai.dev` / `demo123` — seeded with sample data when `GASTOS_SEED_SAMPLE_DATA=true` (default in `backend/.env.example`).
-- **Admin**: set `GASTOS_ADMIN_EMAIL` / `GASTOS_ADMIN_PASSWORD` in `backend/.env`; admin accounts have all features and are always seeded with sample data for easy testing.
+- **Demo**: `demo@gastosai.dev` / `demo123` — seeded with sample data when `GASTOS_SEED_SAMPLE_DATA=true` (default in `.env.example`).
+- **Admin**: set `GASTOS_ADMIN_EMAIL` / `GASTOS_ADMIN_PASSWORD` in the root `.env`; admin accounts have all features and are always seeded with sample data for easy testing.
 
 ### AI features — managed AI vs bring-your-own-key
 
@@ -187,7 +187,7 @@ docker compose up -d
 
 ### Skip sample data
 
-Set `GASTOS_SEED_SAMPLE_DATA=false` in `backend/.env` to keep a clean database (no demo seed). Admin accounts are still seeded with sample data regardless, for testing.
+Set `GASTOS_SEED_SAMPLE_DATA=false` in the root `.env` to keep a clean database (no demo seed). Admin accounts are still seeded with sample data regardless, for testing.
 
 ---
 

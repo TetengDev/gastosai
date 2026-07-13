@@ -40,7 +40,8 @@ $BACKEND_DIR  = Join-Path $ROOT "backend"
 $FRONTEND_DIR = Join-Path $ROOT "frontend"
 $COMPOSE_FILE = Join-Path $ROOT "docker-compose.yaml"
 $MVNW         = Join-Path $BACKEND_DIR "mvnw.cmd"
-$ENV_FILE     = Join-Path $BACKEND_DIR ".env"
+$ENV_FILE     = Join-Path $ROOT ".env"
+$ENV_FILE_LEGACY = Join-Path $BACKEND_DIR ".env"
 $LOGS_DIR     = Join-Path $ROOT "logs"
 $BACKEND_LOG  = Join-Path $LOGS_DIR "backend.log"
 $BACKEND_ERR  = Join-Path $LOGS_DIR "backend-err.log"
@@ -98,11 +99,13 @@ function Test-Prerequisites {
         $ok = $false
     }
 
-    # backend .env
+    # .env (repo root; legacy backend\.env still honored by the app)
     if (Test-Path $ENV_FILE) {
-        Write-Ok "backend\.env found"
+        Write-Ok ".env found (repo root)"
+    } elseif (Test-Path $ENV_FILE_LEGACY) {
+        Write-Ok "backend\.env found (legacy location)"
     } else {
-        Write-Fail "backend\.env not found -- copy backend\.env.example and fill in values"
+        Write-Fail ".env not found -- copy .env.example to the repo root and fill in values"
         $ok = $false
     }
 

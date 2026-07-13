@@ -73,33 +73,21 @@ These apply in every session without exception — do not wait to be reminded:
 
 ## Environment
 
-**Repo root `.env`** (not committed — contains secrets):
+**One repo-root `.env` feeds the whole stack** (copy from `.env.example`; never committed):
 
-| Variable | Description |
+- **Backend** loads it at startup (working dir → repo root → `gastosai/` subdir; first match wins, so a leftover `backend/.env` still takes precedence when present).
+- **Frontend** reads it via Vite `envDir: ".."` — only `VITE_*`-prefixed vars reach the browser bundle.
+- **Tooling** (`scripts/*.ps1`) reads the tooling tokens from it.
+
+| Section | Key variables |
 |---|---|
-| `GITHUB_TOKEN` | Personal access token for `gh` CLI — loaded into `$env:GH_TOKEN` before gh commands |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot token (from @BotFather) — used by `scripts/notify-telegram.ps1` to send E2E artifacts |
-| `TELEGRAM_CHAT_ID` | Target Telegram chat id for `scripts/notify-telegram.ps1` (message the bot then check `getUpdates`, or use @userinfobot) |
+| Database | `DB_URL` (`jdbc:postgresql://localhost:5433/gastos`), `DB_USERNAME` (`postgres`), `DB_PASSWORD` (`dev`) |
+| AI provider | `GASTOS_AI_PROVIDER` (`openai` default or `claude`), `OPENAI_API_KEY`, `OPENAI_MODEL` (e.g. `gpt-4o-mini`), `CLAUDE_API_KEY`, `CLAUDE_MODEL`; `AI_ALLOW_SHARED_KEY` (`true` = your key serves all users with per-plan quotas; `false` default = BYOK) |
+| App behavior | `GASTOS_SEED_SAMPLE_DATA` (`true` seeds 15 sample expenses + per-tier test users on empty DB), `GASTOS_MONETIZATION_ENFORCE`, `PAYMONGO_SECRET_KEY`, `PAYMONGO_WEBHOOK_SECRET`, `GASTOS_ADMIN_EMAIL`/`GASTOS_ADMIN_PASSWORD` |
+| Frontend | `VITE_API_URL` (`http://localhost:8080`); `VITE_BILLING_ENABLED=false` hides all payment/upgrade UI (free-launch mode), unset = visible |
+| Tooling | `GITHUB_TOKEN` (gh CLI — loaded into `$env:GH_TOKEN`), `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` (`scripts/notify-telegram.ps1`) |
 
-**`backend/.env`** (copy from `backend/.env.example`):
-
-| Variable | Description |
-|---|---|
-| `DB_URL` | `jdbc:postgresql://localhost:5433/gastos` |
-| `DB_USERNAME` | `postgres` |
-| `DB_PASSWORD` | `dev` |
-| `OPENAI_API_KEY` | Required if using OpenAI provider |
-| `OPENAI_MODEL` | e.g. `gpt-4o-mini` |
-| `CLAUDE_API_KEY` | Required if using Claude provider |
-| `CLAUDE_MODEL` | e.g. `claude-3-5-sonnet-20241022` |
-| `GASTOS_AI_PROVIDER` | `openai` (default) or `claude` |
-| `GASTOS_SEED_SAMPLE_DATA` | `true` seeds 15 sample expenses on empty DB |
-
-**`frontend/.env.local`**:
-```
-VITE_API_URL=http://localhost:8080
-# VITE_BILLING_ENABLED=false   # uncomment to hide all payment/upgrade UI (free-launch mode); unset = visible
-```
+Production deployment vars: see `backend/.env.prod.example`.
 
 ---
 
