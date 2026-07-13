@@ -18,11 +18,13 @@ public class ExpenseParseService {
 
     private final ExpenseParser expenseParser;
     private final AiUsageService aiUsageService;
+    private final AiQuotaService aiQuotaService;
     private final AiProviderProperties aiProviderProperties;
     private final OpenAiProperties openAiProperties;
     private final ClaudeProperties claudeProperties;
 
     public ParsedExpenseResult parse(String text, User user) {
+        aiQuotaService.assertWithinQuota(user, AiFeature.EXPENSE_PARSE);
         try {
             LlmResult<ParsedExpenseResult> result = expenseParser.parse(text);
             aiUsageService.record(user.getId(), aiProviderProperties.getProvider(),
