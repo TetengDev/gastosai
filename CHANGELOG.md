@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.60.0] - 2026-07-13
+
+### Added
+- **Free-launch mode: `VITE_BILLING_ENABLED` frontend flag.** Setting `VITE_BILLING_ENABLED=false` hides all payment/upgrade UI — the Navbar "Upgrade" link, the `/pricing` and `/billing/return` routes, the Billing section in Settings, and the upgrade CTA in locked-feature prompts — so early users are never routed into a checkout that isn't configured yet. Default (unset) keeps billing visible; flipping the flag back on requires only a frontend env change + redeploy. Pairs with `AI_ALLOW_SHARED_KEY=true` + a funded provider key on the backend for a fully open launch with working AI suggestions.
+
+---
+
 ## [0.59.1] - 2026-07-13
 
 ### Fixed

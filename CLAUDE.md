@@ -98,6 +98,7 @@ These apply in every session without exception — do not wait to be reminded:
 **`frontend/.env.local`**:
 ```
 VITE_API_URL=http://localhost:8080
+# VITE_BILLING_ENABLED=false   # uncomment to hide all payment/upgrade UI (free-launch mode); unset = visible
 ```
 
 ---
