@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.61.0] - 2026-07-13
+
+### Added
+- **Real token-usage logging per AI call.** Provider responses' `usage` objects (OpenAI `prompt/completion_tokens`, Claude `input/output_tokens`) are now captured for every AI feature (query, chat, insights, vision, expense parse) and stored in `ai_usage` with an estimated USD cost (configurable rates, gpt-4o-mini defaults). New admin endpoint `GET /admin/ai-usage/summary` — month-to-date requests/tokens/cost grouped by feature + model. Validates real cost-to-serve against pricing before monetization flips on.
+
+### Security
+- **Free-tier abuse guards** for the open launch on a shared AI key:
+  - Registration caps — per-IP 5 accounts/day (`REGISTER_IP_DAILY_MAX`) and 100 new accounts/day globally (`REGISTER_DAILY_MAX`); covers both password signup and magic-link first-account creation. Blunts multi-account AI-quota multiplexing.
+  - Global AI daily budget — `AI_GLOBAL_DAILY_MAX` (default 2000 requests/day across all users) backstops worst-case daily spend regardless of account count; admins exempt.
+  - Authenticated write rate limit — POST/PUT/PATCH/DELETE on data endpoints capped at 60/min per user (`WRITE_RATE_LIMIT_PER_MINUTE`); GETs unaffected.
+
+---
+
 ## [0.60.1] - 2026-07-13
 
 ### Fixed
