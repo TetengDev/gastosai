@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.62.0] - 2026-07-17
+
+### Added
+- **Observability groundwork — structured logs + operational event capture.** Production logs are now emitted as one ECS-schema JSON object per line (Spring Boot native structured logging, prod profile only; dev keeps the human-readable console), carrying the per-request MDC fields (`requestId`, `method`, `path`, `status`, `durationMs`, `userId`) so a failure can be traced end to end and the stream is ready to ship to any hosted log aggregator. New `app_event` table (V22) persists unhandled server errors (5xx) and abuse-guard trips (`REGISTER_IP_CAP`, `REGISTER_DAILY_CAP`, `WRITE_RATE_LIMIT`, `AI_GLOBAL_CAP`) so the record survives Render free-tier sleep/restart; recording runs in its own transaction and never breaks the request it describes. Added a catch-all exception handler that records the 5xx and returns a generic message without leaking internals.
+- **Public `/actuator/health` liveness endpoint** for external uptime monitoring (e.g. UptimeRobot) and the upcoming admin observability roll-up. Health reflects app + database only; the optional mail and Redis indicators are excluded so a best-effort dependency being down does not falsely report the service as down. Component detail is admin-only.
+
+---
+
 ## [0.61.0] - 2026-07-13
 
 ### Added
