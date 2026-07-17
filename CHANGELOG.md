@@ -14,7 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.63.0] - 2026-07-17
 
 ### Added
-- **In-app admin observability dashboard** at `/admin/observability` (admin-only). Surfaces the four things an operator needs at a glance without leaving the app: **system health** (database up/down, running version, uptime), **users & activity** (total users, new signups today/7d/30d, active users in 24h/7d, top users by AI request count), **AI cost** (today's estimated USD spend, month-to-date by feature + model, success/failure counts), and **recent operational events** — server errors and abuse-guard trips read from `app_event` (PR #250), split into an errors table and an abuse-trips table. New read-only endpoints `GET /admin/observability/{summary,cost,events,health}`. The events view deliberately omits the raw exception `detail` column to avoid surfacing internal state in the UI.
+- **In-app admin observability dashboard** at `/admin/observability` (admin-only). Surfaces the four things an operator needs at a glance without leaving the app: **system health** (database up/down, running version, uptime), **users & activity** (total users, new signups today/7d/30d, active users in 24h/7d, top users by AI request count), **AI cost** (today's estimated USD spend, month-to-date by feature + model, success/failure counts), and **recent operational events** — server errors and abuse-guard trips read from `app_event` (0.62.0), split into an errors table and an abuse-trips table. New read-only endpoints `GET /admin/observability/{summary,cost,events,health}`. The events view deliberately omits the raw exception `detail` column to avoid surfacing internal state in the UI.
+
+### Fixed
+- **Abuse-guard events were lost when recorded from a rolling-back transaction.** `AppEventService.recordError`/`recordAbuseTrip` self-invoked `record()`, so its `@Transactional(REQUIRES_NEW)` was bypassed by the proxy — an event recorded on a path that then throws (e.g. the AI global-cap check) rolled back with the caller and was never persisted. Moved `REQUIRES_NEW` onto each public entry point. Also truncate the event `path` to the column width so an over-long URI no longer fails the insert. (Review fix for the 0.62.0 groundwork that missed that release's merge window.)
 
 ---
 
