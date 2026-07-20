@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0b1120; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
+  .card {
+    width: 1000px;
+    background: radial-gradient(1200px 500px at 80% -10%, #10331f 0%, #0b1120 55%);
+    color: #e8edf5;
+    padding: 64px 68px 56px;
+    border: 1px solid #1e2b3f;
+  }
+  .brand { font-size: 40px; font-weight: 800; letter-spacing: -1px; }
+  .brand span { color: #34d399; }
+  .badge {
+    display: inline-block; margin-top: 22px;
+    background: #34d399; color: #062015; font-weight: 800;
+    font-size: 15px; letter-spacing: .5px; padding: 8px 16px; border-radius: 999px;
+  }
+  h1 {
+    margin-top: 26px; font-size: 58px; line-height: 1.06;
+    font-weight: 800; letter-spacing: -1.5px;
+  }
+  h1 .accent { color: #34d399; }
+  .sub { margin-top: 18px; font-size: 22px; color: #9fb0c7; line-height: 1.5; max-width: 760px; }
+  .grid { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .feat {
+    background: #0f1a2e; border: 1px solid #1e2b3f; border-radius: 16px;
+    padding: 22px 24px;
+  }
+  .feat .ico { font-size: 30px; }
+  .feat .t { margin-top: 10px; font-size: 20px; font-weight: 700; }
+  .feat .d { margin-top: 6px; font-size: 16px; color: #93a3ba; line-height: 1.45; }
+  .foot {
+    margin-top: 46px; display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid #1e2b3f; padding-top: 26px;
+  }
+  .url { font-size: 26px; font-weight: 800; color: #34d399; }
+  .foot .free { font-size: 17px; color: #9fb0c7; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">Gastos<span>AI</span></div>
+    <div class="badge">100% FREE · BETA</div>
+    <h1>Track your money by <span class="accent">just chatting.</span></h1>
+    <div class="sub">AI-powered expense tracking built for the Philippines 🇵🇭 — no spreadsheets, no manual logging, no paywall.</div>
+
+    <div class="grid">
+      <div class="feat">
+        <div class="ico">🤖</div>
+        <div class="t">Ask in plain English</div>
+        <div class="d">"How much did I spend on food this month?" — it just answers.</div>
+      </div>
+      <div class="feat">
+        <div class="ico">📸</div>
+        <div class="t">Snap a receipt</div>
+        <div class="d">Auto-fills the amount, category, and date for you.</div>
+      </div>
+      <div class="feat">
+        <div class="ico">🎯</div>
+        <div class="t">Budgets, goals & alerts</div>
+        <div class="d">Get nudged before you overspend. Hit your savings targets.</div>
+      </div>
+      <div class="feat">
+        <div class="ico">📊</div>
+        <div class="t">Insights & reports</div>
+        <div class="d">Clean dashboard — where your ₱ actually goes each month.</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="url">gastosai.vercel.app</div>
+      <div class="free">Free AI included · no API key needed</div>
+    </div>
+  </div>
+</body>
+</html>
