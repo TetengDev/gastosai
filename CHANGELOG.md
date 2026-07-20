@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.64.0] - 2026-07-18
+
+### Added
+- **Operational alerts + external uptime monitoring** (completes the observability rollout). A scheduler evaluates thresholds every `ALERT_INTERVAL_MS` (default 15 min) and posts a Telegram message when one is breached — today's AI spend over `ALERT_DAILY_COST_USD`, global daily AI usage reaching `ALERT_GLOBAL_CAP_FRACTION` of the cap, or a server-error spike over `ALERT_ERROR_RATE`/hour. Each condition is de-duplicated to a day/hour window so a sustained breach alerts once, not every tick. **Disabled by default** — a no-op unless `ALERTS_ENABLED=true` and both `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` are set (reuses the tooling bot). Because these checks run only while the instance is awake, uptime is delegated to a free external UptimeRobot HTTP monitor on `/actuator/health` (which also keeps the Render free instance warm); setup + all env vars documented in `docs/observability.md`.
+
+---
+
 ## [0.63.0] - 2026-07-17
 
 ### Added
