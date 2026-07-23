@@ -103,7 +103,6 @@ __pycache__/
 # --- Internal / session tracking (never commit) ---
 .claude/ROADMAP-PROGRESS.md
 .claude/scheduled_tasks.lock
-.claude/settings.json
 
 # --- Misc ---
 *.tmp
