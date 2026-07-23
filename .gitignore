@@ -5,6 +5,10 @@
 
 # --- Security findings: keep local, never commit to a public repo ---
 /docs/security/
+
+# --- Obsidian knowledge vault (local-only architecture notes + canvas) ---
+/docs/vault/
+.obsidian/
 *.pem
 *.key
 *.key.pub
